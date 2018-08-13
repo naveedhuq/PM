@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PM.UI")]
+[assembly: AssemblyTitle("Portfolio Manager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Handelsbanken")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PM.UI")]
-[assembly: AssemblyCopyright("Copyright © Handelsbanken 2018")]
+[assembly: AssemblyCopyright("Copyright © 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
