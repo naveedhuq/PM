@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PM.UI.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="ApplicationThemeName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Office2010Blue</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>
