@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
-    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,29 +13,33 @@
     d:DesignWidth="800"
     DataContext="{Binding MasterViewModel, Source={StaticResource Locator}}">
 
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+    </dxmvvm:Interaction.Behaviors>
+
     <DockPanel LastChildFill="True">
         <!-- Top Ribbon Bar -->
         <dxr:RibbonControl DockPanel.Dock="Top" ShowApplicationButton="False">
             <dxr:RibbonDefaultPageCategory>
                 <dxr:RibbonPage Caption="Customer Maintenance">
-                    <dxr:RibbonPageGroup Caption="Data Entry">
-                        <dxb:BarButtonItem Content="Individuals" LargeGlyph="{dx:DXImage Image=BOCustomer_32x32.png}"/>
-                        <dxb:BarButtonItem Content="Corporates" LargeGlyph="{dx:DXImage Image=BODepartment_32x32.png}"/>
-                        <dxb:BarButtonItem Content="Walk-In's" LargeGlyph="{dx:DXImage Image=BOResume_32x32.png}" Glyph="{dx:DXImage Image=BOResume_16x16.png}"/>
+                    <dxr:RibbonPageGroup Caption="Customer Entry">
+                        <dxb:BarButtonItem
+                            Content="Individual Customer"                            
+                            LargeGlyph="{dx:DXImage Image=BOCustomer_32x32.png}" 
+                            Command="{Binding OpenViewCommand}"
+                            CommandParameter="IndCustomer"/>
+                        <dxb:BarButtonItem Content="Business Clients" LargeGlyph="{dx:DXImage Image=BODepartment_32x32.png}" />
+                        <dxb:BarButtonItem
+                            Content="Walk-In Customers"
+                            Glyph="{dx:DXImage Image=BOResume_16x16.png}"
+                            LargeGlyph="{dx:DXImage Image=BOResume_32x32.png}" />
                     </dxr:RibbonPageGroup>
                     <dxr:RibbonPageGroup Caption="Reports and Queries" />
                 </dxr:RibbonPage>
-
-                <dxr:RibbonPage Caption="Services"/>
-
-                <dxr:RibbonPage Caption="Messaging"/>
-
-                <dxr:RibbonPage Caption="Reporting"/>
-
-                
-                
+                <dxr:RibbonPage Caption="Services" />
+                <dxr:RibbonPage Caption="Messaging" />
+                <dxr:RibbonPage Caption="Reporting" />
             </dxr:RibbonDefaultPageCategory>
-
             <dxr:RibbonPageCategory>
                 <dxr:RibbonPage Caption="Settings">
                     <dxr:RibbonPageGroup Caption="Application Theme" SmallGlyph="{dx:DXImage Image=Palette_16x16.png}">
@@ -53,10 +56,8 @@
                 </dxr:RibbonPage>
             </dxr:RibbonPageCategory>
         </dxr:RibbonControl>
-        
         <!-- CONTENT -->
-        <ContentControl />
-        
+        <ContentControl Content="{Binding ChildView}" />
         <!-- Status Bar -->
         <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom">
             <dxr:RibbonStatusBarControl.LeftItems>

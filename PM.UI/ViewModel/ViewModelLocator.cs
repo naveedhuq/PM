@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using Unity;
 using PM.UI.Model;
+using PM.Backend.Shared;
 
 
 namespace PM.UI.ViewModel
@@ -15,6 +16,9 @@ namespace PM.UI.ViewModel
 
         static ViewModelLocator()
         {
+            // Logger
+            _container.RegisterType<Logger>();
+
             // Registering ViewModels
             _container.RegisterType<MasterViewModel>();
 
