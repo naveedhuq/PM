@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="PM" Class="PMDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost\SQLExpress;Initial Catalog=PM;Integrated Security=True" SettingsObjectName="PM.Properties.Settings" SettingsPropertyName="PMConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Contacts" Member="Contacts">
+    <Type Name="Contacts">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ContactItemType" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="ContactItemValue" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Customer" Member="Customer">
+    <Type Name="Customer">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="INSERT_TIMESTAMP" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="INSERT_USER" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="OpeningDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="CustomerType" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerName" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="Personal_Gender" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Personal_BirthDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Personal_SSN" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Personal_LicenseID" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Business_TypeOfCompany" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Business_TaxID" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Notes" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

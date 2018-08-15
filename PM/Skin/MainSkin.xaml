@@ -14,4 +14,18 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
+    <Style TargetType="dxg:TableView">
+        <Setter Property="AllowPerPixelScrolling" Value="True"/>
+        <Setter Property="NavigationStyle" Value="Cell"/>
+        <Setter Property="AllowEditing" Value="False"/>
+        <Setter Property="ShowGroupPanel" Value="False"/>
+        <Setter Property="ShowAutoFilterRow" Value="True"/>
+        <Setter Property="AllowSorting" Value="False"/>
+        <Setter Property="ShowFilterPanelMode" Value="Never"/>
+    </Style>
+
+    <Style TargetType="dxg:GridControl">
+        <Setter Property="FontSize" Value="11"/>
+    </Style>
+
 </ResourceDictionary>

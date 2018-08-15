@@ -93,6 +93,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -143,29 +144,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DB\Contacts.cs">
-      <DependentUpon>PMDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DB\Customer.cs">
-      <DependentUpon>PMDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DB\Lookups.cs">
-      <DependentUpon>PMDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DB\PMDB.Context.cs">
+    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\Enumerators.cs" />
+    <Compile Include="Shared\DBHelper.cs" />
+    <Compile Include="DB\PM.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PMDB.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DB\PMDB.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PMDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DB\PMDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PMDB.edmx</DependentUpon>
+      <DependentUpon>PM.dbml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\JsonLayout.cs" />
     <Compile Include="Shared\AppSettings.cs" />
@@ -203,6 +188,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="DB\PM.dbml.layout">
+      <DependentUpon>PM.dbml</DependentUpon>
+    </None>
     <EmbeddedResource Include="Properties\Licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -211,12 +199,10 @@
     <None Include="AppSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EntityDeploy Include="DB\PMDB.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>PMDB.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="DB\PMDB.edmx.diagram">
-      <DependentUpon>PMDB.edmx</DependentUpon>
+    <None Include="DB\PM.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>PM.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -252,9 +238,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Log4netConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -264,22 +248,13 @@
     <Resource Include="Images\SplashBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DB\PMDB.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PMDB.Context.cs</LastGenOutput>
-      <DependentUpon>PMDB.edmx</DependentUpon>
-    </Content>
-    <Content Include="DB\PMDB.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PMDB.edmx</DependentUpon>
-      <LastGenOutput>PMDB.cs</LastGenOutput>
-    </Content>
     <Resource Include="DB\Scripts\jr_corp.txt" />
     <Resource Include="DB\Scripts\jr_personal.txt" />
     <Content Include="DB\Scripts\mock_load.sql" />
     <Content Include="DB\Scripts\Script_001.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

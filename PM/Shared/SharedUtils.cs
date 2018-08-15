@@ -41,5 +41,10 @@ namespace PM.Shared
         public string AppDirectory { get; }
         public string RegisteredName { get; }
 
+        public T ParseEnum<T>(string value)
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
+
     }
 }
