@@ -77,19 +77,25 @@
     <Reference Include="DevExpress.Xpf.Themes.VS2017Blue.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.VS2017Dark.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.VS2017Light.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net.Ext.Json, Version=2.0.8.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.Ext.Json.2.0.8.3\lib\net452\log4net.Ext.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -137,6 +143,30 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DB\Contacts.cs">
+      <DependentUpon>PMDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Customer.cs">
+      <DependentUpon>PMDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Lookups.cs">
+      <DependentUpon>PMDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\PMDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PMDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\PMDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PMDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\PMDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PMDB.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\JsonLayout.cs" />
     <Compile Include="Shared\AppSettings.cs" />
     <Compile Include="Shared\ILogger.cs" />
@@ -151,6 +181,9 @@
     </Compile>
     <Compile Include="View\MasterView.xaml.cs">
       <DependentUpon>MasterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SplashScreenView.xaml.cs">
+      <DependentUpon>SplashScreenView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +211,13 @@
     <None Include="AppSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <EntityDeploy Include="DB\PMDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PMDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DB\PMDB.edmx.diagram">
+      <DependentUpon>PMDB.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -195,11 +235,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Skin\MainSkin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CustomerEntryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MasterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SplashScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -211,6 +259,28 @@
     <None Include="Log4netConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SplashBackground.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB\PMDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PMDB.Context.cs</LastGenOutput>
+      <DependentUpon>PMDB.edmx</DependentUpon>
+    </Content>
+    <Content Include="DB\PMDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PMDB.edmx</DependentUpon>
+      <LastGenOutput>PMDB.cs</LastGenOutput>
+    </Content>
+    <Resource Include="DB\Scripts\jr_corp.txt" />
+    <Resource Include="DB\Scripts\jr_personal.txt" />
+    <Content Include="DB\Scripts\mock_load.sql" />
+    <Content Include="DB\Scripts\Script_001.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -8,8 +8,9 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    
+    xmlns:view="clr-namespace:PM.View"
     x:Class="PM.View.MasterView"
     
     mc:Ignorable="d"
@@ -34,20 +35,20 @@
                 <dxr:RibbonControl ShowApplicationButton="False">
                     <dxr:RibbonDefaultPageCategory>
                         <dxr:RibbonPage Caption="Customer Maintenance">
-                            <dxr:RibbonPageGroup Caption="Customer Entry">
+                            <dxr:RibbonPageGroup >
                                 <dxb:BarButtonItem
-                            Content="Customer"                            
-                            LargeGlyph="{dx:DXImage Image=BOCustomer_32x32.png}" 
-                            Command="{Binding OpenViewCommand}"
-                            CommandParameter="CustomerEntryView"/>
+                                    Content="Customer Entry"                            
+                                    LargeGlyph="{dx:DXImage Image=BOCustomer_32x32.png}" 
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="CustomerEntryView"/>
                                 <dxb:BarButtonItem
-                            Content="Walk-In Customers"
-                            Glyph="{dx:DXImage Image=BOResume_16x16.png}"
-                            LargeGlyph="{dx:DXImage Image=BOResume_32x32.png}" 
-                            Command="{Binding OpenViewCommand}"
-                            CommandParameter="WalkInCustomerEntryView"/>
+                                    Content="Walk-In Customers"
+                                    Glyph="{dx:DXImage Image=BOResume_16x16.png}"
+                                    LargeGlyph="{dx:DXImage Image=BOResume_32x32.png}" 
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="WalkInCustomerEntryView"/>
                             </dxr:RibbonPageGroup>
-                            <dxr:RibbonPageGroup Caption="Reports and Queries" />
+                            
                         </dxr:RibbonPage>
                         <dxr:RibbonPage Caption="Services" />
                         <dxr:RibbonPage Caption="Messaging" />
