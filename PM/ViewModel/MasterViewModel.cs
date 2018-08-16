@@ -12,7 +12,12 @@ namespace PM.ViewModel
 {
     public class MasterViewModel : ViewModelBase
     {
-        IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+        protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+        protected INotificationService AppNotificationService { get { return GetService<INotificationService>(); } }
+
+        private readonly ISplashScreenService _WaitIndicatorService;
+
+
         private ILogger _logger;
 
 
@@ -38,12 +43,13 @@ namespace PM.ViewModel
                 {
                     try
                     {
+                        _WaitIndicatorService.ShowSplashScreen();
                         _logger.Debug($"Opening {viewName}");
                         var assembly = Assembly.GetExecutingAssembly();
                         var type = assembly.GetTypes().First(t => t.Name == viewName);
                         var view = (UIElement)Activator.CreateInstance(type);
-
                         ChildView = view;
+                        _WaitIndicatorService.HideSplashScreen();
                     }
                     catch (Exception ex)
                     {
@@ -57,6 +63,14 @@ namespace PM.ViewModel
         public MasterViewModel()
         {
             _logger = LogManager.GetLogger(GetType());
+            _WaitIndicatorService = DevExpress.Mvvm.ServiceContainer.Default.GetService<ISplashScreenService>("WaitIndicatorService");
+        }
+
+
+        private async void ShowNotification(string message)
+        {
+            INotification notification = AppNotificationService.CreatePredefinedNotification(message, null, null, null);
+            await notification.ShowAsync();
         }
 
     }

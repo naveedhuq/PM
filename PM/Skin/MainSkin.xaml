@@ -8,6 +8,10 @@
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol">
 
+    <Style TargetType="dxdo:LayoutPanel">
+        <Setter Property="AllowClose" Value="false"/>
+    </Style>
+
     <Style TargetType="dx:SimpleButton">
         <Setter Property="Height" Value="30"/>
         <Setter Property="Margin" Value="10,0"/>

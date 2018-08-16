@@ -20,13 +20,9 @@
                 CornerRadius="5">
                 <Label
                     Content="Portfolio Manager"
+                    Foreground="WhiteSmoke"
                     Margin="20,45,95,230" FontSize="60">
-                    <Label.Foreground>
-                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                            <GradientStop Color="#FF666666" Offset="0"/>
-                            <GradientStop Color="#FFDADADA" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Label.Foreground>
+                    
                     <Label.BitmapEffect>
                         <DropShadowBitmapEffect Color="Black" Direction="320" ShadowDepth="10" Opacity=".5" Softness="9" />
                     </Label.BitmapEffect>

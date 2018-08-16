@@ -36,6 +36,9 @@ namespace PM.DB
     partial void InsertCustomer(Customer instance);
     partial void UpdateCustomer(Customer instance);
     partial void DeleteCustomer(Customer instance);
+    partial void InsertLookup(Lookup instance);
+    partial void UpdateLookup(Lookup instance);
+    partial void DeleteLookup(Lookup instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -81,6 +84,14 @@ namespace PM.DB
 			get
 			{
 				return this.GetTable<Customer>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Lookup> Lookups
+		{
+			get
+			{
+				return this.GetTable<Lookup>();
 			}
 		}
 	}
@@ -592,6 +603,140 @@ namespace PM.DB
 					this._Notes = value;
 					this.SendPropertyChanged("Notes");
 					this.OnNotesChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Lookups")]
+	public partial class Lookup : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _LookupType;
+		
+		private int _SortOrder;
+		
+		private string _LookupName;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnLookupTypeChanging(string value);
+    partial void OnLookupTypeChanged();
+    partial void OnSortOrderChanging(int value);
+    partial void OnSortOrderChanged();
+    partial void OnLookupNameChanging(string value);
+    partial void OnLookupNameChanged();
+    #endregion
+		
+		public Lookup()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LookupType", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string LookupType
+		{
+			get
+			{
+				return this._LookupType;
+			}
+			set
+			{
+				if ((this._LookupType != value))
+				{
+					this.OnLookupTypeChanging(value);
+					this.SendPropertyChanging();
+					this._LookupType = value;
+					this.SendPropertyChanged("LookupType");
+					this.OnLookupTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SortOrder", DbType="Int NOT NULL")]
+		public int SortOrder
+		{
+			get
+			{
+				return this._SortOrder;
+			}
+			set
+			{
+				if ((this._SortOrder != value))
+				{
+					this.OnSortOrderChanging(value);
+					this.SendPropertyChanging();
+					this._SortOrder = value;
+					this.SendPropertyChanged("SortOrder");
+					this.OnSortOrderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LookupName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string LookupName
+		{
+			get
+			{
+				return this._LookupName;
+			}
+			set
+			{
+				if ((this._LookupName != value))
+				{
+					this.OnLookupNameChanging(value);
+					this.SendPropertyChanging();
+					this._LookupName = value;
+					this.SendPropertyChanged("LookupName");
+					this.OnLookupNameChanged();
 				}
 			}
 		}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using DevExpress.Mvvm;
 using PM.Model;
 using PM.Shared;
@@ -23,11 +24,20 @@ namespace PM.ViewModel
             set { SetProperty(() => SelectedCustomer, value); }
         }
 
+        public ObservableCollection<string> CustomerTypes
+        {
+            get { return GetProperty(() => CustomerTypes); }
+            set { SetProperty(() => CustomerTypes, value); }
+        }
+
 
         public CustomerEntryViewModel()
         {
             if (IsInDesignMode)
+            {
+                SelectedCustomer = new Customer();
                 return;
+            }
             RefreshData();
         }
 
@@ -35,6 +45,7 @@ namespace PM.ViewModel
         private void RefreshData()
         {
             Customers = new ObservableCollection<Customer>(DBHelper.Instance.GetCustomers(true));
+            CustomerTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.CustomerType));
         }
         
     }

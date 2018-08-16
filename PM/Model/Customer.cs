@@ -7,7 +7,7 @@ namespace PM.Model
         public int ID { get; set; }
         public bool IsActive { get; set; }
         public DateTime? OpeningDate { get; set; }
-        public Enumerators.CustomerTypeEnum CustomerType { get; set; }
+        public string CustomerType { get; set; }
         public string CustomerName { get; set; }
         public string Personal_Gender { get; set; }
         public DateTime? Personal_BirthDate { get; set; }

@@ -5,7 +5,7 @@
 	xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:view="clr-namespace:PM.View"
-    Title="Portfolio Manager" Icon="portfolio-manager.ico">
+    Title="Portfolio Manager" Icon="portfolio-manager.ico" WindowState="Maximized">
 
     <dxmvvm:Interaction.Behaviors>
         <dx:DXSplashScreenService SplashScreenType="view:SplashScreenView" ShowSplashScreenOnLoading="True"/>

@@ -22,7 +22,12 @@ namespace PM.Shared
         #endregion
 
         private DB.PMDataContext _cx = new DB.PMDataContext(Properties.Settings.Default.PMConnectionString);
-
+        public enum LookupTypesEnum
+        {
+            CustomerType,
+            ContactItemType,
+            TypeOfCompany
+        }
 
         #region Repositories
 
@@ -38,7 +43,7 @@ namespace PM.Shared
                         ID = x.ID,
                         IsActive = x.IsActive,
                         OpeningDate = x.OpeningDate,
-                        CustomerType = SharedUtils.Instance.ParseEnum<Enumerators.CustomerTypeEnum>(x.CustomerType),
+                        CustomerType = x.CustomerType,
                         CustomerName = x.CustomerName,
                         Personal_Gender = x.Personal_Gender,
                         Personal_BirthDate = x.Personal_BirthDate,
@@ -52,26 +57,44 @@ namespace PM.Shared
             }
         }
 
+        private List<LookupItem> _LookupsRepository;
+        public List<LookupItem> LookupsRepository
+        {
+            get
+            {
+                if (_LookupsRepository == null)
+                    _LookupsRepository = (from x in _cx.Lookups
+                                          select new LookupItem()
+                                          {
+                                              LookupName = x.LookupName,
+                                              LookupType = x.LookupType,
+                                              SortOrder = x.SortOrder
+                                          }).ToList();
+                return _LookupsRepository;
+            }
+        }
+
         #endregion
 
-        public List<Customer> GetCustomers(bool ActiveOnly = true, Enumerators.CustomerTypeEnum? CustomerType = null)
+        public List<Customer> GetCustomers(bool ActiveOnly = true, string CustomerType = null)
         {
             return
                 (from x in CustomerRepository
                  where (ActiveOnly ? x.IsActive : true)
-                 && (CustomerType == null ? true : (x.CustomerType == CustomerType))
+                 && (CustomerType == null ? true : (x.CustomerType == CustomerType ))
                  select x).ToList();
         }
 
 
-        public List<Customer> GetPersonalCustomers(bool ActiveOnly = true)
+        public List<string> GetLookups(LookupTypesEnum LookupType)
         {
             return
-                (from x in CustomerRepository
-                 where (x.CustomerType == Enumerators.CustomerTypeEnum.Personal)
-                 && (ActiveOnly ? x.IsActive : true)
-                 select x).ToList();
+                (
+                    from x in LookupsRepository
+                    where x.LookupType == LookupType.ToString()
+                    orderby x.SortOrder
+                    select x.LookupName
+                ).ToList();
         }
-
-}
+    }
 }
