@@ -76,7 +76,13 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('TypeOfCompany', 3, 'Restaurant'),
 ('TypeOfCompany', 4, 'Retail'),
 ('TypeOfCompany', 5, 'Grocery'),
-('TypeOfCompany', 6, 'Others')
+('TypeOfCompany', 6, 'Others'),
+
+('ServiceType', 1, 'Accounting'),
+('ServiceType', 2, 'Immigration'),
+('ServiceType', 3, 'Insurance'),
+('ServiceType', 4, 'Multi-Services'),
+('ServiceType', 5, 'Tax')
 
 GO
 

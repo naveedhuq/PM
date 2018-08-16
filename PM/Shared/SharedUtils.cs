@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Media;
+using DevExpress.Xpf.Core;
+using DevExpress.Xpf.Core.Native;
 using Newtonsoft.Json;
 
 
@@ -44,6 +47,11 @@ namespace PM.Shared
         public T ParseEnum<T>(string value)
         {
             return (T)Enum.Parse(typeof(T), value);
+        }
+
+        public ImageSource GetDXImageSource (string imageName)
+        {
+            return new DXImageExtension() { Image = new DXImageConverter().ConvertFrom(null, null, imageName) as DXImageInfo }.ProvideValue(null) as ImageSource;
         }
 
     }

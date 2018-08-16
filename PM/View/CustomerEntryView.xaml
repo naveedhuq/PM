@@ -8,6 +8,7 @@
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxnav="http://schemas.devexpress.com/winfx/2008/xaml/navigation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
@@ -18,17 +19,14 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Skin/MainSkin.xaml" />
+                <ResourceDictionary Source="/Skin/EntryControlsSkin.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--<x:Array x:Key="CustomerTypes" Type="sys:String">
-                <sys:String>Pesonal</sys:String>
-                <sys:String>Business</sys:String>
-            </x:Array>-->
-
+            <x:Array x:Key="Genders" Type="sys:String">
+                <sys:String>Male</sys:String>
+                <sys:String>Female</sys:String>
+            </x:Array>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
-
-
-
     </UserControl.Resources>
 
     <UserControl.DataContext>
@@ -38,6 +36,7 @@
     <Grid>
         <dxdo:DockLayoutManager Margin="12">
             <dxdo:LayoutGroup Orientation="Horizontal">
+                <!-- Left Layout Grid for Customer Selections -->
                 <dxdo:LayoutPanel
                     AllowSizing="True"
                     Caption="Selection Pane"
@@ -54,7 +53,15 @@
                                 ItemsSource="{Binding Customers}"
                                 SelectedItem="{Binding SelectedCustomer}">
                                 <dxg:GridControl.View>
-                                    <dxg:TableView AllowPerPixelScrolling="True" />
+                                    <dxg:TableView AllowPerPixelScrolling="True">
+                                        <dxg:TableView.FormatConditions>
+                                            <dxg:FormatCondition Expression="[IsDirty] = true" FieldName="CustomerName">
+                                                <dxg:FormatCondition.Format>
+                                                    <dxg:Format FontWeight="Bold" Foreground="Red" />
+                                                </dxg:FormatCondition.Format>
+                                            </dxg:FormatCondition>
+                                        </dxg:TableView.FormatConditions>
+                                    </dxg:TableView>
                                 </dxg:GridControl.View>
                                 <dxg:GridColumn
                                     Width="50"
@@ -76,7 +83,15 @@
                                 ItemsSource="{Binding Customers}"
                                 SelectedItem="{Binding SelectedCustomer}">
                                 <dxg:GridControl.View>
-                                    <dxg:TableView AllowPerPixelScrolling="True" />
+                                    <dxg:TableView AllowPerPixelScrolling="True">
+                                        <dxg:TableView.FormatConditions>
+                                            <dxg:FormatCondition Expression="[IsDirty] = true" FieldName="CustomerName">
+                                                <dxg:FormatCondition.Format>
+                                                    <dxg:Format FontWeight="Bold" Foreground="Red" />
+                                                </dxg:FormatCondition.Format>
+                                            </dxg:FormatCondition>
+                                        </dxg:TableView.FormatConditions>
+                                    </dxg:TableView>
                                 </dxg:GridControl.View>
                                 <dxg:GridColumn
                                     Width="50"
@@ -98,14 +113,22 @@
                         </StackPanel>
                     </Grid>
                 </dxdo:LayoutPanel>
-                <dxdo:LayoutPanel AllowHide="False" Caption="Customer Details">
-                    <Grid Margin="40,0" Visibility="{Binding Path=SelectedCustomer, TargetNullValue=Collapsed }">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <!--Customer Name Label as Top Header -->
-                        <Label Content="{Binding SelectedCustomer.CustomerName}" FontSize="50">
+                <dxdo:LayoutGroup Orientation="Vertical">
+                    
+                    <!--Customer Name Label as Top Header -->
+                    <dxdo:LayoutPanel
+                        Margin="0"
+                        AllowClose="False"
+                        AllowFloat="False"
+                        AllowHide="False"
+                        Background="SlateGray"
+                        ItemHeight="80"
+                        Padding="0">
+                        <Label
+                            Content="{Binding SelectedCustomer.CustomerName}"
+                            FontSize="50"
+                            Foreground="WhiteSmoke"
+                            Padding="20,0">
                             <Label.BitmapEffect>
                                 <DropShadowBitmapEffect
                                     Color="Black"
@@ -115,45 +138,225 @@
                                     Softness="9" />
                             </Label.BitmapEffect>
                         </Label>
-                        <!-- Entry Grid -->
-                        <Grid Grid.Row="1">
-                            <Grid.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.MergedDictionaries>
-                                        <ResourceDictionary Source="/Skin/EntryControlsSkin.xaml" />
-                                    </ResourceDictionary.MergedDictionaries>
-                                </ResourceDictionary>
-                            </Grid.Resources>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <!--Required Info-->
+                    </dxdo:LayoutPanel>
+                    
+                    <dxdo:LayoutGroup
+                        AllowClose="False"
+                        AllowFloat="False"
+                        AllowHide="False"
+                        Orientation="Horizontal">
+                        <!-- Layout for Customer / Contact Details -->
+                        <dxdo:LayoutGroup Orientation="Vertical">
+                            <!-- Customer Details -->
+                            <dxdo:LayoutPanel AllowHide="False" Caption="Customer Details">
+                                <Grid Margin="40,0" Visibility="{Binding Path=SelectedCustomer, TargetNullValue=Collapsed }">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition Height="40" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <!--Required Info-->
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="150" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Customer Opening Date" />
+                                            <dxe:DateEdit Grid.Column="1" EditValue="{Binding SelectedCustomer.OpeningDate}" />
+                                            <Label Grid.Row="1" Content="Customer Type" />
+                                            <dxe:ComboBoxEdit
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Width="150"
+                                                EditValue="{Binding SelectedCustomer.CustomerType}"
+                                                ItemsSource="{Binding CustomerTypes}" />
+                                        </Grid>
+                                        <!-- Personal Customers -->
+                                        <Grid Grid.Row="1" Visibility="{Binding SelectedCustomer.IsPersonalCustomer, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="300" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Customer Name" />
+                                            <dxe:TextEdit Grid.Column="1" EditValue="{Binding SelectedCustomer.CustomerName}" />
+                                            <Label Grid.Row="1" Content="Gender" />
+                                            <dxe:ComboBoxEdit
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Width="150"
+                                                EditValue="{Binding SelectedCustomer.Personal_Gender}"
+                                                ItemsSource="{StaticResource ResourceKey=Genders}" />
+                                            <Label Grid.Row="2" Content="Date of Birth" />
+                                            <dxe:DateEdit
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                EditValue="{Binding SelectedCustomer.Personal_BirthDate}" />
+                                            <Label Grid.Row="3" Content="SSN" />
+                                            <dxe:TextEdit
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Width="150"
+                                                EditValue="{Binding SelectedCustomer.Personal_SSN}" />
+                                            <Label Grid.Row="4" Content="Identifcation No." />
+                                            <dxe:TextEdit
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                EditValue="{Binding SelectedCustomer.Personal_LicenseID}" />
+                                        </Grid>
+                                        <!-- Business Customers -->
+                                        <Grid Grid.Row="2" Visibility="{Binding SelectedCustomer.IsBusinessCustomer, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                                <RowDefinition Height="25" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="300" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="Business Name" />
+                                            <dxe:TextEdit Grid.Column="1" EditValue="{Binding SelectedCustomer.CustomerName}" />
+                                            <Label Grid.Row="1" Content="Tax ID" />
+                                            <dxe:TextEdit
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Width="150"
+                                                EditValue="{Binding SelectedCustomer.Business_TaxID}" />
+                                            <Label Grid.Row="2" Content="Type of Business" />
+                                            <dxe:ComboBoxEdit
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Width="150"
+                                                EditValue="{Binding SelectedCustomer.Business_TypeOfCompany}"
+                                                ItemsSource="{Binding TypesOfCompany}" />
+                                        </Grid>
+                                    </Grid>
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Horizontal">
+                                    <dx:SimpleButton
+                                        Content="New"
+                                        Glyph="{dx:DXImage Image=New_16x16.png}"/>
+                                    <dx:SimpleButton
+                                        Content="Save"
+                                        Glyph="{dx:DXImage Image=Save_16x16.png}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </dxdo:LayoutPanel>
+                            
+                            <!-- Contact Details -->
+                            <dxdo:LayoutPanel AllowHide="False" Caption="Contact Details" >
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <dxg:GridControl
+                                        FontSize="16"
+                                        ItemsSource="{Binding SelectedCustomer.Contacts}"
+                                        SelectedItem="{Binding SelectedContact}">
+                                        <dxg:GridControl.View>
+                                            <dxg:CardView AllowGrouping="False" ShowGroupPanel="False" ShowColumnHeaders="False" AllowEditing="False"/>
+                                        </dxg:GridControl.View>
+                                        <dxg:GridColumn FieldName="ContactItemType" Header="{}"/>
+                                        <dxg:GridColumn FieldName="ContactItemValue" Header="{}"/>
+                                    </dxg:GridControl>
+
+                                    <Grid Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="25" />
+                                            <RowDefinition Height="25" />
+                                            <RowDefinition Height="25" />
+                                            <RowDefinition Height="40" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150" />
+                                            <ColumnDefinition Width="300" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Content="Is Active"/>
+                                        <dxe:CheckEdit
+                                            Grid.Column="1"
+                                            IsChecked="{Binding SelectedContact.IsActive}"/>
+                                        <Label Grid.Row="1" Content="Contact Type"/>
+                                        <dxe:ComboBoxEdit
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            ItemsSource="{Binding ContactItemTypes}"
+                                            SelectedItem="{Binding SelectedContact.ContactItemType}"/>
+                                        <Label Grid.Row="2" Content="Contact"/>
+                                        <dxe:TextEdit
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            EditValue="{Binding SelectedContact.ContactItemValue}" />
+                                        <StackPanel
+                                            Grid.Row="3"
+                                            Grid.ColumnSpan="2"
+                                            Orientation="Horizontal">
+                                            <dx:SimpleButton
+                                                Content="New"
+                                                Glyph="{dx:DXImage Image=New_16x16.png}"/>
+                                            <dx:SimpleButton
+                                                Content="Save"
+                                                Glyph="{dx:DXImage Image=Save_16x16.png}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                                
+                            </dxdo:LayoutPanel>
+                        </dxdo:LayoutGroup>
+                        
+                        
+                        <!-- Attached Documents -->
+                        <dxdo:LayoutPanel AllowHide="False" Caption="Attached Documents" >
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="25" />
-                                    <RowDefinition Height="25" />
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
-                                </Grid.ColumnDefinitions>
-                                <Label Content="Customer Opening Date" />
-                                <dxe:DateEdit
-                                    Grid.Column="1"
-                                    EditValue="{Binding SelectedCustomer.OpeningDate}" />
-                                <Label
+                                <dxnav:TileBar ItemsSource="{Binding ServiceTypes}"/>
+
+                                <dxg:GridControl
                                     Grid.Row="1"
-                                    Content="Customer Type" />
-                                <dxe:ComboBoxEdit
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Width="150"
-                                    ItemsSource="{Binding CustomerTypes}"
-                                    EditValue="{Binding SelectedCustomer.CustomerType}"/>
+                                    ItemsSource="{Binding SelectedCustomer.CustomerDocuments}">
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView />
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn FieldName="ImageSource" >
+                                        <dxg:GridColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding Path=Value}" Width="32" Height="32" Stretch="Fill" RenderOptions.BitmapScalingMode="Fant" HorizontalAlignment="Center"  />
+                                            </DataTemplate>
+                                        </dxg:GridColumn.CellTemplate>
+                                    </dxg:GridColumn>
+                                    <dxg:GridColumn FieldName="FileName"/>
+                                    <dxg:GridColumn FieldName="ExpiryDate" Width="100"/>
+                                    <dxg:GridColumn FieldName="Notes" Width="250"/>
+                                </dxg:GridControl>
+
                             </Grid>
-                        </Grid>
-                    </Grid>
-                </dxdo:LayoutPanel>
+                        </dxdo:LayoutPanel>
+                        
+                    </dxdo:LayoutGroup>
+                </dxdo:LayoutGroup>
             </dxdo:LayoutGroup>
         </dxdo:DockLayoutManager>
     </Grid>

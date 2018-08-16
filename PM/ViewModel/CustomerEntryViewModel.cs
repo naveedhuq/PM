@@ -23,6 +23,13 @@ namespace PM.ViewModel
             get { return GetProperty(() => SelectedCustomer); }
             set { SetProperty(() => SelectedCustomer, value); }
         }
+        public Contact SelectedContact
+        {
+            get { return GetProperty(() => SelectedContact); }
+            set { SetProperty(() => SelectedContact, value); }
+        }
+
+
 
         public ObservableCollection<string> CustomerTypes
         {
@@ -30,6 +37,23 @@ namespace PM.ViewModel
             set { SetProperty(() => CustomerTypes, value); }
         }
 
+        public ObservableCollection<string> TypesOfCompany
+        {
+            get { return GetProperty(() => TypesOfCompany); }
+            set { SetProperty(() => TypesOfCompany, value); }
+        }
+
+        public ObservableCollection<string> ContactItemTypes
+        {
+            get { return GetProperty(() => ContactItemTypes); }
+            set { SetProperty(() => ContactItemTypes, value); }
+        }
+
+        public ObservableCollection<string> ServiceTypes
+        {
+            get { return GetProperty(() => ServiceTypes); }
+            set { SetProperty(() => ServiceTypes, value); }
+        }
 
         public CustomerEntryViewModel()
         {
@@ -46,6 +70,9 @@ namespace PM.ViewModel
         {
             Customers = new ObservableCollection<Customer>(DBHelper.Instance.GetCustomers(true));
             CustomerTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.CustomerType));
+            TypesOfCompany = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.TypeOfCompany));
+            ContactItemTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.ContactItemType));
+            ServiceTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.ServiceType));
         }
         
     }

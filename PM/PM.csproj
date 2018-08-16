@@ -44,6 +44,7 @@
     <Reference Include="DevExpress.Images.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Mvvm.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Printing.v18.1.Core, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Controls.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Core.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Docking.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Grid.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -145,9 +146,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\CustomerDocument.cs" />
     <Compile Include="Model\Enumerators.cs" />
     <Compile Include="Model\LookupItem.cs" />
+    <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Shared\DBHelper.cs" />
     <Compile Include="DB\PM.designer.cs">
       <AutoGen>True</AutoGen>
@@ -254,6 +258,11 @@
     <Resource Include="Images\SplashBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\excel.ico" />
+    <Resource Include="Images\image.ico" />
+    <Resource Include="Images\pdf.ico" />
+    <Resource Include="Images\text.ico" />
+    <Resource Include="Images\word.ico" />
     <Resource Include="DB\Scripts\jr_corp.txt" />
     <Resource Include="DB\Scripts\jr_personal.txt" />
     <Content Include="DB\Scripts\mock_load.sql" />
