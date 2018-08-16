@@ -38,7 +38,8 @@
                         <dxr:RibbonPage Caption="Customer Maintenance">
                             <dxr:RibbonPageGroup >
                                 <dxb:BarButtonItem
-                                    Content="Customer Entry"                            
+                                    Content="Customer Entry"
+                                     Glyph="{dx:DXImage Image=BOCustomer_16x16.png}"
                                     LargeGlyph="{dx:DXImage Image=BOCustomer_32x32.png}" 
                                     Command="{Binding OpenViewCommand}"
                                     CommandParameter="CustomerEntryView"/>
