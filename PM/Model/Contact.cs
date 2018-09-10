@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PM.Shared;
+using System;
+using System.Drawing;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PM.Model
 {
@@ -58,6 +58,7 @@ namespace PM.Model
                     return;
                 _ContactItemType = value;
                 NotifyPropertyChanged(m => m.ContactItemType);
+                ContactItemTypeImage = GetContactItemTypeImage();
             }
         }
 
@@ -74,6 +75,19 @@ namespace PM.Model
             }
         }
 
+        private ImageSource _ContactItemTypeImage;
+        public ImageSource ContactItemTypeImage
+        {
+            get { return _ContactItemTypeImage; }
+            set
+            {
+                if (_ContactItemTypeImage == value)
+                    return;
+                _ContactItemTypeImage = value;
+                NotifyPropertyChanged(m => m.ContactItemTypeImage);
+            }
+        }
+
 
         public override void SaveChanges()
         {
@@ -83,6 +97,19 @@ namespace PM.Model
         protected override void Populate(Contact item)
         {
             throw new NotImplementedException();
+        }
+
+        ImageSource GetContactItemTypeImage()
+        {
+            var defaultImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("OtherContacts") as Bitmap);
+            if (ContactItemType == null)
+                return null;
+
+            var image = Properties.Resources.ResourceManager.GetObject(ContactItemType.Replace(" ", ""));
+            if (image != null)
+                return SharedUtils.Instance.ConvertBitmapToImageSource(image as Bitmap);
+            else
+                return defaultImage;
         }
     }
 }

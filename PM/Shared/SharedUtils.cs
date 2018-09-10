@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using DevExpress.Xpf.Core;
 using DevExpress.Xpf.Core.Native;
 using Newtonsoft.Json;
@@ -52,6 +54,18 @@ namespace PM.Shared
         public ImageSource GetDXImageSource (string imageName)
         {
             return new DXImageExtension() { Image = new DXImageConverter().ConvertFrom(null, null, imageName) as DXImageInfo }.ProvideValue(null) as ImageSource;
+        }
+
+        public ImageSource ConvertBitmapToImageSource(Bitmap src)
+        {
+            MemoryStream ms = new MemoryStream();
+            ((System.Drawing.Bitmap)src).Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            ms.Seek(0, SeekOrigin.Begin);
+            image.StreamSource = ms;
+            image.EndInit();
+            return image;
         }
 
     }

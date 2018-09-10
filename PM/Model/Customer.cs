@@ -44,7 +44,7 @@ namespace PM.Model
             }
         }
 
-        private string _CustomerType;
+        private string _CustomerType = "Personal";
         public string CustomerType
         {
             get { return _CustomerType; }

@@ -17,6 +17,11 @@ namespace PM.Model
             Female
         }
 
+        public enum MessageTokenEnum
+        {
+            SelectedCustomerChanged
+        }
+
 
     }
 }

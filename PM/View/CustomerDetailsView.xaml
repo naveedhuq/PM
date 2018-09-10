@@ -1,0 +1,131 @@
+﻿<UserControl
+    x:Class="PM.View.CustomerDetailsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="_Resource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <x:Array x:Key="Genders" Type="sys:String">
+                <sys:String>Male</sys:String>
+                <sys:String>Female</sys:String>
+            </x:Array>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <Binding Path="CustomerDetailsViewModel" Source="{StaticResource Locator}" />
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!--Required Info-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Customer Opening Date" />
+                <dxe:DateEdit Grid.Column="1" EditValue="{Binding SelectedCustomer.OpeningDate}" />
+                <Label Grid.Row="1" Content="Customer Type" />
+                <dxe:ComboBoxEdit
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="150"
+                    EditValue="{Binding SelectedCustomer.CustomerType}"
+                    ItemsSource="{Binding CustomerTypes}" />
+            </Grid>
+            <!-- Personal Customers -->
+            <Grid Grid.Row="1" Visibility="{Binding SelectedCustomer.IsPersonalCustomer, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="300" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Customer Name" />
+                <dxe:TextEdit Grid.Column="1" EditValue="{Binding SelectedCustomer.CustomerName}" />
+                <Label Grid.Row="1" Content="Gender" />
+                <dxe:ComboBoxEdit
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="150"
+                    EditValue="{Binding SelectedCustomer.Personal_Gender}"
+                    ItemsSource="{StaticResource ResourceKey=Genders}" />
+                <Label Grid.Row="2" Content="Date of Birth" />
+                <dxe:DateEdit
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    EditValue="{Binding SelectedCustomer.Personal_BirthDate}" />
+                <Label Grid.Row="3" Content="SSN" />
+                <dxe:TextEdit
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Width="150"
+                    EditValue="{Binding SelectedCustomer.Personal_SSN}" />
+                <Label Grid.Row="4" Content="Identifcation No." />
+                <dxe:TextEdit
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    EditValue="{Binding SelectedCustomer.Personal_LicenseID}" />
+            </Grid>
+            <!-- Business Customers -->
+            <Grid Grid.Row="2" Visibility="{Binding SelectedCustomer.IsBusinessCustomer, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="300" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Business Name" />
+                <dxe:TextEdit Grid.Column="1" EditValue="{Binding SelectedCustomer.CustomerName}" />
+                <Label Grid.Row="1" Content="Tax ID" />
+                <dxe:TextEdit
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="150"
+                    EditValue="{Binding SelectedCustomer.Business_TaxID}" />
+                <Label Grid.Row="2" Content="Type of Business" />
+                <dxe:ComboBoxEdit
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Width="150"
+                    EditValue="{Binding SelectedCustomer.Business_TypeOfCompany}"
+                    ItemsSource="{Binding TypesOfCompany}" />
+            </Grid>
+        </Grid>
+        <StackPanel
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Orientation="Horizontal">
+            <dx:SimpleButton Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" />
+            <dx:SimpleButton Content="Save" Glyph="{dx:DXImage Image=Save_16x16.png}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
