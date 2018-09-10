@@ -28,15 +28,14 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <dxg:GridControl
-            FontSize="16"
+        <dxg:GridControl            
             ItemsSource="{Binding SelectedCustomer.Contacts}"
             SelectedItem="{Binding SelectedContact}" SelectionMode="Cell" ClipboardCopyMode="ExcludeHeader">
             <dxg:GridControl.View>
                 <dxg:TableView ShowVerticalLines="False" AllowResizing="False" NavigationStyle="Cell">
                     <dxg:TableView.RowStyle>
                         <Style TargetType="dxg:RowControl">
-                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="Height" Value="24"/>
                         </Style>
                     </dxg:TableView.RowStyle>
                 </dxg:TableView>

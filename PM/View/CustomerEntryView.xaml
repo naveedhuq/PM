@@ -5,11 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
-    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-    xmlns:dxnav="http://schemas.devexpress.com/winfx/2008/xaml/navigation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:view="clr-namespace:PM.View"
     mc:Ignorable="d"
     d:DesignHeight="450"
@@ -42,7 +38,7 @@
                     </dxdo:LayoutPanel.CaptionTemplate>
                     <view:CustomerSelectionPaneView  />
                 </dxdo:LayoutPanel>
-                <dxdo:LayoutGroup Orientation="Vertical">
+                <dxdo:LayoutGroup Orientation="Vertical" Visibility="{Binding Path=SelectedCustomer, TargetNullValue=Collapsed }">
                     <!--Customer Name Label as Top Header -->
                     <dxdo:LayoutPanel
                         Margin="0"
@@ -67,6 +63,7 @@
                             </Label.BitmapEffect>
                         </Label>
                     </dxdo:LayoutPanel>
+                    
                     <dxdo:LayoutPanel
                         AllowClose="False"
                         AllowHide="False"
@@ -83,7 +80,7 @@
                                                 <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"/>
                                             </DataTemplate>
                                         </dxdo:LayoutPanel.CaptionTemplate>
-                                        <view:CustomerDetailsView Margin="40,10" Visibility="{Binding Path=SelectedCustomer, TargetNullValue=Collapsed }"/>
+                                        <view:CustomerDetailsView Margin="40,10" />
                                     </dxdo:LayoutPanel>
 
                                     <!-- Contact Details -->
@@ -93,19 +90,16 @@
                                                 <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"/>
                                             </DataTemplate>
                                         </dxdo:LayoutPanel.CaptionTemplate>
-                                        <view:CustomerContactsView Margin="40,10" Visibility="{Binding Path=SelectedCustomer, TargetNullValue=Collapsed }"/>
+                                        <view:CustomerContactsView Margin="40,10"/>
                                     </dxdo:LayoutPanel>
                                 </dxdo:LayoutGroup>
                             </dx:DXTabItem>
 
                             <dx:DXTabItem Header="Attached Documents">
-                                
+                                <view:CustomerDocumentsView/>
                             </dx:DXTabItem>
                         </dx:DXTabControl>
                     </dxdo:LayoutPanel>
-                    
-                    
-                        
                 </dxdo:LayoutGroup>
             </dxdo:LayoutGroup>
         </dxdo:DockLayoutManager>

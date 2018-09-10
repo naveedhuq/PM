@@ -149,6 +149,7 @@
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerDocument.cs" />
+    <Compile Include="Model\DocumentFolder.cs" />
     <Compile Include="Model\Enumerators.cs" />
     <Compile Include="Model\LookupItem.cs" />
     <Compile Include="Model\ModelBase.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Shared\SharedUtils.cs" />
     <Compile Include="ViewModel\CustomerContactsViewModel.cs" />
     <Compile Include="ViewModel\CustomerDetailsViewModel.cs" />
+    <Compile Include="ViewModel\CustomerDocumentsViewModel.cs" />
     <Compile Include="ViewModel\CustomerEntryViewModel.cs" />
     <Compile Include="ViewModel\CustomerSelectionPaneViewModel.cs" />
     <Compile Include="ViewModel\MasterViewModel.cs" />
@@ -175,6 +177,9 @@
     </Compile>
     <Compile Include="View\CustomerDetailsView.xaml.cs">
       <DependentUpon>CustomerDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CustomerDocumentsView.xaml.cs">
+      <DependentUpon>CustomerDocumentsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\CustomerEntryView.xaml.cs">
       <DependentUpon>CustomerEntryView.xaml</DependentUpon>
@@ -244,6 +249,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CustomerDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CustomerDocumentsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

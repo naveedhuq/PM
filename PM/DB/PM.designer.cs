@@ -39,6 +39,9 @@ namespace PM.DB
     partial void InsertLookup(Lookup instance);
     partial void UpdateLookup(Lookup instance);
     partial void DeleteLookup(Lookup instance);
+    partial void InsertDocumentFolders(DocumentFolders instance);
+    partial void UpdateDocumentFolders(DocumentFolders instance);
+    partial void DeleteDocumentFolders(DocumentFolders instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -92,6 +95,14 @@ namespace PM.DB
 			get
 			{
 				return this.GetTable<Lookup>();
+			}
+		}
+		
+		public System.Data.Linq.Table<DocumentFolders> DocumentFolders
+		{
+			get
+			{
+				return this.GetTable<DocumentFolders>();
 			}
 		}
 	}
@@ -737,6 +748,212 @@ namespace PM.DB
 					this._LookupName = value;
 					this.SendPropertyChanged("LookupName");
 					this.OnLookupNameChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DocumentFolders")]
+	public partial class DocumentFolders : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private bool _IsActive;
+		
+		private int _CustomerID;
+		
+		private System.Nullable<int> _ParentID;
+		
+		private string _FolderName;
+		
+		private bool _IsStarred;
+		
+		private bool _IsHidden;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnCustomerIDChanging(int value);
+    partial void OnCustomerIDChanged();
+    partial void OnParentIDChanging(System.Nullable<int> value);
+    partial void OnParentIDChanged();
+    partial void OnFolderNameChanging(string value);
+    partial void OnFolderNameChanged();
+    partial void OnIsStarredChanging(bool value);
+    partial void OnIsStarredChanged();
+    partial void OnIsHiddenChanging(bool value);
+    partial void OnIsHiddenChanged();
+    #endregion
+		
+		public DocumentFolders()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerID", DbType="Int NOT NULL")]
+		public int CustomerID
+		{
+			get
+			{
+				return this._CustomerID;
+			}
+			set
+			{
+				if ((this._CustomerID != value))
+				{
+					this.OnCustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._CustomerID = value;
+					this.SendPropertyChanged("CustomerID");
+					this.OnCustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentID", DbType="Int")]
+		public System.Nullable<int> ParentID
+		{
+			get
+			{
+				return this._ParentID;
+			}
+			set
+			{
+				if ((this._ParentID != value))
+				{
+					this.OnParentIDChanging(value);
+					this.SendPropertyChanging();
+					this._ParentID = value;
+					this.SendPropertyChanged("ParentID");
+					this.OnParentIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderName", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
+		public string FolderName
+		{
+			get
+			{
+				return this._FolderName;
+			}
+			set
+			{
+				if ((this._FolderName != value))
+				{
+					this.OnFolderNameChanging(value);
+					this.SendPropertyChanging();
+					this._FolderName = value;
+					this.SendPropertyChanged("FolderName");
+					this.OnFolderNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsStarred", DbType="Bit NOT NULL")]
+		public bool IsStarred
+		{
+			get
+			{
+				return this._IsStarred;
+			}
+			set
+			{
+				if ((this._IsStarred != value))
+				{
+					this.OnIsStarredChanging(value);
+					this.SendPropertyChanging();
+					this._IsStarred = value;
+					this.SendPropertyChanged("IsStarred");
+					this.OnIsStarredChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsHidden", DbType="Bit NOT NULL")]
+		public bool IsHidden
+		{
+			get
+			{
+				return this._IsHidden;
+			}
+			set
+			{
+				if ((this._IsHidden != value))
+				{
+					this.OnIsHiddenChanging(value);
+					this.SendPropertyChanging();
+					this._IsHidden = value;
+					this.SendPropertyChanged("IsHidden");
+					this.OnIsHiddenChanged();
 				}
 			}
 		}

@@ -13,13 +13,16 @@ namespace PM.ViewModel
         public static CustomerSelectionPaneViewModel CustomerSelectionPaneViewModel { get { return _container.Resolve<CustomerSelectionPaneViewModel>(); } }
         public static CustomerDetailsViewModel CustomerDetailsViewModel { get { return _container.Resolve<CustomerDetailsViewModel>(); } }
         public static CustomerContactsViewModel CustomerContactsViewModel { get { return _container.Resolve<CustomerContactsViewModel>(); } }
-        
-
+        public static CustomerDocumentsViewModel CustomerDocumentsViewModel { get { return _container.Resolve<CustomerDocumentsViewModel>(); } }
 
         static ViewModelLocator()
         {
             _container.RegisterType<MasterViewModel>();
             _container.RegisterType<CustomerEntryViewModel>();
+            _container.RegisterType<CustomerSelectionPaneViewModel>();
+            _container.RegisterType<CustomerDetailsViewModel>();
+            _container.RegisterType<CustomerContactsViewModel>();
+            _container.RegisterType<CustomerDocumentsViewModel>();
         }
     }
 }

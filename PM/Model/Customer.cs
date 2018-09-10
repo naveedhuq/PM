@@ -174,21 +174,6 @@ namespace PM.Model
             }
         }
 
-        private ObservableCollection<CustomerDocument> _CustomerDocuments;
-        public ObservableCollection<CustomerDocument> CustomerDocuments
-        {
-            get { return _CustomerDocuments; }
-            set
-            {
-                if (_CustomerDocuments == value)
-                    return;
-                _CustomerDocuments = value;
-                NotifyPropertyChanged(m => m.CustomerDocuments);
-            }
-        }
-
-
-
 
         public bool IsPersonalCustomer
         {

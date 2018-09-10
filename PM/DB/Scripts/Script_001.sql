@@ -47,6 +47,23 @@ GO
 
 
 -----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.DocumentFolders','U') IS NOT NULL
+	DROP TABLE dbo.DocumentFolders
+CREATE TABLE dbo.DocumentFolders
+(
+	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	IsActive BIT NOT NULL DEFAULT 1,
+
+	CustomerID INT NOT NULL,
+	ParentID INT,
+	FolderName NVARCHAR(1000) NOT NULL,
+	IsStarred BIT NOT NULL DEFAULT 0,
+	IsHidden BIT NOT NULL DEFAULT 0
+)
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.Lookups','U') IS NOT NULL
 	DROP TABLE dbo.Lookups
 CREATE TABLE dbo.Lookups
@@ -82,7 +99,16 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('ServiceType', 2, 'Immigration'),
 ('ServiceType', 3, 'Insurance'),
 ('ServiceType', 4, 'Multi-Services'),
-('ServiceType', 5, 'Tax')
+('ServiceType', 5, 'Tax'),
+
+('DefaultFolder', 1, 'Accounting'),
+('DefaultFolder', 2, 'Immigration'),
+('DefaultFolder', 3, 'Insurance'),
+('DefaultFolder', 4, 'Tax'),
+('DefaultFolder', 5, 'Personal Documents'),
+('DefaultFolder', 6, 'Financial Documents'),
+('DefaultFolder', 7, 'Other Legal'),
+('DefaultFolder', 8, 'Miscellaneous')
 
 GO
 

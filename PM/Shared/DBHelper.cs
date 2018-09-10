@@ -97,26 +97,24 @@ namespace PM.Shared
         }
 
 
-        private List<CustomerDocument> _CustomerDocumentRepository;
-        public List<CustomerDocument> CustomerDocumentRepository
+        public List<DocumentFolder> DocumentFolderRepository
         {
             get
             {
-                if (_CustomerDocumentRepository == null)
-                    _CustomerDocumentRepository = LoadFakeCustomerDocumentRepository();
-                return _CustomerDocumentRepository;
+                return
+                (
+                    from x in _cx.DocumentFolders
+                    select new DocumentFolder()
+                    {
+                        ID = x.ID,
+                        ParentID = x.ParentID,
+                        CustomerID = x.CustomerID,
+                        FolderName = x.FolderName,
+                        IsStarred = x.IsStarred,
+                        IsHidden = x.IsHidden
+                    }
+                ).ToList();
             }
-        }
-
-        private List<CustomerDocument> LoadFakeCustomerDocumentRepository()
-        {
-            List<CustomerDocument> ret = new List<CustomerDocument>();
-            ret.Add(new CustomerDocument() { FileName = "W2 Tax Document.doc", ExpiryDate = DateTime.Parse("10/15/2019"), Notes = "Customer's W2 tax document for 2017" });
-            ret.Add(new CustomerDocument() { FileName = "License.pdf", ExpiryDate = DateTime.Parse("1/3/2022"), Notes = "NY Drive's license" });
-            ret.Add(new CustomerDocument() { FileName = "PowerOfAttorny.docx", ExpiryDate = null, Notes = "Power of Attorny document" });
-            ret.Add(new CustomerDocument() { FileName = "Bills.xls", ExpiryDate = null, Notes = "List of bills submitted" });
-            ret.Add(new CustomerDocument() { FileName = "passport.jpeg", ExpiryDate = DateTime.Parse("05/12/2023"), Notes = "Copy of passport" });
-            return ret;
         }
 
 
@@ -145,8 +143,7 @@ namespace PM.Shared
                            Business_TypeOfCompany = x.Business_TypeOfCompany,
                            Business_TaxID = x.Business_TaxID,
                            Notes = x.Notes,
-                           Contacts = new ObservableCollection<Contact>(from y in contacts where y.CustomerID == x.ID select y),
-                           CustomerDocuments = new ObservableCollection<CustomerDocument>(CustomerDocumentRepository)
+                           Contacts = new ObservableCollection<Contact>(from y in contacts where y.CustomerID == x.ID select y)
                        }).ToList();
             return new ObservableCollection<Customer>(ret);
         }
@@ -164,6 +161,40 @@ namespace PM.Shared
                 );
         }
 
-        
+        public ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID)
+        {
+            if ((from x in DocumentFolderRepository where x.CustomerID == customerID select x).Count() == 0)
+                SaveDefaultDocumentFolder(customerID);
+
+            var folders = from x in DocumentFolderRepository
+                          where x.CustomerID == customerID
+                          orderby x.ID
+                          select new DocumentFolder()
+                          {
+                              ID = x.ID,
+                              ParentID = x.ParentID,
+                              CustomerID = x.CustomerID,
+                              FolderName = x.FolderName,
+                              IsStarred = x.IsStarred,
+                              IsHidden = x.IsHidden
+                          };
+            return new ObservableCollection<DocumentFolder>(folders);
+        }
+
+
+
+        private void SaveDefaultDocumentFolder(int customerID)
+        {
+            var folders = from x in LookupsRepository
+                          where x.LookupType == "DefaultFolder"
+                          orderby x.SortOrder
+                          select new DocumentFolder
+                          {
+                              CustomerID = customerID,
+                              FolderName = x.LookupName
+                          };
+            foreach (var folder in folders)
+                folder.SaveChanges();
+        }
     }
 }

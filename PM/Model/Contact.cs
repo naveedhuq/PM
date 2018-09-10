@@ -8,7 +8,7 @@ namespace PM.Model
 {
     public class Contact : ModelBase<Contact>
     {
-        private int _ID;
+        private int _ID = 0;
         public int ID
         {
             get { return _ID; }
