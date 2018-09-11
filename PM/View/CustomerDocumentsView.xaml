@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:PM.View"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     x:Class="PM.View.CustomerDocumentsView"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800">
@@ -36,19 +38,40 @@
             ItemsSource="{Binding DocumentFolders}">
             <dxg:GridControl.View>
                 <dxg:TreeListView
+                    AllowConditionalFormattingMenu="True"
                     ShowNodeImages="True"
                     ShowColumnHeaders="False"
                     ShowAutoFilterRow="True"
                     ShowVerticalLines="False"
                     KeyFieldName="ID"
                     ParentFieldName="ParentID"
-                    ImageFieldName="FolderImage">
+                    ImageFieldName="FolderImage"
+                    AllowEditing="False"
+                    ShowIndicator="False">
+                    
+                    <dxg:TreeListView.RowCellMenuCustomizations>
+                        <dxb:BarButtonItem Content="Rename" Glyph="{dx:DXImage Image=ChangeFontStyle_16x16.png}"/>
+                        <dxb:BarItemSeparator />
+                        <dxb:BarButtonItem Content="New Sub-Folder" Glyph="{dx:DXImage Image=Add_16x16.png}"/>
+                        <dxb:BarItemSeparator />
+                        <dxb:BarButtonItem Content="Hide Folder" Glyph="{dx:DXImage Image=Edit_16x16.png}"/>
+                        <dxb:BarButtonItem Content="Bookmark Folder" Glyph="{dx:DXImage Image=Cube_16x16.png}"/>
+                        <dxb:BarButtonItem Content="Delete" Glyph="{dx:DXImage Image=Delete_16x16.png}"/>
+                    </dxg:TreeListView.RowCellMenuCustomizations>
+                    
+                    <dxg:TreeListView.FormatConditions>
+                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsHidden]=True">
+                            <dxg:Format Foreground="DarkGray" />
+                        </dxg:FormatCondition>
+                    </dxg:TreeListView.FormatConditions>
+                    
                 </dxg:TreeListView>
             </dxg:GridControl.View>
             <dxg:GridColumn
                     Width="250"
                     MinWidth="250"
                     FieldName="FolderName" />
+            <dxg:GridColumn FieldName="IsHidden"/>
         </dxg:GridControl>
     </Grid>
 </UserControl>
