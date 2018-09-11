@@ -3,10 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:local="clr-namespace:PM.View"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
+    xmlns:view="clr-namespace:PM.View"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     x:Class="PM.View.CustomerDocumentsView"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800">
@@ -19,9 +22,24 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <dxmvvm:Interaction.Behaviors>
+        <dxwui:WinUIDialogService x:Name="InputDialog" DialogWindowStartupLocation="CenterOwner">
+            <dxwui:WinUIDialogService.ViewTemplate>
+                <DataTemplate>
+                    <Border Margin="10" Padding="100 50" BorderThickness="2" CornerRadius="5">
+                        <dxe:TextEdit Width="300" Text="{Binding InputDialogText}" Focusable="True"/>
+                    </Border>
+                </DataTemplate>
+            </dxwui:WinUIDialogService.ViewTemplate>
+        </dxwui:WinUIDialogService>
+        <dx:DXMessageBoxService/>
+    </dxmvvm:Interaction.Behaviors>
+
     <UserControl.DataContext>
         <Binding Path="CustomerDocumentsViewModel" Source="{StaticResource Locator}" />
     </UserControl.DataContext>
+    
+    
 
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +53,18 @@
 
         <dxg:GridControl
             Grid.RowSpan="2"
-            ItemsSource="{Binding DocumentFolders}">
+            ItemsSource="{Binding DocumentFolders}"
+            SelectedItem="{Binding SelectedDocumentFolder}">
+
+            <dxmvvm:Interaction.Triggers>
+                <dxmvvm:EventToCommand
+                    Command="{Binding OnPreviewKeyDownCommand}" 
+                    EventName="PreviewKeyDown" 
+                    PassEventArgsToCommand="True">
+
+                </dxmvvm:EventToCommand>
+            </dxmvvm:Interaction.Triggers>
+            
             <dxg:GridControl.View>
                 <dxg:TreeListView
                     AllowConditionalFormattingMenu="True"
@@ -50,28 +79,42 @@
                     ShowIndicator="False">
                     
                     <dxg:TreeListView.RowCellMenuCustomizations>
-                        <dxb:BarButtonItem Content="Rename" Glyph="{dx:DXImage Image=ChangeFontStyle_16x16.png}"/>
+                        <dxb:BarButtonItem
+                            Content="Rename [F2]"
+                            Glyph="{dx:DXImage Image=ChangeFontStyle_16x16.png}"
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.RenameFolderCommand, RelativeSource={RelativeSource Self}}"/>
                         <dxb:BarItemSeparator />
-                        <dxb:BarButtonItem Content="New Sub-Folder" Glyph="{dx:DXImage Image=Add_16x16.png}"/>
+                        <dxb:BarButtonItem Content="New Sub-Folder [Ins]" Glyph="{dx:DXImage Image=Add_16x16.png}"/>
                         <dxb:BarItemSeparator />
-                        <dxb:BarButtonItem Content="Hide Folder" Glyph="{dx:DXImage Image=Edit_16x16.png}"/>
-                        <dxb:BarButtonItem Content="Bookmark Folder" Glyph="{dx:DXImage Image=Cube_16x16.png}"/>
-                        <dxb:BarButtonItem Content="Delete" Glyph="{dx:DXImage Image=Delete_16x16.png}"/>
+                        <dxb:BarButtonItem
+                            Content="Hide Folder Toggle"
+                            Glyph="{dx:DXImage Image=Edit_16x16.png}"
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.HideFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                        <dxb:BarButtonItem
+                            Content="Bookmark Folder Toggle"
+                            Glyph="{dx:DXImage Image=Cube_16x16.png}"
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.BookMarkFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                        <dxb:BarButtonItem
+                            Content="Delete [Del]"
+                            Glyph="{dx:DXImage Image=Delete_16x16.png}"/>
                     </dxg:TreeListView.RowCellMenuCustomizations>
-                    
+
                     <dxg:TreeListView.FormatConditions>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsHidden]=True">
                             <dxg:Format Foreground="DarkGray" />
                         </dxg:FormatCondition>
+                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsStarred]=True">
+                            <dxg:Format Foreground="Red" />
+                        </dxg:FormatCondition>
                     </dxg:TreeListView.FormatConditions>
-                    
                 </dxg:TreeListView>
             </dxg:GridControl.View>
             <dxg:GridColumn
-                    Width="250"
-                    MinWidth="250"
-                    FieldName="FolderName" />
-            <dxg:GridColumn FieldName="IsHidden"/>
+                Width="250"
+                MinWidth="250"
+                FieldName="FolderName" />
         </dxg:GridControl>
+
+        <dx:SimpleButton Content="Ok" Grid.Row="1" Grid.Column="1" Width="100" HorizontalAlignment="Left" Command="{Binding RenameFolderCommand}" />
     </Grid>
 </UserControl>

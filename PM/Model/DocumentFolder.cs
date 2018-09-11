@@ -129,7 +129,8 @@ namespace PM.Model
 
         public override void SaveChanges()
         {
-            throw new NotImplementedException();
+            var ret = DBHelper.Instance.SaveDocumentFolder(this);
+
         }
 
         protected override void Populate(DocumentFolder item)

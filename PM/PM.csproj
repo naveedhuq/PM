@@ -187,6 +187,9 @@
     <Compile Include="View\CustomerSelectionPaneView.xaml.cs">
       <DependentUpon>CustomerSelectionPaneView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\InputBoxDialogView.xaml.cs">
+      <DependentUpon>InputBoxDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MasterView.xaml.cs">
       <DependentUpon>MasterView.xaml</DependentUpon>
     </Compile>
@@ -261,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CustomerSelectionPaneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InputBoxDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

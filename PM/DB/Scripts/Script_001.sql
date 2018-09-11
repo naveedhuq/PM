@@ -153,3 +153,34 @@ END
 GO
 GRANT EXECUTE ON dbo.fn_GetDocumentFolderCountForCustomer TO PUBLIC
 GO
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveDocumentFolders','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveDocumentFolders
+GO
+CREATE PROCEDURE dbo.sp_SaveDocumentFolders
+    @ID INT,
+    @CustomerID INT,
+    @ParentID INT,
+    @FolderName NVARCHAR(1000),
+    @IsStarred BIT,
+    @IsHidden BIT
+AS
+BEGIN
+    IF EXISTS(SELECT * FROM dbo.DocumentFolders WHERE ID=@ID)
+        UPDATE dbo.DocumentFolders
+        SET CustomerID=@CustomerID,
+            ParentID=@ParentID,
+            FolderName=@FolderName,
+            IsStarred=@IsStarred,
+            IsHidden=@IsHidden
+        WHERE ID=@ID
+    ELSE
+        INSERT INTO dbo.DocumentFolders (CustomerID,ParentID,FolderName,IsStarred,IsHidden)
+        VALUES (@CustomerID,@ParentID,@FolderName,@IsStarred,@IsHidden)
+
+    RETURN SCOPE_IDENTITY()
+END
+GO
+GRANT EXECUTE ON dbo.sp_SaveDocumentFolders TO PUBLIC
+GO

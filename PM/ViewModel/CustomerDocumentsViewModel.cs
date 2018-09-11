@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using PM.Model;
 using PM.Shared;
 using static PM.Model.Enumerators;
@@ -8,6 +11,11 @@ namespace PM.ViewModel
 {
     public class CustomerDocumentsViewModel : ViewModelBase
     {
+        [ServiceProperty(Key = "InputDialog")]
+        protected virtual IDialogService DialogService { get { return GetService<IDialogService>(); } }
+        protected virtual IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+
+
         private Customer _SelectedCustomer;
         public Customer SelectedCustomer
         {
@@ -33,6 +41,105 @@ namespace PM.ViewModel
                     return;
                 _DocumntFolders = value;
                 RaisePropertyChanged("DocumentFolders");
+            }
+        }
+
+        private DocumentFolder _SelectedDocumentFolder;
+        public DocumentFolder SelectedDocumentFolder
+        {
+            get { return _SelectedDocumentFolder; }
+            set
+            {
+                if (_SelectedDocumentFolder == value)
+                    return;
+                _SelectedDocumentFolder = value;
+                RaisePropertyChanged("SelectedDocumentFolder");
+            }
+        }
+
+
+        private string _InputDialogText;
+        public string InputDialogText
+        {
+            get { return _InputDialogText; }
+            set
+            {
+                if (_InputDialogText == value)
+                    return;
+                _InputDialogText = value;
+                RaisePropertyChanged("InputDialogText");
+            }
+        }
+
+
+        public DelegateCommand RenameFolderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        InputDialogText = SelectedDocumentFolder?.FolderName;
+                        var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter Folder Name", viewModel: this);
+                        if (ret != MessageResult.OK)
+                            return;
+                        SelectedDocumentFolder.FolderName = InputDialogText;
+                        SelectedDocumentFolder.SaveChanges();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                });
+            }
+        }
+
+        public DelegateCommand HideFolderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        SelectedDocumentFolder.IsHidden = !SelectedDocumentFolder.IsHidden;
+                        SelectedDocumentFolder.SaveChanges();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                });
+            }
+        }
+
+        public DelegateCommand BookMarkFolderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        SelectedDocumentFolder.IsStarred = !SelectedDocumentFolder.IsStarred;
+                        SelectedDocumentFolder.SaveChanges();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                });
+            }
+        }
+
+
+
+        public DelegateCommand<KeyEventArgs> OnPreviewKeyDownCommand
+        {
+            get
+            {
+                return new DelegateCommand<KeyEventArgs>(args =>
+                {
+                    switch (args.Key)
+                    {
+                        case Key.F2:
+                            RenameFolderCommand.Execute(null);
+                            break;
+                        
+                    }
+                });
             }
         }
 

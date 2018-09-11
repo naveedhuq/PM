@@ -118,6 +118,13 @@ namespace PM.DB
 		{
 			return ((System.Nullable<int>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID).ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocumentFolders")]
+		public int sp_SaveDocumentFolders([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ParentID", DbType="Int")] System.Nullable<int> parentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FolderName", DbType="NVarChar(1000)")] string folderName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsStarred", DbType="Bit")] System.Nullable<bool> isStarred, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsHidden", DbType="Bit")] System.Nullable<bool> isHidden)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, parentID, folderName, isStarred, isHidden);
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Contacts")]

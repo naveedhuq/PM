@@ -118,8 +118,22 @@ namespace PM.Shared
         }
 
 
+        #endregion
+
+
+
+        #region Save Methods
+
+        public DocumentFolder SaveDocumentFolder(DocumentFolder f)
+        {
+            var id = _cx.sp_SaveDocumentFolders(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
+            f.ID = id;
+            return f;
+        }
 
         #endregion
+
+
 
         public ObservableCollection<Customer> GetCustomers(bool ActiveOnly = true, string CustomerType = null)
         {

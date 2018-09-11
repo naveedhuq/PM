@@ -1,0 +1,19 @@
+﻿<UserControl xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"  x:Class="PM.View.InputBoxDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PM.View"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Orientation="Vertical" Margin="10">
+        <Label Content="Hello" FontSize="20pt"/>
+        <Label Content="Enter new value"/>
+        <dxe:TextEdit />
+        <StackPanel Orientation="Horizontal">
+            <dx:SimpleButton Content="Ok" Width="100" HorizontalAlignment="Left" Glyph="{dx:DXImage Image=Apply_32x32.png}" Margin="5" IsDefault="True"/>
+            <dx:SimpleButton Content="Cancel" Width="100" HorizontalAlignment="Left" Glyph="{dx:DXImage Image=Cancel_32x32.png}" Margin="5" IsCancel="True"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
