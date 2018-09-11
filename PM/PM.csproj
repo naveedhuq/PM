@@ -287,6 +287,9 @@
     <Resource Include="Images\SplashBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\StarredFolder.png" />
+    <None Include="Resources\HiddenFolder.png" />
+    <None Include="Resources\Folder.png" />
     <None Include="Resources\Website.png" />
     <None Include="Resources\OtherPhone.png" />
     <None Include="Resources\OtherContacts.png" />
@@ -296,11 +299,6 @@
     <None Include="Resources\ContactName.png" />
     <None Include="Resources\BusinessPhone.png" />
     <None Include="Resources\Address.png" />
-    <Resource Include="Images\excel.ico" />
-    <Resource Include="Images\image.ico" />
-    <Resource Include="Images\pdf.ico" />
-    <Resource Include="Images\text.ico" />
-    <Resource Include="Images\word.ico" />
     <Resource Include="DB\Scripts\jr_corp.txt" />
     <Resource Include="DB\Scripts\jr_personal.txt" />
     <Content Include="DB\Scripts\mock_load.sql" />

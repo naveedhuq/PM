@@ -112,3 +112,44 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 
 GO
 
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_CreateDefaultDocumentFolders','P') IS NOT NULL
+	DROP PROCEDURE dbo.sp_CreateDefaultDocumentFolders
+GO
+CREATE PROCEDURE dbo.sp_CreateDefaultDocumentFolders
+	@CustomerID INT
+AS
+BEGIN
+	WITH cte AS
+	(
+		SELECT SortOrder, LookupName FolderName FROM dbo.Lookups
+		WHERE LookupType='DefaultFolder'
+	)
+	MERGE dbo.DocumentFolders AS t
+	USING (SELECT @CustomerID, FolderName FROM cte) AS s (CustomerID, FolderName)
+	ON t.CustomerID=s.CustomerID AND t.FolderName=s.FolderName AND t.IsActive=1
+	WHEN NOT MATCHED THEN
+	INSERT (CustomerID, FolderName)
+	VALUES (s.CustomerID, s.FolderName);
+END
+GO
+GRANT EXEC ON dbo.sp_CreateDefaultDocumentFolders TO PUBLIC
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetDocumentFolderCountForCustomer','FN') IS NOT NULL
+	DROP FUNCTION dbo.fn_GetDocumentFolderCountForCustomer
+GO
+CREATE FUNCTION dbo.fn_GetDocumentFolderCountForCustomer(@CustomerID INT)
+RETURNS INT AS
+BEGIN
+	DECLARE @ret INT
+	SELECT @ret = COUNT(*) FROM dbo.DocumentFolders WHERE CustomerID=@CustomerID
+	RETURN @ret
+END
+GO
+GRANT EXECUTE ON dbo.fn_GetDocumentFolderCountForCustomer TO PUBLIC
+GO

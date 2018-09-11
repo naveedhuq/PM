@@ -163,7 +163,7 @@ namespace PM.Shared
 
         public ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID)
         {
-            if ((from x in DocumentFolderRepository where x.CustomerID == customerID select x).Count() == 0)
+            if ((_cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0) == 0)
                 SaveDefaultDocumentFolder(customerID);
 
             var folders = from x in DocumentFolderRepository
@@ -185,16 +185,7 @@ namespace PM.Shared
 
         private void SaveDefaultDocumentFolder(int customerID)
         {
-            var folders = from x in LookupsRepository
-                          where x.LookupType == "DefaultFolder"
-                          orderby x.SortOrder
-                          select new DocumentFolder
-                          {
-                              CustomerID = customerID,
-                              FolderName = x.LookupName
-                          };
-            foreach (var folder in folders)
-                folder.SaveChanges();
+            _cx.sp_CreateDefaultDocumentFolders(customerID);
         }
     }
 }

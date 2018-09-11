@@ -113,6 +113,26 @@ namespace PM.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Folder {
+            get {
+                object obj = ResourceManager.GetObject("Folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HiddenFolder {
+            get {
+                object obj = ResourceManager.GetObject("HiddenFolder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap MobilePhone {
             get {
                 object obj = ResourceManager.GetObject("MobilePhone", resourceCulture);
@@ -136,6 +156,16 @@ namespace PM.Properties {
         internal static System.Drawing.Bitmap OtherPhone {
             get {
                 object obj = ResourceManager.GetObject("OtherPhone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StarredFolder {
+            get {
+                object obj = ResourceManager.GetObject("StarredFolder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

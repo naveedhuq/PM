@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using DevExpress.Images;
+using PM.Shared;
 
 
 namespace PM.Model
@@ -79,6 +81,7 @@ namespace PM.Model
                     return;
                 _IsStarred = value;
                 NotifyPropertyChanged(m => m.IsStarred);
+                ChangeFolderImage();
             }
         }
         private bool _IsHidden;
@@ -91,14 +94,15 @@ namespace PM.Model
                     return;
                 _IsHidden = value;
                 NotifyPropertyChanged(m => m.IsHidden);
+                ChangeFolderImage();
             }
         }
 
-        private Image _FolderImage;
-        public Image FolderImage
+        private ImageSource _FolderImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("Folder") as Bitmap);
+        public ImageSource FolderImage
         {
             get { return _FolderImage; }
-            set
+            private set
             {
                 if (_FolderImage == value)
                     return;
@@ -122,19 +126,25 @@ namespace PM.Model
             }
         }
 
-        public DocumentFolder()
-        {
-            _FolderImage = ImageResourceCache.Default.GetImage("images/actions/open16x16");
-        }
 
         public override void SaveChanges()
         {
-            
+            throw new NotImplementedException();
         }
 
         protected override void Populate(DocumentFolder item)
         {
             throw new NotImplementedException();
+        }
+
+        void ChangeFolderImage()
+        {
+            string imageResourceName = "Folder";
+            if (IsHidden)
+                imageResourceName = "HiddenFolder";
+            else if (IsStarred)
+                imageResourceName = "StarredFolder";
+            FolderImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject(imageResourceName) as Bitmap);
         }
     }
 }
