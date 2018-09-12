@@ -39,8 +39,6 @@
         <Binding Path="CustomerDocumentsViewModel" Source="{StaticResource Locator}" />
     </UserControl.DataContext>
 
-
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -61,7 +59,6 @@
                     Command="{Binding OnPreviewKeyDownCommand}" 
                     EventName="PreviewKeyDown" 
                     PassEventArgsToCommand="True">
-
                 </dxmvvm:EventToCommand>
             </dxmvvm:Interaction.Triggers>
 
@@ -88,10 +85,11 @@
                         <dxb:BarItemSeparator />
                         <dxb:BarButtonItem
                             Content="New Folder [Ins]"
-                            Glyph="{dx:DXImage Image=Add_16x16.png}"
+                            Glyph="{dx:DXImage Image=Open_16x16.png}"
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewFolderCommand, RelativeSource={RelativeSource Self}}"/>
                         <dxb:BarButtonItem
-                            Content="New Sub-Folder [Shift + Ins]"
+                            Content="New Sub-Folder [+ Key]"
+                            Glyph="{dx:DXImage Image=BOProductGroup_16x16.png}"
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewSubFolderCommand, RelativeSource={RelativeSource Self}}"/>
                         <dxb:BarItemSeparator />
                         <dxb:BarButtonItem
@@ -112,11 +110,14 @@
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsHidden]=True">
                             <dxg:Format Foreground="DarkGray" />
                         </dxg:FormatCondition>
-                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsStarred]=True">
+                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsStarred]=True And [IsHidden]=False">
                             <dxg:Format Foreground="Red" />
                         </dxg:FormatCondition>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsDefault]=True">
                             <dxg:Format Foreground="DarkCyan" FontStyle="Italic" />
+                        </dxg:FormatCondition>
+                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsRoot]=True">
+                            <dxg:Format FontWeight="Bold" />
                         </dxg:FormatCondition>
                     </dxg:TreeListView.FormatConditions>
                 </dxg:TreeListView>

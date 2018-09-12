@@ -28,6 +28,7 @@ CREATE TABLE dbo.Customer
 
 	Notes NVARCHAR(4000)
 )
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.Customer TO PUBLIC
 GO
 
 
@@ -43,6 +44,7 @@ CREATE TABLE dbo.Contacts
 	ContactItemType NVARCHAR(100) NOT NULL,
 	ContactItemValue NVARCHAR(1000) NOT NULL,
 )
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.Contacts TO PUBLIC
 GO
 
 
@@ -60,6 +62,7 @@ CREATE TABLE dbo.DocumentFolders
 	IsStarred BIT NOT NULL DEFAULT 0,
 	IsHidden BIT NOT NULL DEFAULT 0
 )
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.DocumentFolders TO PUBLIC
 GO
 
 
@@ -73,6 +76,7 @@ CREATE TABLE dbo.Lookups
 	SortOrder INT NOT NULL,
 	LookupName NVARCHAR(100) NOT NULL,
 )
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.Lookups TO PUBLIC
 GO
 INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('CustomerType', 1, 'Personal'),
@@ -109,7 +113,23 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('DefaultFolder', 6, 'Financial Documents'),
 ('DefaultFolder', 7, 'Other Legal'),
 ('DefaultFolder', 8, 'Miscellaneous')
+GO
 
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.AppSettings','U') IS NOT NULL
+	DROP TABLE dbo.AppSettings
+CREATE TABLE dbo.AppSettings
+(
+	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	SettingsName NVARCHAR(100) NOT NULL UNIQUE,
+	SettingsValue NVARCHAR(1000)
+)
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.AppSettings TO PUBLIC
+GO
+INSERT INTO dbo.AppSettings(SettingsName, SettingsValue) VALUES
+('SPECIAL_FOLDERNAME_ALL', 'ALL'),
+('SPECIAL_FOLDERNAME_UNCATEGORIZED', 'Un-Categorized')
 GO
 
 
@@ -139,6 +159,7 @@ GO
 GRANT EXEC ON dbo.sp_CreateDefaultDocumentFolders TO PUBLIC
 GO
 
+
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.fn_GetDocumentFolderCountForCustomer','FN') IS NOT NULL
 	DROP FUNCTION dbo.fn_GetDocumentFolderCountForCustomer
@@ -153,6 +174,7 @@ END
 GO
 GRANT EXECUTE ON dbo.fn_GetDocumentFolderCountForCustomer TO PUBLIC
 GO
+
 
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.sp_SaveDocumentFolders','P') IS NOT NULL
@@ -184,6 +206,7 @@ END
 GO
 GRANT EXECUTE ON dbo.sp_SaveDocumentFolders TO PUBLIC
 GO
+
 
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.sp_DeleteDocumentFolder','P') IS NOT NULL

@@ -27,7 +27,7 @@ namespace PM.ViewModel
                 _SelectedCustomer = value;
                 RaisePropertyChanged("SelectedCustomer");
                 if (_SelectedCustomer != null)
-                    DocumentFolders = DBHelper.Instance.GetCustomerDocumentFolders(_SelectedCustomer.ID);
+                    DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(_SelectedCustomer.ID);
             }
         }
 
@@ -88,7 +88,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                }, () => SelectedDocumentFolder?.IsDefault == false);
+                }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
 
@@ -104,7 +104,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                }, () => SelectedDocumentFolder?.IsDefault == false);
+                }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
 
@@ -120,7 +120,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                }, () => SelectedDocumentFolder?.IsDefault == false);
+                }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
 
@@ -176,7 +176,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder = folder;
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                }, () => SelectedDocumentFolder?.IsDefault == false);
+                }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
 
@@ -194,7 +194,7 @@ namespace PM.ViewModel
                         DocumentFolders.Remove(SelectedDocumentFolder);
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                }, () => SelectedDocumentFolder?.IsDefault == false);
+                }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
 
@@ -217,8 +217,11 @@ namespace PM.ViewModel
                         case Key.Delete:
                             DeleteFolderCommand.Execute(null);
                             break;
+                        case Key.Add:
+                            NewSubFolderCommand.Execute(null);
+                            break;
                     }
-                }, (args) => SelectedDocumentFolder?.IsDefault == false);
+                }, (args) => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
 

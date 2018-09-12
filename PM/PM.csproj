@@ -153,6 +153,7 @@
     <Compile Include="Model\Enumerators.cs" />
     <Compile Include="Model\LookupItem.cs" />
     <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\AppSetting.cs" />
     <Compile Include="Shared\DBHelper.cs" />
     <Compile Include="DB\PM.designer.cs">
       <AutoGen>True</AutoGen>
@@ -294,6 +295,7 @@
     <Resource Include="Images\SplashBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\AllFolders.png" />
     <None Include="Resources\UnCategorized.png" />
     <None Include="Resources\Folder.png" />
     <None Include="Resources\HiddenFolder.png" />

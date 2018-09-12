@@ -42,6 +42,9 @@ namespace PM.DB
     partial void InsertDocumentFolders(DocumentFolders instance);
     partial void UpdateDocumentFolders(DocumentFolders instance);
     partial void DeleteDocumentFolders(DocumentFolders instance);
+    partial void InsertAppSettings(AppSettings instance);
+    partial void UpdateAppSettings(AppSettings instance);
+    partial void DeleteAppSettings(AppSettings instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -103,6 +106,14 @@ namespace PM.DB
 			get
 			{
 				return this.GetTable<DocumentFolders>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AppSettings> AppSettings
+		{
+			get
+			{
+				return this.GetTable<AppSettings>();
 			}
 		}
 		
@@ -981,6 +992,116 @@ namespace PM.DB
 					this._IsHidden = value;
 					this.SendPropertyChanged("IsHidden");
 					this.OnIsHiddenChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AppSettings")]
+	public partial class AppSettings : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _SettingsName;
+		
+		private string _SettingsValue;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnSettingsNameChanging(string value);
+    partial void OnSettingsNameChanged();
+    partial void OnSettingsValueChanging(string value);
+    partial void OnSettingsValueChanged();
+    #endregion
+		
+		public AppSettings()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettingsName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string SettingsName
+		{
+			get
+			{
+				return this._SettingsName;
+			}
+			set
+			{
+				if ((this._SettingsName != value))
+				{
+					this.OnSettingsNameChanging(value);
+					this.SendPropertyChanging();
+					this._SettingsName = value;
+					this.SendPropertyChanged("SettingsName");
+					this.OnSettingsNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettingsValue", DbType="NVarChar(1000)")]
+		public string SettingsValue
+		{
+			get
+			{
+				return this._SettingsValue;
+			}
+			set
+			{
+				if ((this._SettingsValue != value))
+				{
+					this.OnSettingsValueChanging(value);
+					this.SendPropertyChanging();
+					this._SettingsValue = value;
+					this.SendPropertyChanged("SettingsValue");
+					this.OnSettingsValueChanged();
 				}
 			}
 		}

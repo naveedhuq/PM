@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using PM.Model;
+using m = PM.Model;
 
 
 namespace PM.Shared
@@ -33,14 +33,14 @@ namespace PM.Shared
 
         #region Repositories
 
-        public List<Customer> CustomerRepository
+        public List<m.Customer> CustomerRepository
         {
             get
             {
                 return
                 (
                     from x in _cx.Customer
-                    select new Customer
+                    select new m.Customer
                     {
                         ID = x.ID,
                         IsActive = x.IsActive,
@@ -59,14 +59,14 @@ namespace PM.Shared
             }
         }
 
-        public List<Contact> ContactRepository
+        public List<m.Contact> ContactRepository
         {
             get
             {
                 return
                 (
                     from x in _cx.Contacts
-                    select new Contact
+                    select new m.Contact
                     {
                         ID = x.ID,
                         IsActive = x.IsActive,
@@ -79,14 +79,14 @@ namespace PM.Shared
         }
 
 
-        private List<LookupItem> _LookupsRepository;
-        public List<LookupItem> LookupsRepository
+        private List<m.LookupItem> _LookupsRepository;
+        public List<m.LookupItem> LookupsRepository
         {
             get
             {
                 if (_LookupsRepository == null)
                     _LookupsRepository = (from x in _cx.Lookups
-                                          select new LookupItem()
+                                          select new m.LookupItem
                                           {
                                               LookupName = x.LookupName,
                                               LookupType = x.LookupType,
@@ -97,7 +97,7 @@ namespace PM.Shared
         }
 
 
-        public List<DocumentFolder> DocumentFolderRepository
+        public List<m.DocumentFolder> DocumentFolderRepository
         {
             get
             {
@@ -105,7 +105,7 @@ namespace PM.Shared
                 (
                     from x in _cx.DocumentFolders
                     where x.IsActive == true
-                    select new DocumentFolder()
+                    select new m.DocumentFolder
                     {
                         ID = x.ID,
                         ParentID = x.ParentID,
@@ -118,6 +118,22 @@ namespace PM.Shared
             }
         }
 
+        public List<m.AppSetting> AppSettingsRepository
+        {
+            get
+            {
+                return
+                (
+                    from x in _cx.AppSettings
+                    select new m.AppSetting
+                    {
+                        ID = x.ID,
+                        SettingsName = x.SettingsName,
+                        SettingsValue = x.SettingsValue
+                    }
+                ).ToList();
+            }
+        }
 
         #endregion
 
@@ -125,14 +141,15 @@ namespace PM.Shared
 
         #region Save Methods
 
-        public DocumentFolder SaveDocumentFolder(DocumentFolder f)
+        public m.DocumentFolder SaveDocumentFolder(m.DocumentFolder f)
         {
             var id = _cx.sp_SaveDocumentFolders(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
-            f.ID = id;
+            if (id != 0)
+                f.ID = id;
             return f;
         }
 
-        public void DeleteDocumentFolder(DocumentFolder f)
+        public void DeleteDocumentFolder(m.DocumentFolder f)
         {
             _cx.sp_DeleteDocumentFolder(f.ID);
         }
@@ -141,7 +158,7 @@ namespace PM.Shared
 
 
 
-        public ObservableCollection<Customer> GetCustomers(bool ActiveOnly = true, string CustomerType = null)
+        public ObservableCollection<m.Customer> GetCustomers(bool ActiveOnly = true, string CustomerType = null)
         {
             var customers = CustomerRepository;
             var contacts = ContactRepository;
@@ -149,7 +166,7 @@ namespace PM.Shared
             var ret = (from x in customers
                        where (ActiveOnly ? x.IsActive : true)
                        && (CustomerType == null ? true : (x.CustomerType == CustomerType))
-                       select new Customer()
+                       select new m.Customer
                        {
                            ID = x.ID,
                            IsActive = x.IsActive,
@@ -163,9 +180,9 @@ namespace PM.Shared
                            Business_TypeOfCompany = x.Business_TypeOfCompany,
                            Business_TaxID = x.Business_TaxID,
                            Notes = x.Notes,
-                           Contacts = new ObservableCollection<Contact>(from y in contacts where y.CustomerID == x.ID select y)
+                           Contacts = new ObservableCollection<m.Contact>(from y in contacts where y.CustomerID == x.ID select y)
                        }).ToList();
-            return new ObservableCollection<Customer>(ret);
+            return new ObservableCollection<m.Customer>(ret);
         }
 
 
@@ -181,32 +198,15 @@ namespace PM.Shared
                 );
         }
 
-        public ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID)
-        {
-            if ((_cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0) == 0)
-                CreateDefaultDocumentFolders(customerID);
+        public void CreateDefaultDocumentFolders(int customerID) { _cx.sp_CreateDefaultDocumentFolders(customerID); }
 
-            var folders = (from x in DocumentFolderRepository
-                           where x.CustomerID == customerID
-                           orderby x.ID
-                           select new DocumentFolder()
-                           {
-                              ID = x.ID,
-                              ParentID = x.ParentID,
-                              CustomerID = x.CustomerID,
-                              FolderName = x.FolderName,
-                              IsStarred = x.IsStarred,
-                              IsHidden = x.IsHidden
-                           }).ToList();
-            folders.Insert(0, new DocumentFolder { ID = -1, FolderName = "Un-Categorized", IsDefault = true, CustomerID = customerID });
-            return new ObservableCollection<DocumentFolder>(folders);
+        public int GetDocumentFolderCountForCustomer(int customerID) { return _cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0; }
+
+        public string GetAppSetting(string settingName)
+        {
+            return (from x in AppSettingsRepository where x.SettingsName == settingName select x.SettingsValue).FirstOrDefault();
         }
 
 
-
-        private void CreateDefaultDocumentFolders(int customerID)
-        {
-            _cx.sp_CreateDefaultDocumentFolders(customerID);
-        }
     }
 }

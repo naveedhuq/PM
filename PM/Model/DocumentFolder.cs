@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DevExpress.Images;
@@ -11,6 +12,10 @@ namespace PM.Model
 {
     public class DocumentFolder : ModelBase<DocumentFolder>
     {
+        private static string _SpecialFolderName_All = DBHelper.Instance.GetAppSetting("SPECIAL_FOLDERNAME_ALL");
+        private static string _SpecialFolderName_UnCategorized = DBHelper.Instance.GetAppSetting("SPECIAL_FOLDERNAME_UNCATEGORIZED");
+
+
         private int _ID = 0;
         public int ID
         {
@@ -111,6 +116,21 @@ namespace PM.Model
             }
         }
 
+        private bool _IsRoot;
+        public bool IsRoot
+        {
+            get { return _IsRoot; }
+            set
+            {
+                if (_IsRoot == value)
+                    return;
+                _IsRoot = value;
+                NotifyPropertyChanged(m => m.IsRoot);
+                ChangeFolderImage();
+            }
+        }
+
+
 
         private ImageSource _FolderImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("Folder") as Bitmap);
         public ImageSource FolderImage
@@ -140,7 +160,7 @@ namespace PM.Model
             }
         }
 
-
+        
         public override void SaveChanges()
         {
             var ret = DBHelper.Instance.SaveDocumentFolder(this);
@@ -157,11 +177,37 @@ namespace PM.Model
             throw new NotImplementedException();
         }
 
-        void ChangeFolderImage()
+        public static ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID)
+        {
+            if (DBHelper.Instance.GetDocumentFolderCountForCustomer(customerID) == 0)
+                DBHelper.Instance.CreateDefaultDocumentFolders(customerID);
+
+            var folders = (from x in DBHelper.Instance.DocumentFolderRepository
+                           where x.CustomerID == customerID
+                           orderby x.ID
+                           select new DocumentFolder()
+                           {
+                               ID = x.ID,
+                               ParentID = x.ParentID ?? 0,
+                               CustomerID = x.CustomerID,
+                               FolderName = x.FolderName,
+                               IsStarred = x.IsStarred,
+                               IsHidden = x.IsHidden
+                           }).ToList();
+            folders.Insert(0, new DocumentFolder { ID = -1, FolderName = _SpecialFolderName_UnCategorized, IsDefault = true, CustomerID = customerID, ParentID = 0 });
+            folders.Insert(0, new DocumentFolder { ID = 0, FolderName = _SpecialFolderName_All, IsRoot = true, CustomerID = customerID });
+            return new ObservableCollection<DocumentFolder>(folders);
+        }
+
+
+        private void ChangeFolderImage()
         {
             string imageResourceName = "Folder";
+            if (IsRoot)
+                imageResourceName = "AllFolders";
             if (IsDefault)
                 imageResourceName = "UnCategorized";
+
             if (IsHidden)
                 imageResourceName = "HiddenFolder";
             else if (IsStarred)

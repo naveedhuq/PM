@@ -46,6 +46,13 @@
       <Column Name="IsHidden" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="dbo.AppSettings" Member="AppSettings">
+    <Type Name="AppSettings">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SettingsName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="SettingsValue" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.sp_CreateDefaultDocumentFolders" Method="sp_CreateDefaultDocumentFolders">
     <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
