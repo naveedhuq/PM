@@ -97,6 +97,20 @@ namespace PM.Model
                 ChangeFolderImage();
             }
         }
+        private bool _IsDefault;
+        public bool IsDefault
+        {
+            get { return _IsDefault; }
+            set
+            {
+                if (_IsDefault == value)
+                    return;
+                _IsDefault = value;
+                NotifyPropertyChanged(m => m.IsDefault);
+                ChangeFolderImage();
+            }
+        }
+
 
         private ImageSource _FolderImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("Folder") as Bitmap);
         public ImageSource FolderImage
@@ -133,6 +147,11 @@ namespace PM.Model
 
         }
 
+        public void Delete()
+        {
+            DBHelper.Instance.DeleteDocumentFolder(this);
+        }
+
         protected override void Populate(DocumentFolder item)
         {
             throw new NotImplementedException();
@@ -141,6 +160,8 @@ namespace PM.Model
         void ChangeFolderImage()
         {
             string imageResourceName = "Folder";
+            if (IsDefault)
+                imageResourceName = "UnCategorized";
             if (IsHidden)
                 imageResourceName = "HiddenFolder";
             else if (IsStarred)

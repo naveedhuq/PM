@@ -88,7 +88,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                });
+                }, () => SelectedDocumentFolder?.IsDefault == false);
             }
         }
 
@@ -104,7 +104,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
-                });
+                }, () => SelectedDocumentFolder?.IsDefault == false);
             }
         }
 
@@ -120,7 +120,81 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedDocumentFolder?.IsDefault == false);
+            }
+        }
+
+
+        public DelegateCommand NewFolderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        InputDialogText = "";
+                        var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter Folder Name", viewModel: this);
+                        if (ret != MessageResult.OK || InputDialogText == "")
+                            return;
+
+                        var folder = new DocumentFolder()
+                        {
+                            CustomerID = SelectedCustomer.ID,
+                            FolderName = InputDialogText,
+                        };
+                        folder.SaveChanges();
+                        DocumentFolders.Add(folder);
+                        SelectedDocumentFolder = folder;
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
                 });
+            }
+        }
+
+        public DelegateCommand NewSubFolderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        InputDialogText = "";
+                        var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter New SubFolder Name", viewModel: this);
+                        if (ret != MessageResult.OK || InputDialogText == "")
+                            return;
+
+                        var folder = new DocumentFolder()
+                        {
+                            CustomerID = SelectedCustomer.ID,
+                            FolderName = InputDialogText,
+                            ParentID = SelectedDocumentFolder?.ID
+                        };
+                        folder.SaveChanges();
+                        DocumentFolders.Add(folder);
+                        SelectedDocumentFolder = folder;
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedDocumentFolder?.IsDefault == false);
+            }
+        }
+
+        public DelegateCommand DeleteFolderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        if (MessageBoxService.ShowMessage("Are you sure you want to Delete this folder (All existing document(s) will move to Un-Categorized folder)", "Confirmation", MessageButton.OKCancel, MessageIcon.Exclamation) == MessageResult.Cancel)
+                            return;
+                        SelectedDocumentFolder.Delete();
+                        DocumentFolders.Remove(SelectedDocumentFolder);
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedDocumentFolder?.IsDefault == false);
             }
         }
 
@@ -137,9 +211,14 @@ namespace PM.ViewModel
                         case Key.F2:
                             RenameFolderCommand.Execute(null);
                             break;
-                        
+                        case Key.Insert:
+                            NewFolderCommand.Execute(null);
+                            break;
+                        case Key.Delete:
+                            DeleteFolderCommand.Execute(null);
+                            break;
                     }
-                });
+                }, (args) => SelectedDocumentFolder?.IsDefault == false);
             }
         }
 

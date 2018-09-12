@@ -104,6 +104,7 @@ namespace PM.Shared
                 return
                 (
                     from x in _cx.DocumentFolders
+                    where x.IsActive == true
                     select new DocumentFolder()
                     {
                         ID = x.ID,
@@ -129,6 +130,11 @@ namespace PM.Shared
             var id = _cx.sp_SaveDocumentFolders(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
             f.ID = id;
             return f;
+        }
+
+        public void DeleteDocumentFolder(DocumentFolder f)
+        {
+            _cx.sp_DeleteDocumentFolder(f.ID);
         }
 
         #endregion
@@ -178,26 +184,27 @@ namespace PM.Shared
         public ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID)
         {
             if ((_cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0) == 0)
-                SaveDefaultDocumentFolder(customerID);
+                CreateDefaultDocumentFolders(customerID);
 
-            var folders = from x in DocumentFolderRepository
-                          where x.CustomerID == customerID
-                          orderby x.ID
-                          select new DocumentFolder()
-                          {
+            var folders = (from x in DocumentFolderRepository
+                           where x.CustomerID == customerID
+                           orderby x.ID
+                           select new DocumentFolder()
+                           {
                               ID = x.ID,
                               ParentID = x.ParentID,
                               CustomerID = x.CustomerID,
                               FolderName = x.FolderName,
                               IsStarred = x.IsStarred,
                               IsHidden = x.IsHidden
-                          };
+                           }).ToList();
+            folders.Insert(0, new DocumentFolder { ID = -1, FolderName = "Un-Categorized", IsDefault = true, CustomerID = customerID });
             return new ObservableCollection<DocumentFolder>(folders);
         }
 
 
 
-        private void SaveDefaultDocumentFolder(int customerID)
+        private void CreateDefaultDocumentFolders(int customerID)
         {
             _cx.sp_CreateDefaultDocumentFolders(customerID);
         }

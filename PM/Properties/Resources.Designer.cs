@@ -173,6 +173,16 @@ namespace PM.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap UnCategorized {
+            get {
+                object obj = ResourceManager.GetObject("UnCategorized", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Website {
             get {
                 object obj = ResourceManager.GetObject("Website", resourceCulture);

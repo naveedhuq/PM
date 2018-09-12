@@ -38,8 +38,8 @@
     <UserControl.DataContext>
         <Binding Path="CustomerDocumentsViewModel" Source="{StaticResource Locator}" />
     </UserControl.DataContext>
-    
-    
+
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -64,7 +64,7 @@
 
                 </dxmvvm:EventToCommand>
             </dxmvvm:Interaction.Triggers>
-            
+
             <dxg:GridControl.View>
                 <dxg:TreeListView
                     AllowConditionalFormattingMenu="True"
@@ -72,19 +72,27 @@
                     ShowColumnHeaders="False"
                     ShowAutoFilterRow="True"
                     ShowVerticalLines="False"
+                    ShowHorizontalLines="False"
                     KeyFieldName="ID"
                     ParentFieldName="ParentID"
                     ImageFieldName="FolderImage"
                     AllowEditing="False"
-                    ShowIndicator="False">
-                    
+                    ShowIndicator="False"
+                    AutoExpandAllNodes="True">
+
                     <dxg:TreeListView.RowCellMenuCustomizations>
                         <dxb:BarButtonItem
                             Content="Rename [F2]"
                             Glyph="{dx:DXImage Image=ChangeFontStyle_16x16.png}"
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.RenameFolderCommand, RelativeSource={RelativeSource Self}}"/>
                         <dxb:BarItemSeparator />
-                        <dxb:BarButtonItem Content="New Sub-Folder [Ins]" Glyph="{dx:DXImage Image=Add_16x16.png}"/>
+                        <dxb:BarButtonItem
+                            Content="New Folder [Ins]"
+                            Glyph="{dx:DXImage Image=Add_16x16.png}"
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                        <dxb:BarButtonItem
+                            Content="New Sub-Folder [Shift + Ins]"
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewSubFolderCommand, RelativeSource={RelativeSource Self}}"/>
                         <dxb:BarItemSeparator />
                         <dxb:BarButtonItem
                             Content="Hide Folder Toggle"
@@ -96,7 +104,8 @@
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.BookMarkFolderCommand, RelativeSource={RelativeSource Self}}"/>
                         <dxb:BarButtonItem
                             Content="Delete [Del]"
-                            Glyph="{dx:DXImage Image=Delete_16x16.png}"/>
+                            Glyph="{dx:DXImage Image=Delete_16x16.png}"
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.DeleteFolderCommand, RelativeSource={RelativeSource Self}}"/>
                     </dxg:TreeListView.RowCellMenuCustomizations>
 
                     <dxg:TreeListView.FormatConditions>
@@ -105,6 +114,9 @@
                         </dxg:FormatCondition>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsStarred]=True">
                             <dxg:Format Foreground="Red" />
+                        </dxg:FormatCondition>
+                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsDefault]=True">
+                            <dxg:Format Foreground="DarkCyan" FontStyle="Italic" />
                         </dxg:FormatCondition>
                     </dxg:TreeListView.FormatConditions>
                 </dxg:TreeListView>

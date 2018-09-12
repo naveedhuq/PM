@@ -294,6 +294,7 @@
     <Resource Include="Images\SplashBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\UnCategorized.png" />
     <None Include="Resources\Folder.png" />
     <None Include="Resources\HiddenFolder.png" />
     <None Include="Resources\StarredFolder.png" />

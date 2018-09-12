@@ -184,3 +184,19 @@ END
 GO
 GRANT EXECUTE ON dbo.sp_SaveDocumentFolders TO PUBLIC
 GO
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_DeleteDocumentFolder','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteDocumentFolder
+GO
+CREATE PROCEDURE dbo.sp_DeleteDocumentFolder
+    @ID INT
+AS
+BEGIN
+	UPDATE dbo.DocumentFolders
+	SET IsActive = 0
+	WHERE ID=@ID
+END
+GO
+GRANT EXECUTE ON dbo.sp_DeleteDocumentFolder TO PUBLIC
+GO
