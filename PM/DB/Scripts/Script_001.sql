@@ -112,7 +112,25 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('DefaultFolder', 5, 'Personal Documents'),
 ('DefaultFolder', 6, 'Financial Documents'),
 ('DefaultFolder', 7, 'Other Legal'),
-('DefaultFolder', 8, 'Miscellaneous')
+('DefaultFolder', 8, 'Miscellaneous'),
+
+('ExtensionToImageMapping', 1, '.pdf|IconPDF'),
+('ExtensionToImageMapping', 2, '.xls|IconExcel'),
+('ExtensionToImageMapping', 3, '.xlsx|IconExcel'),
+('ExtensionToImageMapping', 4, '.doc|IconWord'),
+('ExtensionToImageMapping', 5, '.docx|IconWord'),
+('ExtensionToImageMapping', 6, '.rtf|IconWord'),
+('ExtensionToImageMapping', 7, '.ppt|IconPowerPoint'),
+('ExtensionToImageMapping', 8, '.pptx|IconPowerPoint'),
+('ExtensionToImageMapping', 9, '.txt|IconPowerText'),
+('ExtensionToImageMapping', 10, '.jpg|IconImage'),
+('ExtensionToImageMapping', 11, '.jpeg|IconImage'),
+('ExtensionToImageMapping', 12, '.gif|IconImage'),
+('ExtensionToImageMapping', 13, '.png|IconImage'),
+('ExtensionToImageMapping', 14, '.tiff|IconImage'),
+('ExtensionToImageMapping', 15, '.gif|IconImage'),
+('ExtensionToImageMapping', 16, '.bmp|IconImage')
+
 GO
 
 

@@ -1,7 +1,10 @@
-﻿using System;
+﻿using PM.Shared;
+using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+
 
 namespace PM.Model
 {
@@ -17,6 +20,7 @@ namespace PM.Model
                     return;
                 _FileName = value;
                 NotifyPropertyChanged(m => m.FileName);
+                ChangeFileImage();
             }
         }
 
@@ -46,60 +50,34 @@ namespace PM.Model
             }
         }
 
-
-        public ImageSource ImageSource
+        private ImageSource _FileImage;
+        public ImageSource FileImage
         {
-            get
+            get { return _FileImage; }
+            set
             {
-                if (FileName == null)
-                    return GetImage("/Images/text.ico");
-
-                if (FileName.EndsWith(".pdf"))
-                    return GetImage("/Images/pdf.ico");
-
-                if (FileName.EndsWith(".xls"))
-                    return GetImage("/Images/excel.ico");
-                if (FileName.EndsWith(".xlsx"))
-                    return GetImage("/Images/excel.ico");
-
-                if (FileName.EndsWith(".doc"))
-                    return GetImage("/Images/word.ico");
-                if (FileName.EndsWith(".docx"))
-                    return GetImage("/Images/word.ico");
-                if (FileName.EndsWith(".rtf"))
-                    return GetImage("/Images/word.ico");
-
-                if (FileName.EndsWith(".png"))
-                    return GetImage("/Images/image.ico");
-                if (FileName.EndsWith(".jpg"))
-                    return GetImage("/Images/image.ico");
-                if (FileName.EndsWith(".jpeg"))
-                    return GetImage("/Images/image.ico");
-                if (FileName.EndsWith(".bmp"))
-                    return GetImage("/Images/image.ico");
-
-                /*
-                switch (Path.GetExtension(FileName)?.ToLower())
-                {
-                    case "pdf":
-                        return GetImage("/Images/pdf.ico");
-                    case "xls":
-                    case "xlsx":
-                        return GetImage("/Images/excel.ico");
-                    case "doc":
-                    case "docx":
-                    case "rtf":
-                        return GetImage("/Images/word.ico");
-                    case "png":
-                    case "jpg":
-                    case "jpeg":
-                    case "tiff":
-                    case "bmp":
-                        return GetImage("/Images/image.ico");                 
-                }
-                */
-                return GetImage("/Images/text.ico");
+                if (_FileImage == value)
+                    return;
+                _FileImage = value;
+                NotifyPropertyChanged(m => m.FileImage);
             }
+        }
+
+
+        private void ChangeFileImage()
+        {
+            string imageResourceName = "IconUnknown";
+            if (FileName != null)
+            {
+                var fileExtension = Path.GetExtension(FileName.ToLower());
+                string lookupValue = (from x in DBHelper.Instance.LookupsRepository
+                                      where x.LookupType == "ExtensionToImageMapping"
+                                      where x.LookupName.Contains(fileExtension)
+                                      select x.LookupName).FirstOrDefault();
+                if (lookupValue.Contains("|"))
+                    imageResourceName = lookupValue.Split('|')[1];
+            }
+            FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject(imageResourceName) as Bitmap);
         }
 
 
@@ -113,10 +91,6 @@ namespace PM.Model
             throw new NotImplementedException();
         }
 
-        ImageSource GetImage(string path)
-        {
-            return new BitmapImage(new Uri(path, UriKind.Relative));
-        }
 
     }
 }

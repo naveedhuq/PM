@@ -128,6 +128,17 @@
                 FieldName="FolderName" />
         </dxg:GridControl>
 
-        <dx:SimpleButton Content="Ok" Grid.Row="1" Grid.Column="1" Width="100" HorizontalAlignment="Left" Command="{Binding RenameFolderCommand}" />
+        <dxg:GridControl Grid.Column="1">
+            <dxg:GridControl.View>
+                <dxg:TableView>
+                    
+                </dxg:TableView>
+            </dxg:GridControl.View>
+            <dxg:GridColumn
+                FieldName="FileName">
+                
+            </dxg:GridColumn>
+        </dxg:GridControl>
+
     </Grid>
 </UserControl>
