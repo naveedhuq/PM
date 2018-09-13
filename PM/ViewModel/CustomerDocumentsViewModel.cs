@@ -142,6 +142,7 @@ namespace PM.ViewModel
                         {
                             CustomerID = SelectedCustomer.ID,
                             FolderName = InputDialogText,
+                            ParentID = 0
                         };
                         folder.SaveChanges();
                         DocumentFolders.Add(folder);
