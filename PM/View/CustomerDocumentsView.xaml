@@ -1,18 +1,19 @@
 ﻿<UserControl
+    x:Class="PM.View.CustomerDocumentsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
-    xmlns:view="clr-namespace:PM.View"
-    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-    x:Class="PM.View.CustomerDocumentsView"
-    mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shared="clr-namespace:PM.Shared"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -26,13 +27,20 @@
         <dxwui:WinUIDialogService x:Name="InputDialog" DialogWindowStartupLocation="CenterOwner">
             <dxwui:WinUIDialogService.ViewTemplate>
                 <DataTemplate>
-                    <Border Margin="10" Padding="100 50" BorderThickness="2" CornerRadius="5">
-                        <dxe:TextEdit Width="300" Text="{Binding InputDialogText}" Focusable="True"/>
+                    <Border
+                        Margin="10"
+                        BorderThickness="2"
+                        CornerRadius="5"
+                        Padding="100 50">
+                        <dxe:TextEdit
+                            Width="300"
+                            Focusable="True"
+                            Text="{Binding InputDialogText}" />
                     </Border>
                 </DataTemplate>
             </dxwui:WinUIDialogService.ViewTemplate>
         </dxwui:WinUIDialogService>
-        <dx:DXMessageBoxService/>
+        <dx:DXMessageBoxService />
     </dxmvvm:Interaction.Behaviors>
 
     <UserControl.DataContext>
@@ -42,70 +50,88 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
+        
+        
         <dxg:GridControl
             Grid.RowSpan="2"
             ItemsSource="{Binding DocumentFolders}"
             SelectedItem="{Binding SelectedDocumentFolder}">
-
             <dxmvvm:Interaction.Triggers>
                 <dxmvvm:EventToCommand
-                    Command="{Binding OnPreviewKeyDownCommand}" 
-                    EventName="PreviewKeyDown" 
-                    PassEventArgsToCommand="True">
-                </dxmvvm:EventToCommand>
+                    Command="{Binding OnPreviewKeyDownCommand}"
+                    EventName="PreviewKeyDown"
+                    PassEventArgsToCommand="True" />
             </dxmvvm:Interaction.Triggers>
-
+            
+            <dxmvvm:Interaction.Behaviors>
+                <!--<shared:CustomTreeListDragDropManager/>-->
+                <dxg:TreeListDragDropManager AllowDrag="True" AllowDrop="True">
+                    <dxmvvm:Interaction.Triggers>
+                        <dxmvvm:EventToCommand EventName="DragOver" Command="{Binding DragCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
+                        <dxmvvm:EventToCommand EventName="Drop" Command="{Binding DropCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
+                    </dxmvvm:Interaction.Triggers>
+                    <dxg:TreeListDragDropManager.DragElementTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding FirstDraggingObject.FolderName}"
+                                Visibility="{Binding FirstDraggingObject.IsDraggableFolder, Converter={dx:BooleanToVisibilityConverter}}"
+                                FontWeight="Bold"
+                                Foreground="White"
+                                Background="Black"/>
+                        </DataTemplate>
+                    </dxg:TreeListDragDropManager.DragElementTemplate>
+                </dxg:TreeListDragDropManager>
+                
+            </dxmvvm:Interaction.Behaviors>
+            
             <dxg:GridControl.View>
                 <dxg:TreeListView
                     AllowConditionalFormattingMenu="True"
-                    ShowNodeImages="True"
-                    ShowColumnHeaders="False"
-                    ShowAutoFilterRow="True"
-                    ShowVerticalLines="False"
-                    ShowHorizontalLines="False"
+                    AllowEditing="False"
+                    AutoExpandAllNodes="True"
+                    ImageFieldName="FolderImage"
                     KeyFieldName="ID"
                     ParentFieldName="ParentID"
-                    ImageFieldName="FolderImage"
-                    AllowEditing="False"
+                    ShowAutoFilterRow="True"
+                    ShowColumnHeaders="False"
+                    ShowHorizontalLines="False"
                     ShowIndicator="False"
-                    AutoExpandAllNodes="True">
-
+                    ShowNodeImages="True"
+                    ShowVerticalLines="False">
                     <dxg:TreeListView.RowCellMenuCustomizations>
                         <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.RenameFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="Rename [F2]"
-                            Glyph="{dx:DXImage Image=ChangeFontStyle_16x16.png}"
-                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.RenameFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                            Glyph="{dx:DXImage Image=ChangeFontStyle_16x16.png}" />
                         <dxb:BarItemSeparator />
                         <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="New Folder [Ins]"
-                            Glyph="{dx:DXImage Image=Open_16x16.png}"
-                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                            Glyph="{dx:DXImage Image=Open_16x16.png}" />
                         <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewSubFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="New Sub-Folder [+ Key]"
-                            Glyph="{dx:DXImage Image=BOProductGroup_16x16.png}"
-                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.NewSubFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                            Glyph="{dx:DXImage Image=BOProductGroup_16x16.png}" />
                         <dxb:BarItemSeparator />
                         <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.HideFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="Hide Folder Toggle"
-                            Glyph="{dx:DXImage Image=Edit_16x16.png}"
-                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.HideFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                            Glyph="{dx:DXImage Image=Edit_16x16.png}" />
                         <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.BookMarkFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="Bookmark Folder Toggle"
-                            Glyph="{dx:DXImage Image=Cube_16x16.png}"
-                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.BookMarkFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                            Glyph="{dx:DXImage Image=Cube_16x16.png}" />
                         <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.DeleteFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="Delete [Del]"
-                            Glyph="{dx:DXImage Image=Delete_16x16.png}"
-                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.DeleteFolderCommand, RelativeSource={RelativeSource Self}}"/>
+                            Glyph="{dx:DXImage Image=Delete_16x16.png}" />
                     </dxg:TreeListView.RowCellMenuCustomizations>
-
                     <dxg:TreeListView.FormatConditions>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsHidden]=True">
                             <dxg:Format Foreground="DarkGray" />
@@ -114,7 +140,7 @@
                             <dxg:Format Foreground="Red" />
                         </dxg:FormatCondition>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsDefault]=True">
-                            <dxg:Format Foreground="DarkCyan" FontStyle="Italic" />
+                            <dxg:Format FontStyle="Italic" Foreground="DarkCyan" />
                         </dxg:FormatCondition>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsRoot]=True">
                             <dxg:Format FontWeight="Bold" />
@@ -127,18 +153,12 @@
                 MinWidth="250"
                 FieldName="FolderName" />
         </dxg:GridControl>
-
         <dxg:GridControl Grid.Column="1">
             <dxg:GridControl.View>
-                <dxg:TableView>
-                    
-                </dxg:TableView>
+                <dxg:TableView />
             </dxg:GridControl.View>
-            <dxg:GridColumn
-                FieldName="FileName">
-                
-            </dxg:GridColumn>
+            <dxg:GridColumn FieldName="FileName" />
         </dxg:GridControl>
-
     </Grid>
+
 </UserControl>

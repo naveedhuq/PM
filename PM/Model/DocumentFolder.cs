@@ -130,6 +130,11 @@ namespace PM.Model
             }
         }
 
+        public bool IsDraggableFolder
+        {
+            get { return !(IsRoot || IsDefault); }
+        }
+
 
 
         private ImageSource _FolderImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("Folder") as Bitmap);

@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Grid;
+using DevExpress.Xpf.Grid.DragDrop;
 using PM.Model;
 using PM.Shared;
 using static PM.Model.Enumerators;
@@ -223,6 +225,40 @@ namespace PM.ViewModel
                             break;
                     }
                 }, (args) => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
+            }
+        }
+
+        public DelegateCommand<TreeListDragOverEventArgs> DragCommand
+        {
+            get
+            {
+                return new DelegateCommand<TreeListDragOverEventArgs>(args =>
+                {
+                    if (SelectedDocumentFolder.IsRoot)
+                        args.Manager.AllowDrop = false;
+                    else if (SelectedDocumentFolder.IsDefault)
+                        args.Manager.AllowDrop = false;
+                    else
+                        args.Manager.AllowDrop = true;
+                    //else
+                    //{
+                    //    TreeListView view = args.Manager.TreeListView;
+                    //    var draggedRow = view.GetNodeByRowHandle(args.HitInfo.RowHandle);
+                    //}                    
+                });
+            }
+        }
+
+        public DelegateCommand<TreeListDropEventArgs> DropCommand
+        {
+            get
+            {
+                return new DelegateCommand<TreeListDropEventArgs>(args =>
+                {
+                    var target = args.TargetNode.Content as DocumentFolder;
+                    SelectedDocumentFolder.ParentID = target.ID;
+                    SelectedDocumentFolder.SaveChanges();
+                });
             }
         }
 
