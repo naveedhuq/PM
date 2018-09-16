@@ -59,7 +59,6 @@
         
         
         <dxg:GridControl
-            Grid.RowSpan="2"
             ItemsSource="{Binding DocumentFolders}"
             SelectedItem="{Binding SelectedDocumentFolder}">
             <dxmvvm:Interaction.Triggers>
@@ -70,7 +69,6 @@
             </dxmvvm:Interaction.Triggers>
             
             <dxmvvm:Interaction.Behaviors>
-                <!--<shared:CustomTreeListDragDropManager/>-->
                 <dxg:TreeListDragDropManager AllowDrag="True" AllowDrop="True">
                     <dxmvvm:Interaction.Triggers>
                         <dxmvvm:EventToCommand EventName="DragOver" Command="{Binding DragCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
@@ -149,10 +147,13 @@
                 </dxg:TreeListView>
             </dxg:GridControl.View>
             <dxg:GridColumn
-                Width="250"
-                MinWidth="250"
+                Width="200"
+                MinWidth="200"
                 FieldName="FolderName" />
         </dxg:GridControl>
+
+        <dxe:CheckEdit Content="Show Hidden Folders" Grid.Row="1" IsChecked="{Binding ShowHiddenFolders}"/>
+
         <dxg:GridControl Grid.Column="1">
             <dxg:GridControl.View>
                 <dxg:TableView />

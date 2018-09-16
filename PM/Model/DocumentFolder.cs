@@ -182,13 +182,14 @@ namespace PM.Model
             throw new NotImplementedException();
         }
 
-        public static ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID)
+        public static ObservableCollection<DocumentFolder> GetCustomerDocumentFolders(int customerID, bool showHiddenFolder = true)
         {
             if (DBHelper.Instance.GetDocumentFolderCountForCustomer(customerID) == 0)
                 DBHelper.Instance.CreateDefaultDocumentFolders(customerID);
 
             var folders = (from x in DBHelper.Instance.DocumentFolderRepository
                            where x.CustomerID == customerID
+                           where (showHiddenFolder ? true : !x.IsHidden) == true
                            orderby x.ID
                            select new DocumentFolder()
                            {

@@ -28,8 +28,7 @@ namespace PM.ViewModel
                     return;
                 _SelectedCustomer = value;
                 RaisePropertyChanged("SelectedCustomer");
-                if (_SelectedCustomer != null)
-                    DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(_SelectedCustomer.ID);
+                RefreshFolderTree();
             }
         }
 
@@ -73,6 +72,19 @@ namespace PM.ViewModel
             }
         }
 
+        private bool _ShowHiddenFolders;
+        public bool ShowHiddenFolders
+        {
+            get { return _ShowHiddenFolders; }
+            set
+            {
+                if (_ShowHiddenFolders == value)
+                    return;
+                _ShowHiddenFolders = value;
+                RaisePropertyChanged("ShowHiddenFolders");
+                RefreshFolderTree();
+            }
+        }
 
         public DelegateCommand RenameFolderCommand
         {
@@ -104,6 +116,7 @@ namespace PM.ViewModel
                     {
                         SelectedDocumentFolder.IsHidden = !SelectedDocumentFolder.IsHidden;
                         SelectedDocumentFolder.SaveChanges();
+                        RefreshFolderTree();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
@@ -201,8 +214,7 @@ namespace PM.ViewModel
             }
         }
 
-
-
+        
         public DelegateCommand<KeyEventArgs> OnPreviewKeyDownCommand
         {
             get
@@ -228,13 +240,17 @@ namespace PM.ViewModel
             }
         }
 
+
         public DelegateCommand<TreeListDragOverEventArgs> DragCommand
         {
             get
             {
                 return new DelegateCommand<TreeListDragOverEventArgs>(args =>
                 {
-                    if (SelectedDocumentFolder.IsRoot)
+                    var target = (DocumentFolder)args.TargetNode.Content;
+                    if (target.IsDefault)
+                        args.Manager.AllowDrop = false;
+                    else if (SelectedDocumentFolder.IsRoot)
                         args.Manager.AllowDrop = false;
                     else if (SelectedDocumentFolder.IsDefault)
                         args.Manager.AllowDrop = false;
@@ -276,6 +292,12 @@ namespace PM.ViewModel
                 recipient: this,
                 token: MessageTokenEnum.SelectedCustomerChanged,
                 action: customer => SelectedCustomer = customer);
+        }
+
+        private void RefreshFolderTree()
+        {
+            if (_SelectedCustomer != null)
+                DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(_SelectedCustomer.ID, ShowHiddenFolders);
         }
 
     }
