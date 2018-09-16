@@ -38,6 +38,8 @@ IF OBJECT_ID('dbo.Contacts','U') IS NOT NULL
 CREATE TABLE dbo.Contacts
 (
 	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	INSERT_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INSERT_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
 	IsActive BIT NOT NULL DEFAULT 1,
 
 	CustomerID INT NOT NULL,
@@ -54,6 +56,8 @@ IF OBJECT_ID('dbo.DocumentFolders','U') IS NOT NULL
 CREATE TABLE dbo.DocumentFolders
 (
 	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	INSERT_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INSERT_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
 	IsActive BIT NOT NULL DEFAULT 1,
 
 	CustomerID INT NOT NULL,
@@ -63,6 +67,28 @@ CREATE TABLE dbo.DocumentFolders
 	IsHidden BIT NOT NULL DEFAULT 0
 )
 GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.DocumentFolders TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.Documents','U') IS NOT NULL
+	DROP TABLE dbo.Documents
+CREATE TABLE dbo.Documents
+(
+	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	INSERT_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INSERT_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
+	IsActive BIT NOT NULL DEFAULT 1,
+	
+	CustomerID INT NOT NULL,
+	DocumentFolderID INT, 
+	DocumentFileName NVARCHAR(100) NOT NULL,
+	DocumentType NVARCHAR(100),
+	UploadDate DATE,
+	ExpirationDate DATE,
+	Comments NVARCHAR(1000)
+)
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.Documents TO PUBLIC
 GO
 
 
@@ -240,4 +266,38 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON dbo.sp_DeleteDocumentFolder TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetDocumentFoldersForCustomer','IF') IS NOT NULL
+	DROP FuNCTION dbo.fn_GetDocumentFoldersForCustomer
+GO
+CREATE FUNCTION dbo.fn_GetDocumentFoldersForCustomer(@CustomerID INT)
+RETURNS TABLE AS RETURN
+(
+	SELECT *
+	FROM dbo.DocumentFolders
+	WHERE IsActive=1
+	AND CustomerID=@CustomerID
+)
+GO
+GRANT SELECT ON dbo.fn_GetDocumentFoldersForCustomer TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetDocumentsForCustomer','IF') IS NOT NULL
+	DROP FuNCTION dbo.fn_GetDocumentsForCustomer
+GO
+CREATE FUNCTION dbo.fn_GetDocumentsForCustomer(@CustomerID INT)
+RETURNS TABLE AS RETURN
+(
+	SELECT *
+	FROM dbo.Documents
+	WHERE IsActive=1
+	AND CustomerID=@CustomerID
+)
+GO
+GRANT SELECT ON dbo.fn_GetDocumentsForCustomer TO PUBLIC
 GO

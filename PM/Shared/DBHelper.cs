@@ -202,6 +202,42 @@ namespace PM.Shared
 
         public int GetDocumentFolderCountForCustomer(int customerID) { return _cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0; }
 
+        public ObservableCollection<m.DocumentFolder> GetDocumentFoldersForCustomer(int customerID)
+        {
+            var folders = from x in _cx.DocumentFolders
+                          where x.CustomerID == customerID
+                          where x.IsActive == true
+                          select new m.DocumentFolder
+                          {
+                              ID = x.ID,
+                              ParentID = x.ParentID,
+                              CustomerID = x.CustomerID,
+                              FolderName = x.FolderName,
+                              IsStarred = x.IsStarred,
+                              IsHidden = x.IsHidden
+                          };
+            return new ObservableCollection<m.DocumentFolder>(folders);
+        }
+
+        public ObservableCollection<m.Document> GetDocumentsForCustomer(int customerID)
+        {
+            var docs = from x in _cx.Documents
+                       where x.CustomerID == customerID
+                       where x.IsActive == true
+                       select new m.Document
+                       {
+                           ID = x.ID,
+                           CustomerID = x.CustomerID,
+                           DocumentFolderID = x.DocumentFolderID,
+                           DocumentFileName = x.DocumentFileName,
+                           DocumentType = x.DocumentType,
+                           UploadDate = x.UploadDate,
+                           ExpirationDate = x.ExpirationDate,
+                           Comments = x.Comments
+                       };
+            return new ObservableCollection<m.Document>(docs);
+        }
+
         public string GetAppSetting(string settingName)
         {
             return (from x in AppSettingsRepository where x.SettingsName == settingName select x.SettingsValue).FirstOrDefault();

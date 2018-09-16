@@ -154,11 +154,14 @@
 
         <dxe:CheckEdit Content="Show Hidden Folders" Grid.Row="1" IsChecked="{Binding ShowHiddenFolders}"/>
 
-        <dxg:GridControl Grid.Column="1">
+        <dxg:GridControl
+            Grid.Column="1"
+            ItemsSource="{Binding Documents}"
+            SelectedItem="{Binding SelectedDocument}">
             <dxg:GridControl.View>
                 <dxg:TableView />
             </dxg:GridControl.View>
-            <dxg:GridColumn FieldName="FileName" />
+            <dxg:GridColumn FieldName="DocumentFileName" />
         </dxg:GridControl>
     </Grid>
 

@@ -55,9 +55,35 @@ namespace PM.ViewModel
                     return;
                 _SelectedDocumentFolder = value;
                 RaisePropertyChanged("SelectedDocumentFolder");
+                RefreshDocumentGrid();
             }
         }
 
+        private ObservableCollection<Document> _Documents;
+        public ObservableCollection<Document> Documents
+        {
+            get { return _Documents; }
+            set
+            {
+                if (_Documents == value)
+                    return;
+                _Documents = value;
+                RaisePropertyChanged("Documents");
+            }
+        }
+
+        private Document _SelectedDocument;
+        public Document SelectedDocument
+        {
+            get { return _SelectedDocument; }
+            set
+            {
+                if (_SelectedDocument == value)
+                    return;
+                _SelectedDocument = value;
+                RaisePropertyChanged("SelectedDocument");
+            }
+        }
 
         private string _InputDialogText;
         public string InputDialogText
@@ -85,6 +111,7 @@ namespace PM.ViewModel
                 RefreshFolderTree();
             }
         }
+
 
         public DelegateCommand RenameFolderCommand
         {
@@ -138,7 +165,6 @@ namespace PM.ViewModel
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
-
 
         public DelegateCommand NewFolderCommand
         {
@@ -214,7 +240,6 @@ namespace PM.ViewModel
             }
         }
 
-        
         public DelegateCommand<KeyEventArgs> OnPreviewKeyDownCommand
         {
             get
@@ -239,7 +264,6 @@ namespace PM.ViewModel
                 }, (args) => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
-
 
         public DelegateCommand<TreeListDragOverEventArgs> DragCommand
         {
@@ -298,6 +322,12 @@ namespace PM.ViewModel
         {
             if (_SelectedCustomer != null)
                 DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(_SelectedCustomer.ID, ShowHiddenFolders);
+        }
+
+        private void RefreshDocumentGrid()
+        {
+            if (_SelectedCustomer != null && _SelectedDocumentFolder != null)
+                Documents = Document.GetCustomerDocuments(_SelectedCustomer.ID, _SelectedDocumentFolder.ID);
         }
 
     }

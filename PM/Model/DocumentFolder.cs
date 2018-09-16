@@ -150,26 +150,9 @@ namespace PM.Model
             }
         }
 
-
-        private ObservableCollection<CustomerDocument> _CustomerDocuments;
-        public ObservableCollection<CustomerDocument> CustomerDocuments
-        {
-            get { return _CustomerDocuments; }
-            set
-            {
-                if (_CustomerDocuments == value)
-                    return;
-                _CustomerDocuments = value;
-                NotifyPropertyChanged(m => m.CustomerDocuments);
-                IsEmpty = _CustomerDocuments?.Count > 0;
-            }
-        }
-
-        
         public override void SaveChanges()
         {
             var ret = DBHelper.Instance.SaveDocumentFolder(this);
-
         }
 
         public void Delete()
@@ -187,8 +170,7 @@ namespace PM.Model
             if (DBHelper.Instance.GetDocumentFolderCountForCustomer(customerID) == 0)
                 DBHelper.Instance.CreateDefaultDocumentFolders(customerID);
 
-            var folders = (from x in DBHelper.Instance.DocumentFolderRepository
-                           where x.CustomerID == customerID
+            var folders = (from x in DBHelper.Instance.GetDocumentFoldersForCustomer(customerID)
                            where (showHiddenFolder ? true : !x.IsHidden) == true
                            orderby x.ID
                            select new DocumentFolder()

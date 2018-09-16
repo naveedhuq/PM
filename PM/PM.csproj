@@ -149,7 +149,7 @@
     </Compile>
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\Customer.cs" />
-    <Compile Include="Model\CustomerDocument.cs" />
+    <Compile Include="Model\Document.cs" />
     <Compile Include="Model\DocumentFolder.cs" />
     <Compile Include="Model\Enumerators.cs" />
     <Compile Include="Model\LookupItem.cs" />
