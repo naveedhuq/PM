@@ -47,11 +47,11 @@ namespace PM.ViewModel
                 action: customer => SelectedCustomer = customer);
         }
 
-        void RefreshData()
+        private void RefreshData()
         {
-            CustomerTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.CustomerType));
-            TypesOfCompany = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.TypeOfCompany));
-            ServiceTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.ServiceType));
+            CustomerTypes =LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.CustomerType);
+            TypesOfCompany = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.TypeOfCompany);
+            ServiceTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.ServiceType);
         }
     }
 }

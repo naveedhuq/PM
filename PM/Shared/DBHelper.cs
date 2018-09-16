@@ -23,13 +23,7 @@ namespace PM.Shared
         #endregion
 
         private DB.PMDataContext _cx = new DB.PMDataContext(Properties.Settings.Default.PMConnectionString);
-        public enum LookupTypesEnum
-        {
-            CustomerType,
-            ContactItemType,
-            TypeOfCompany,
-            ServiceType
-        }
+
 
         #region Repositories
 
@@ -186,17 +180,7 @@ namespace PM.Shared
         }
 
 
-        public ObservableCollection<string> GetLookups(LookupTypesEnum LookupType)
-        {
-            return
-                new ObservableCollection<string>
-                (
-                    from x in LookupsRepository
-                    where x.LookupType == LookupType.ToString()
-                    orderby x.SortOrder
-                    select x.LookupName
-                );
-        }
+
 
         public void CreateDefaultDocumentFolders(int customerID) { _cx.sp_CreateDefaultDocumentFolders(customerID); }
 
@@ -204,9 +188,7 @@ namespace PM.Shared
 
         public ObservableCollection<m.DocumentFolder> GetDocumentFoldersForCustomer(int customerID)
         {
-            var folders = from x in _cx.DocumentFolders
-                          where x.CustomerID == customerID
-                          where x.IsActive == true
+            var folders = from x in _cx.fn_GetDocumentFoldersForCustomer(customerID)
                           select new m.DocumentFolder
                           {
                               ID = x.ID,
@@ -221,9 +203,7 @@ namespace PM.Shared
 
         public ObservableCollection<m.Document> GetDocumentsForCustomer(int customerID)
         {
-            var docs = from x in _cx.Documents
-                       where x.CustomerID == customerID
-                       where x.IsActive == true
+            var docs = from x in _cx.fn_GetDocumentsForCustomer(customerID)
                        select new m.Document
                        {
                            ID = x.ID,

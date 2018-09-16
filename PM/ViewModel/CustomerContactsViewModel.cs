@@ -36,7 +36,7 @@ namespace PM.ViewModel
                 SelectedCustomer = new Customer();
                 return;
             }
-            ContactItemTypes = new ObservableCollection<string>(DBHelper.Instance.GetLookups(DBHelper.LookupTypesEnum.ContactItemType));
+            ContactItemTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.ContactItemType);
 
             Messenger.Default.Register<Customer>(
                 recipient: this,

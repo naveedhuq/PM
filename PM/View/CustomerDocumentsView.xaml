@@ -10,7 +10,6 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:shared="clr-namespace:PM.Shared"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="800">
@@ -159,9 +158,46 @@
             ItemsSource="{Binding Documents}"
             SelectedItem="{Binding SelectedDocument}">
             <dxg:GridControl.View>
-                <dxg:TableView />
+                <dxg:TableView
+                    ShowVerticalLines="False"
+                    ShowAutoFilterRow="True"
+                    AllowEditing="True">
+                    <dxg:TableView.RowStyle>
+                        <Style TargetType="dxg:RowControl">
+                            <Setter Property="Height" Value="32"/>
+                        </Style>
+                    </dxg:TableView.RowStyle>
+                </dxg:TableView>
             </dxg:GridControl.View>
-            <dxg:GridColumn FieldName="DocumentFileName" />
+            <dxg:GridColumn
+                FieldName="FileImage"
+                Header=" "
+                Width="32"
+                AllowEditing="false">
+                <dxg:GridColumn.CellTemplate>
+                    <DataTemplate>
+                        <dxe:ImageEdit
+                            Source="{Binding Value}"
+                            Margin="2"
+                            ShowBorder="False"
+                            IsEnabled="False"/>
+                    </DataTemplate>
+                </dxg:GridColumn.CellTemplate>
+            </dxg:GridColumn>
+            <dxg:GridColumn
+                FieldName="DocumentFileName"
+                Header="Filename"
+                Width="150"
+                AllowEditing="false"/>
+            <dxg:GridColumn FieldName="DocumentType" AllowEditing="true">
+                <dxg:GridColumn.EditSettings>
+                    <dxg:LookUpEditSettings
+                        ItemsSource="{Binding DocumentTypes}"
+                        AutoComplete="True"
+                        AllowNullInput="True"
+                        AllowCollectionView="True"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
         </dxg:GridControl>
     </Grid>
 

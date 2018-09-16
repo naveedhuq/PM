@@ -52,7 +52,6 @@
         <Setter Property="ShowGroupPanel" Value="False" />
         <Setter Property="ShowAutoFilterRow" Value="True" />
         <Setter Property="AllowSorting" Value="False" />
-        <Setter Property="ShowFilterPanelMode" Value="Never" />
         <Setter Property="ShowIndicator" Value="False"/>
     </Style>
 

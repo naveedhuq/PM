@@ -155,10 +155,22 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('ExtensionToImageMapping', 13, '.png|IconImage'),
 ('ExtensionToImageMapping', 14, '.tiff|IconImage'),
 ('ExtensionToImageMapping', 15, '.gif|IconImage'),
-('ExtensionToImageMapping', 16, '.bmp|IconImage')
+('ExtensionToImageMapping', 16, '.bmp|IconImage'),
+
+('DocumentType', 1, 'Driver''s License'),
+('DocumentType', 2, 'Social Security'),
+('DocumentType', 3, 'Tax Returns'),
+('DocumentType', 4, 'Passport'),
+('DocumentType', 5, 'Bank Statements'),
+('DocumentType', 6, 'Insurance Document'),
+('DocumentType', 7, 'W-2'),
+('DocumentType', 8, 'Paystub'),
+('DocumentType', 9, 'Property Records'),
+('DocumentType', 10, 'Car Documents'),
+('DocumentType', 11, 'Business Documents'),
+('DocumentType', 12, 'Other Documents')
 
 GO
-
 
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.AppSettings','U') IS NOT NULL
@@ -293,10 +305,23 @@ GO
 CREATE FUNCTION dbo.fn_GetDocumentsForCustomer(@CustomerID INT)
 RETURNS TABLE AS RETURN
 (
-	SELECT *
-	FROM dbo.Documents
-	WHERE IsActive=1
-	AND CustomerID=@CustomerID
+	SELECT
+		d.ID,
+		d.IsActive,
+		d.CustomerID,
+		(CASE
+		   WHEN d.DocumentFolderID IS NULL THEN -1
+		   WHEN NOT EXISTS(SELECT * FROM dbo.DocumentFolders WHERE CustomerID=@CustomerID AND IsActive=1 AND ID=d.DocumentFolderID) THEN -1
+		   ELSE d.DocumentFolderID
+		END) DocumentFolderID,
+		d.DocumentFileName,
+		d.DocumentType,
+		d.UploadDate,
+		d.ExpirationDate,
+		d.Comments
+	FROM dbo.Documents d
+	WHERE d.IsActive=1
+	AND d.CustomerID=@CustomerID
 )
 GO
 GRANT SELECT ON dbo.fn_GetDocumentsForCustomer TO PUBLIC

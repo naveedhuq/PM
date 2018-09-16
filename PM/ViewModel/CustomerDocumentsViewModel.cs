@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
-using DevExpress.Xpf.Grid;
 using DevExpress.Xpf.Grid.DragDrop;
 using PM.Model;
 using PM.Shared;
@@ -16,6 +15,8 @@ namespace PM.ViewModel
         [ServiceProperty(Key = "InputDialog")]
         protected virtual IDialogService DialogService { get { return GetService<IDialogService>(); } }
         protected virtual IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+
+        public ObservableCollection<string> DocumentTypes;
 
 
         private Customer _SelectedCustomer;
@@ -312,6 +313,7 @@ namespace PM.ViewModel
                 return;
             }
 
+            DocumentTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.DocumentType);
             Messenger.Default.Register<Customer>(
                 recipient: this,
                 token: MessageTokenEnum.SelectedCustomerChanged,
