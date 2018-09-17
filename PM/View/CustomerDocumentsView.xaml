@@ -40,6 +40,7 @@
             </dxwui:WinUIDialogService.ViewTemplate>
         </dxwui:WinUIDialogService>
         <dx:DXMessageBoxService />
+        <dxmvvm:OpenFileDialogService />
     </dxmvvm:Interaction.Behaviors>
 
     <UserControl.DataContext>
@@ -55,7 +56,6 @@
             <ColumnDefinition Width="300" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        
         
         <dxg:GridControl
             ItemsSource="{Binding DocumentFolders}"
@@ -151,7 +151,9 @@
                 FieldName="FolderName" />
         </dxg:GridControl>
 
-        <dxe:CheckEdit Content="Show Hidden Folders" Grid.Row="1" IsChecked="{Binding ShowHiddenFolders}"/>
+        <dxe:CheckEdit
+            Content="Show Hidden Folders"
+            Grid.Row="1" IsChecked="{Binding ShowHiddenFolders}"/>
 
         <dxg:GridControl
             Grid.Column="1"
@@ -189,16 +191,16 @@
                 Header="Filename"
                 Width="150"
                 AllowEditing="false"/>
-            <dxg:GridColumn FieldName="DocumentType" AllowEditing="true">
-                <dxg:GridColumn.EditSettings>
-                    <dxg:LookUpEditSettings
-                        ItemsSource="{Binding DocumentTypes}"
-                        AutoComplete="True"
-                        AllowNullInput="True"
-                        AllowCollectionView="True"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
+            <dxg:GridColumn
+                FieldName="DocumentType"
+                Width="150"
+                AllowEditing="false"/>
         </dxg:GridControl>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+            <dx:SimpleButton Content="Import File" Command="{Binding ImportFileCommand}"/>
+            
+        </StackPanel>
     </Grid>
 
 </UserControl>

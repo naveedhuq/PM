@@ -132,25 +132,29 @@ namespace PM.Model
 
 
         private void ChangeFileImage()
-        {
-            string imageResourceName = "IconUnknown";
-            if (DocumentFileName != null)
+        {                        
+            try
             {
-                var fileExtension = Path.GetExtension(DocumentFileName.ToLower());
-                string lookupValue = (from x in DBHelper.Instance.LookupsRepository
-                                      where x.LookupType == "ExtensionToImageMapping"
-                                      where x.LookupName.Contains(fileExtension)
-                                      select x.LookupName).FirstOrDefault();
-                if (lookupValue.Contains("|"))
-                    imageResourceName = lookupValue.Split('|')[1];
+                string imageResourceName = "IconUnknown";
+                if (DocumentFileName != null)
+                {
+                    var fileExtension = Path.GetExtension(DocumentFileName.ToLower());
+                    string lookupValue = (from x in DBHelper.Instance.LookupsRepository
+                                          where x.LookupType == "ExtensionToImageMapping"
+                                          where x.LookupName.Contains(fileExtension)
+                                          select x.LookupName).FirstOrDefault();
+                    if (lookupValue.Contains("|"))
+                        imageResourceName = lookupValue.Split('|')[1];
+                }
+                FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject(imageResourceName) as Bitmap);
             }
-            FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject(imageResourceName) as Bitmap);
+            catch { FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("IconUnknown") as Bitmap); }
         }
 
 
         public override void SaveChanges()
         {
-            throw new NotImplementedException();
+            var ret = DBHelper.Instance.SaveDocument(this);
         }
 
         protected override void Populate(Document item)

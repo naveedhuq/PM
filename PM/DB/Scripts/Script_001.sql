@@ -326,3 +326,37 @@ RETURNS TABLE AS RETURN
 GO
 GRANT SELECT ON dbo.fn_GetDocumentsForCustomer TO PUBLIC
 GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveDocuments','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveDocuments
+GO
+CREATE PROCEDURE dbo.sp_SaveDocuments
+    @ID INT,
+    @CustomerID INT,
+    @DocumentFolderID INT,
+    @DocumentFileName NVARCHAR(100),
+    @DocumentType NVARCHAR(100),
+    @UploadDate DATE,
+	@ExpirationDate DATE,
+	@Comments NVARCHAR(1000)
+AS
+BEGIN
+    IF EXISTS(SELECT * FROM dbo.Documents WHERE ID=@ID)
+        UPDATE dbo.Documents
+        SET CustomerID=@CustomerID,
+            DocumentFolderID=@DocumentFolderID,
+            DocumentFileName=@DocumentFileName,
+            UploadDate=@UploadDate,
+            ExpirationDate=@ExpirationDate,
+			Comments=@Comments
+        WHERE ID=@ID
+    ELSE
+        INSERT INTO dbo.Documents (CustomerID, DocumentFolderID, DocumentFileName, UploadDate, ExpirationDate, Comments)
+        VALUES (@CustomerID, @DocumentFolderID, @DocumentFileName, @UploadDate, @ExpirationDate, @Comments)
+    RETURN SCOPE_IDENTITY()
+END
+GO
+GRANT EXECUTE ON dbo.sp_SaveDocuments TO PUBLIC
+GO

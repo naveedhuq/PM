@@ -23,6 +23,7 @@ namespace PM.Shared
         #endregion
 
         private DB.PMDataContext _cx = new DB.PMDataContext(Properties.Settings.Default.PMConnectionString);
+        public DB.PMDataContext DataContext { get { return _cx; } }
 
 
         #region Repositories
@@ -148,6 +149,13 @@ namespace PM.Shared
             _cx.sp_DeleteDocumentFolder(f.ID);
         }
 
+        public m.Document SaveDocument(m.Document d)
+        {
+            var id = _cx.sp_SaveDocuments(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.UploadDate, d.ExpirationDate, d.Comments);
+            if (id != 0)
+                d.ID = id;
+            return d;
+        }
         #endregion
 
 

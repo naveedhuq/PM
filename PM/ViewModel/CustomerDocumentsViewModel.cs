@@ -15,6 +15,8 @@ namespace PM.ViewModel
         [ServiceProperty(Key = "InputDialog")]
         protected virtual IDialogService DialogService { get { return GetService<IDialogService>(); } }
         protected virtual IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+        protected IOpenFileDialogService OpenFileDialogService { get { return GetService<IOpenFileDialogService>(); } }
+
 
         public ObservableCollection<string> DocumentTypes;
 
@@ -272,20 +274,19 @@ namespace PM.ViewModel
             {
                 return new DelegateCommand<TreeListDragOverEventArgs>(args =>
                 {
-                    var target = (DocumentFolder)args.TargetNode.Content;
-                    if (target.IsDefault)
-                        args.Manager.AllowDrop = false;
-                    else if (SelectedDocumentFolder.IsRoot)
-                        args.Manager.AllowDrop = false;
-                    else if (SelectedDocumentFolder.IsDefault)
-                        args.Manager.AllowDrop = false;
-                    else
-                        args.Manager.AllowDrop = true;
-                    //else
-                    //{
-                    //    TreeListView view = args.Manager.TreeListView;
-                    //    var draggedRow = view.GetNodeByRowHandle(args.HitInfo.RowHandle);
-                    //}                    
+                    try
+                    {
+                        var target = (DocumentFolder)args.TargetNode.Content;
+                        if (target.IsDefault)
+                            args.Manager.AllowDrop = false;
+                        else if (SelectedDocumentFolder.IsRoot)
+                            args.Manager.AllowDrop = false;
+                        else if (SelectedDocumentFolder.IsDefault)
+                            args.Manager.AllowDrop = false;
+                        else
+                            args.Manager.AllowDrop = true;
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
                 });
             }
         }
@@ -296,13 +297,36 @@ namespace PM.ViewModel
             {
                 return new DelegateCommand<TreeListDropEventArgs>(args =>
                 {
-                    var target = args.TargetNode.Content as DocumentFolder;
-                    SelectedDocumentFolder.ParentID = target.ID;
-                    SelectedDocumentFolder.SaveChanges();
+                    try
+                    {
+                        var target = args.TargetNode.Content as DocumentFolder;
+                        SelectedDocumentFolder.ParentID = target.ID;
+                        SelectedDocumentFolder.SaveChanges();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
                 });
             }
         }
 
+
+        public DelegateCommand ImportFileCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    
+                    try
+                    {
+                        if (!OpenFileDialogService.ShowDialog())
+                            return;
+                        ImportFileIntoFolder(OpenFileDialogService.File);
+                        RefreshDocumentGrid();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedDocumentFolder != null);
+            }
+        }
 
 
         public CustomerDocumentsViewModel()
@@ -330,6 +354,18 @@ namespace PM.ViewModel
         {
             if (_SelectedCustomer != null && _SelectedDocumentFolder != null)
                 Documents = Document.GetCustomerDocuments(_SelectedCustomer.ID, _SelectedDocumentFolder.ID);
+        }
+
+        private void ImportFileIntoFolder(IFileInfo file)
+        {
+            Document doc = new Document
+            {
+                CustomerID = SelectedDocumentFolder.CustomerID,
+                DocumentFolderID = SelectedDocumentFolder.ID,
+                DocumentFileName = file.Name
+            };
+            doc.SaveChanges();
+            //TODO: Import BLOB            
         }
 
     }

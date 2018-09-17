@@ -166,6 +166,13 @@ namespace PM.DB
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocuments")]
+		public int sp_SaveDocuments([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, uploadDate, expirationDate, comments);
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Customer")]

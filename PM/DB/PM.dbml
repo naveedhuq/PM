@@ -123,4 +123,15 @@
       <Column Name="Comments" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_SaveDocuments" Method="sp_SaveDocuments">
+    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="DocumentFolderID" Parameter="documentFolderID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="DocumentFileName" Parameter="documentFileName" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="DocumentType" Parameter="documentType" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="UploadDate" Parameter="uploadDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="ExpirationDate" Parameter="expirationDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="Comments" Parameter="comments" Type="System.String" DbType="NVarChar(1000)" />
+    <Return Type="System.Int32" />
+  </Function>
 </Database>
