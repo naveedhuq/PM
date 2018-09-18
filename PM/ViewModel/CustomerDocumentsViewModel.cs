@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
@@ -19,7 +20,7 @@ namespace PM.ViewModel
         protected IOpenFileDialogService OpenFileDialogService { get { return GetService<IOpenFileDialogService>(); } }
 
 
-        public ObservableCollection<string> DocumentTypes;
+        
 
 
         private Customer _SelectedCustomer;
@@ -131,6 +132,20 @@ namespace PM.ViewModel
                 RaisePropertyChanged("IsDocumentSelectionValid");
             }
         }
+
+        private ObservableCollection<string> _DocumentTypes = new ObservableCollection<string>();
+        public ObservableCollection<string> DocumentTypes
+        {
+            get { return _DocumentTypes; }
+            set
+            {
+                if (_DocumentTypes == value)
+                    return;
+                _DocumentTypes = value;
+                RaisePropertyChanged("DocumentTypes");
+            }
+        }
+
 
 
 
@@ -325,8 +340,7 @@ namespace PM.ViewModel
                 });
             }
         }
-
-
+        
         public DelegateCommand ImportFileCommand
         {
             get
@@ -345,6 +359,20 @@ namespace PM.ViewModel
                 }, () => SelectedDocumentFolder != null);
             }
         }
+
+        public DelegateCommand SaveDocumentCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try { SelectedDocument.SaveChanges(); }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedDocument != null && SelectedDocument.IsDirty);
+            }
+        }
+
+
 
 
         public CustomerDocumentsViewModel()
@@ -366,12 +394,16 @@ namespace PM.ViewModel
         {
             if (_SelectedCustomer != null)
                 DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(_SelectedCustomer.ID, ShowHiddenFolders);
+            else
+                DocumentFolders = null;
         }
 
         private void RefreshDocumentGrid()
         {
             if (_SelectedCustomer != null && _SelectedDocumentFolder != null)
                 Documents = Document.GetCustomerDocuments(_SelectedCustomer.ID, _SelectedDocumentFolder.ID);
+            else
+                Documents = null;
         }
 
         private void ImportFileIntoFolder(IFileInfo file)
@@ -381,10 +413,11 @@ namespace PM.ViewModel
                 CustomerID = SelectedDocumentFolder.CustomerID,
                 DocumentFolderID = SelectedDocumentFolder.ID,
                 DocumentFileName = file.Name,
-                FileTimestamp = File.GetLastWriteTime(file.GetFullName())
+                FileTimestamp = File.GetLastWriteTime(file.GetFullName()),
+                UploadDate = DateTime.Today
             };
             doc.SaveChanges();
-            //TODO: Import BLOB            
+            //TODO: Import BLOB
         }
 
     }

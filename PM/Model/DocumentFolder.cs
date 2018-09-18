@@ -153,6 +153,7 @@ namespace PM.Model
         public override void SaveChanges()
         {
             var ret = DBHelper.Instance.SaveDocumentFolder(this);
+            IsDirty = false;
         }
 
         public void Delete()

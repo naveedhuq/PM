@@ -169,6 +169,7 @@ namespace PM.Model
         public override void SaveChanges()
         {
             var ret = DBHelper.Instance.SaveDocument(this);
+            IsDirty = false;
         }
 
         protected override void Populate(Document item)

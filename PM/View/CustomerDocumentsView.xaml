@@ -216,7 +216,7 @@
                     <RowDefinition Height="24"/>
                     <RowDefinition Height="24"/>
                     <RowDefinition Height="24"/>
-                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
@@ -235,16 +235,36 @@
                 <Label Grid.Column="1" Content="Filename"/>
                 <dxe:TextEdit Grid.Column="2" EditValue="{Binding SelectedDocument.DocumentFileName}"/>
 
-                <Label Grid.Row="1" Grid.Column="1" Content=""/>
+                <Label Grid.Row="1" Grid.Column="1" Content="Document Type"/>
                 <dxe:ComboBoxEdit
                     Grid.Row="1"
                     Grid.Column="2"
                     EditValue="{Binding SelectedDocument.DocumentType}"
-                    ItemsSource="{Binding DocumentTypes}"/>
+                    ItemsSource="{Binding DocumentTypes}"
+                    AllowNullInput="True"
+                    IsTextEditable="True"
+                    AllowCollectionView="True"/>
 
-                <!--<Label Grid.Row="1" Grid.Column="1" Content=""/>
+                <Label Grid.Row="2" Grid.Column="1" Content="Expiration Date"/>
+                <dxe:DateEdit
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    EditValue="{Binding SelectedDocument.ExpirationDate}"
+                    Mask="MM/dd/yyyy"
+                    MaskUseAsDisplayFormat="True"/>
 
-                <Label Grid.Row="1" Grid.Column="1" Content=""/>-->
+                <Label Grid.Row="3" Grid.Column="1" Content="Comments" VerticalAlignment="Top"/>
+                <dxe:TextEdit
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    EditValue="{Binding SelectedDocument.Comments}"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    VerticalAlignment="Top"
+                    Height="72"
+                    VerticalScrollBarVisibility="Auto"
+                    VerticalContentAlignment="Top"/>
+
 
 
             </Grid>
@@ -257,6 +277,10 @@
                 Content="Import File(s)"
                 Command="{Binding ImportFileCommand}"
                 Glyph="{dx:DXImage Image=IndentIncrease_16x16.png}"/>
+            <dx:SimpleButton
+                Content="Save Changes"
+                Command="{Binding SaveDocumentCommand}"
+                Glyph="{dx:DXImage Image=Save_16x16.png}"/>
         </StackPanel>
     </Grid>
 
