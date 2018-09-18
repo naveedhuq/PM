@@ -77,6 +77,20 @@ namespace PM.Model
             }
         }
 
+        private DateTime? _FileTimestamp;
+        public DateTime? FileTimestamp
+        {
+            get { return _FileTimestamp; }
+            set
+            {
+                if (_FileTimestamp == value)
+                    return;
+                _FileTimestamp = value;
+                NotifyPropertyChanged(m => m.FileTimestamp);
+            }
+        }
+
+
         private DateTime? _UploadDate;
         public DateTime? UploadDate
         {

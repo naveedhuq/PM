@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
@@ -13,8 +14,8 @@ namespace PM.ViewModel
     public class CustomerDocumentsViewModel : ViewModelBase
     {
         [ServiceProperty(Key = "InputDialog")]
-        protected virtual IDialogService DialogService { get { return GetService<IDialogService>(); } }
-        protected virtual IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+        protected IDialogService DialogService { get { return GetService<IDialogService>(); } }
+        protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
         protected IOpenFileDialogService OpenFileDialogService { get { return GetService<IOpenFileDialogService>(); } }
 
 
@@ -32,6 +33,8 @@ namespace PM.ViewModel
                 _SelectedCustomer = value;
                 RaisePropertyChanged("SelectedCustomer");
                 RefreshFolderTree();
+                SelectedDocumentFolder = null;
+                RefreshDocumentGrid();
             }
         }
 
@@ -85,6 +88,7 @@ namespace PM.ViewModel
                     return;
                 _SelectedDocument = value;
                 RaisePropertyChanged("SelectedDocument");
+                IsDocumentSelectionValid = (_SelectedDocument != null);
             }
         }
 
@@ -114,6 +118,20 @@ namespace PM.ViewModel
                 RefreshFolderTree();
             }
         }
+
+        private bool _IsDocumentSelectionValid;
+        public bool IsDocumentSelectionValid
+        {
+            get { return _IsDocumentSelectionValid; }
+            set
+            {
+                if (_IsDocumentSelectionValid == value)
+                    return;
+                _IsDocumentSelectionValid = value;
+                RaisePropertyChanged("IsDocumentSelectionValid");
+            }
+        }
+
 
 
         public DelegateCommand RenameFolderCommand
@@ -315,12 +333,12 @@ namespace PM.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    
                     try
                     {
                         if (!OpenFileDialogService.ShowDialog())
                             return;
-                        ImportFileIntoFolder(OpenFileDialogService.File);
+                        foreach (var file in OpenFileDialogService.Files)
+                            ImportFileIntoFolder(file);
                         RefreshDocumentGrid();
                     }
                     catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
@@ -362,7 +380,8 @@ namespace PM.ViewModel
             {
                 CustomerID = SelectedDocumentFolder.CustomerID,
                 DocumentFolderID = SelectedDocumentFolder.ID,
-                DocumentFileName = file.Name
+                DocumentFileName = file.Name,
+                FileTimestamp = File.GetLastWriteTime(file.GetFullName())
             };
             doc.SaveChanges();
             //TODO: Import BLOB            

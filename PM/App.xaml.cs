@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using DevExpress.Xpf.Core;
+﻿using DevExpress.Xpf.Core;
+using System.Windows;
 
 
 namespace PM
@@ -12,6 +12,8 @@ namespace PM
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             ApplicationThemeHelper.ApplicationThemeName = PM.Properties.Settings.Default.ApplicationThemeName;
+            DevExpress.Xpf.Grid.DataControlBase.AllowInfiniteGridSize = true;
+
             MainWindow window = new MainWindow();
             window.Show();
         }

@@ -161,17 +161,17 @@ namespace PM.DB
 			return this.CreateMethodCallQuery<fn_GetDocumentFoldersForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocuments")]
+		public int sp_SaveDocuments([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileTimestamp", DbType="DateTime")] System.Nullable<System.DateTime> fileTimestamp, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, fileTimestamp, uploadDate, expirationDate, comments);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentsForCustomer", IsComposable=true)]
 		public IQueryable<fn_GetDocumentsForCustomerResult> fn_GetDocumentsForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocuments")]
-		public int sp_SaveDocuments([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, uploadDate, expirationDate, comments);
-			return ((int)(result.ReturnValue));
 		}
 	}
 	
@@ -1275,6 +1275,8 @@ namespace PM.DB
 		
 		private string _DocumentType;
 		
+		private System.Nullable<System.DateTime> _FileTimestamp;
+		
 		private System.Nullable<System.DateTime> _UploadDate;
 		
 		private System.Nullable<System.DateTime> _ExpirationDate;
@@ -1301,6 +1303,8 @@ namespace PM.DB
     partial void OnDocumentFileNameChanged();
     partial void OnDocumentTypeChanging(string value);
     partial void OnDocumentTypeChanged();
+    partial void OnFileTimestampChanging(System.Nullable<System.DateTime> value);
+    partial void OnFileTimestampChanged();
     partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
     partial void OnUploadDateChanged();
     partial void OnExpirationDateChanging(System.Nullable<System.DateTime> value);
@@ -1470,6 +1474,26 @@ namespace PM.DB
 					this._DocumentType = value;
 					this.SendPropertyChanged("DocumentType");
 					this.OnDocumentTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileTimestamp", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FileTimestamp
+		{
+			get
+			{
+				return this._FileTimestamp;
+			}
+			set
+			{
+				if ((this._FileTimestamp != value))
+				{
+					this.OnFileTimestampChanging(value);
+					this.SendPropertyChanging();
+					this._FileTimestamp = value;
+					this.SendPropertyChanged("FileTimestamp");
+					this.OnFileTimestampChanged();
 				}
 			}
 		}
@@ -1730,10 +1754,6 @@ namespace PM.DB
 		
 		private int _ID;
 		
-		private System.DateTime _INSERT_TIMESTAMP;
-		
-		private string _INSERT_USER;
-		
 		private bool _IsActive;
 		
 		private int _CustomerID;
@@ -1743,6 +1763,8 @@ namespace PM.DB
 		private string _DocumentFileName;
 		
 		private string _DocumentType;
+		
+		private System.Nullable<System.DateTime> _FileTimestamp;
 		
 		private System.Nullable<System.DateTime> _UploadDate;
 		
@@ -1766,38 +1788,6 @@ namespace PM.DB
 				if ((this._ID != value))
 				{
 					this._ID = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_TIMESTAMP", DbType="DateTime NOT NULL")]
-		public System.DateTime INSERT_TIMESTAMP
-		{
-			get
-			{
-				return this._INSERT_TIMESTAMP;
-			}
-			set
-			{
-				if ((this._INSERT_TIMESTAMP != value))
-				{
-					this._INSERT_TIMESTAMP = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string INSERT_USER
-		{
-			get
-			{
-				return this._INSERT_USER;
-			}
-			set
-			{
-				if ((this._INSERT_USER != value))
-				{
-					this._INSERT_USER = value;
 				}
 			}
 		}
@@ -1878,6 +1868,22 @@ namespace PM.DB
 				if ((this._DocumentType != value))
 				{
 					this._DocumentType = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileTimestamp", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FileTimestamp
+		{
+			get
+			{
+				return this._FileTimestamp;
+			}
+			set
+			{
+				if ((this._FileTimestamp != value))
+				{
+					this._FileTimestamp = value;
 				}
 			}
 		}

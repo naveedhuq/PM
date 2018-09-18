@@ -151,7 +151,7 @@ namespace PM.Shared
 
         public m.Document SaveDocument(m.Document d)
         {
-            var id = _cx.sp_SaveDocuments(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.UploadDate, d.ExpirationDate, d.Comments);
+            var id = _cx.sp_SaveDocuments(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
             if (id != 0)
                 d.ID = id;
             return d;
@@ -187,9 +187,6 @@ namespace PM.Shared
             return new ObservableCollection<m.Customer>(ret);
         }
 
-
-
-
         public void CreateDefaultDocumentFolders(int customerID) { _cx.sp_CreateDefaultDocumentFolders(customerID); }
 
         public int GetDocumentFolderCountForCustomer(int customerID) { return _cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0; }
@@ -219,6 +216,7 @@ namespace PM.Shared
                            DocumentFolderID = x.DocumentFolderID,
                            DocumentFileName = x.DocumentFileName,
                            DocumentType = x.DocumentType,
+                           FileTimestamp = x.FileTimestamp,
                            UploadDate = x.UploadDate,
                            ExpirationDate = x.ExpirationDate,
                            Comments = x.Comments

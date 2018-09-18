@@ -67,6 +67,7 @@
       <Column Name="DocumentFolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="DocumentFileName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="DocumentType" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="FileTimestamp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="UploadDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="ExpirationDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="Comments" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
@@ -107,31 +108,31 @@
       <Column Name="IsHidden" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.fn_GetDocumentsForCustomer" Method="fn_GetDocumentsForCustomer" IsComposable="true">
-    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
-    <ElementType Name="fn_GetDocumentsForCustomerResult">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="INSERT_TIMESTAMP" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="INSERT_USER" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="DocumentFolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DocumentFileName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="DocumentType" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="UploadDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="ExpirationDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="Comments" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_SaveDocuments" Method="sp_SaveDocuments">
     <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
     <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
     <Parameter Name="DocumentFolderID" Parameter="documentFolderID" Type="System.Int32" DbType="Int" />
     <Parameter Name="DocumentFileName" Parameter="documentFileName" Type="System.String" DbType="NVarChar(100)" />
     <Parameter Name="DocumentType" Parameter="documentType" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="FileTimestamp" Parameter="fileTimestamp" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="UploadDate" Parameter="uploadDate" Type="System.DateTime" DbType="Date" />
     <Parameter Name="ExpirationDate" Parameter="expirationDate" Type="System.DateTime" DbType="Date" />
     <Parameter Name="Comments" Parameter="comments" Type="System.String" DbType="NVarChar(1000)" />
     <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.fn_GetDocumentsForCustomer" Method="fn_GetDocumentsForCustomer" IsComposable="true">
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="fn_GetDocumentsForCustomerResult">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentFolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DocumentFileName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentType" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="FileTimestamp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UploadDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="ExpirationDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Comments" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+    </ElementType>
   </Function>
 </Database>

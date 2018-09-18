@@ -40,7 +40,7 @@
             </dxwui:WinUIDialogService.ViewTemplate>
         </dxwui:WinUIDialogService>
         <dx:DXMessageBoxService />
-        <dxmvvm:OpenFileDialogService />
+        <dxmvvm:OpenFileDialogService Multiselect="True"/>
     </dxmvvm:Interaction.Behaviors>
 
     <UserControl.DataContext>
@@ -59,7 +59,8 @@
         
         <dxg:GridControl
             ItemsSource="{Binding DocumentFolders}"
-            SelectedItem="{Binding SelectedDocumentFolder}">
+            SelectedItem="{Binding SelectedDocumentFolder}"
+             >
             <dxmvvm:Interaction.Triggers>
                 <dxmvvm:EventToCommand
                     Command="{Binding OnPreviewKeyDownCommand}"
@@ -153,53 +154,109 @@
 
         <dxe:CheckEdit
             Content="Show Hidden Folders"
-            Grid.Row="1" IsChecked="{Binding ShowHiddenFolders}"/>
+            Grid.Row="1"
+            IsChecked="{Binding ShowHiddenFolders}"/>
 
-        <dxg:GridControl
-            Grid.Column="1"
-            ItemsSource="{Binding Documents}"
-            SelectedItem="{Binding SelectedDocument}">
-            <dxg:GridControl.View>
-                <dxg:TableView
-                    ShowVerticalLines="False"
-                    ShowAutoFilterRow="True"
-                    AllowEditing="True">
-                    <dxg:TableView.RowStyle>
-                        <Style TargetType="dxg:RowControl">
-                            <Setter Property="Height" Value="32"/>
-                        </Style>
-                    </dxg:TableView.RowStyle>
-                </dxg:TableView>
-            </dxg:GridControl.View>
-            <dxg:GridColumn
-                FieldName="FileImage"
-                Header=" "
-                Width="32"
-                AllowEditing="false">
-                <dxg:GridColumn.CellTemplate>
-                    <DataTemplate>
-                        <dxe:ImageEdit
-                            Source="{Binding Value}"
-                            Margin="2"
-                            ShowBorder="False"
-                            IsEnabled="False"/>
-                    </DataTemplate>
-                </dxg:GridColumn.CellTemplate>
-            </dxg:GridColumn>
-            <dxg:GridColumn
-                FieldName="DocumentFileName"
-                Header="Filename"
-                Width="150"
-                AllowEditing="false"/>
-            <dxg:GridColumn
-                FieldName="DocumentType"
-                Width="150"
-                AllowEditing="false"/>
-        </dxg:GridControl>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <dxg:GridControl
+                Grid.Column="1"
+                ItemsSource="{Binding Documents}"
+                SelectedItem="{Binding SelectedDocument}">
+                <dxg:GridControl.View>
+                    <dxg:TableView
+                        ShowVerticalLines="False"
+                        ShowAutoFilterRow="True"
+                        AllowEditing="False">
+                        <dxg:TableView.RowStyle>
+                            <Style TargetType="dxg:RowControl">
+                                <Setter Property="Height" Value="32"/>
+                            </Style>
+                        </dxg:TableView.RowStyle>
+                    </dxg:TableView>
+                </dxg:GridControl.View>
+                <dxg:GridColumn
+                    FieldName="FileImage"
+                    Header=" "
+                    Width="32">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ImageEdit
+                                Source="{Binding Value}"
+                                Margin="2"
+                                ShowBorder="False"
+                                IsEnabled="False"/>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
+                <dxg:GridColumn
+                    FieldName="DocumentFileName"
+                    Header="Filename"
+                    Width="150"/>
+                <dxg:GridColumn
+                    FieldName="DocumentType"
+                    Width="150"/>
+                <dxg:GridColumn
+                    FieldName="FileTimestamp"
+                    Width="150">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="MM/dd/yyyy  hh:mm tt" MaskUseAsDisplayFormat="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+            </dxg:GridControl>
+
+            <Grid
+                Grid.Row="1"
+                Visibility="{Binding IsDocumentSelectionValid, Converter={dx:BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="24"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+
+                <dxe:ImageEdit
+                    Grid.RowSpan="2"
+                    EditValue="{Binding SelectedDocument.FileImage}"
+                    Height="32"
+                    Width="32" 
+                    IsEnabled="False"
+                    ShowBorder="False"/>
+
+                <Label Grid.Column="1" Content="Filename"/>
+                <dxe:TextEdit Grid.Column="2" EditValue="{Binding SelectedDocument.DocumentFileName}"/>
+
+                <Label Grid.Row="1" Grid.Column="1" Content=""/>
+                <dxe:ComboBoxEdit
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    EditValue="{Binding SelectedDocument.DocumentType}"
+                    ItemsSource="{Binding DocumentTypes}"/>
+
+                <!--<Label Grid.Row="1" Grid.Column="1" Content=""/>
+
+                <Label Grid.Row="1" Grid.Column="1" Content=""/>-->
+
+
+            </Grid>
+
+        </Grid>
+        
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-            <dx:SimpleButton Content="Import File" Command="{Binding ImportFileCommand}"/>
-            
+            <dx:SimpleButton
+                Content="Import File(s)"
+                Command="{Binding ImportFileCommand}"
+                Glyph="{dx:DXImage Image=IndentIncrease_16x16.png}"/>
         </StackPanel>
     </Grid>
 

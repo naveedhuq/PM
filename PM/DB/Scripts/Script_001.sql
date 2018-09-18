@@ -84,6 +84,7 @@ CREATE TABLE dbo.Documents
 	DocumentFolderID INT, 
 	DocumentFileName NVARCHAR(100) NOT NULL,
 	DocumentType NVARCHAR(100),
+	FileTimestamp DATETIME,
 	UploadDate DATE,
 	ExpirationDate DATE,
 	Comments NVARCHAR(1000)
@@ -316,6 +317,7 @@ RETURNS TABLE AS RETURN
 		END) DocumentFolderID,
 		d.DocumentFileName,
 		d.DocumentType,
+		d.FileTimestamp,
 		d.UploadDate,
 		d.ExpirationDate,
 		d.Comments
@@ -338,6 +340,7 @@ CREATE PROCEDURE dbo.sp_SaveDocuments
     @DocumentFolderID INT,
     @DocumentFileName NVARCHAR(100),
     @DocumentType NVARCHAR(100),
+	@FileTimestamp DATETIME,
     @UploadDate DATE,
 	@ExpirationDate DATE,
 	@Comments NVARCHAR(1000)
@@ -348,13 +351,15 @@ BEGIN
         SET CustomerID=@CustomerID,
             DocumentFolderID=@DocumentFolderID,
             DocumentFileName=@DocumentFileName,
+			DocumentType=@DocumentType,
+			FileTimestamp=@FileTimestamp,
             UploadDate=@UploadDate,
             ExpirationDate=@ExpirationDate,
 			Comments=@Comments
         WHERE ID=@ID
     ELSE
-        INSERT INTO dbo.Documents (CustomerID, DocumentFolderID, DocumentFileName, UploadDate, ExpirationDate, Comments)
-        VALUES (@CustomerID, @DocumentFolderID, @DocumentFileName, @UploadDate, @ExpirationDate, @Comments)
+        INSERT INTO dbo.Documents (CustomerID, DocumentFolderID, DocumentFileName, DocumentType, FileTimestamp, UploadDate, ExpirationDate, Comments)
+        VALUES (@CustomerID, @DocumentFolderID, @DocumentFileName, @DocumentType, @FileTimestamp, @UploadDate, @ExpirationDate, @Comments)
     RETURN SCOPE_IDENTITY()
 END
 GO
