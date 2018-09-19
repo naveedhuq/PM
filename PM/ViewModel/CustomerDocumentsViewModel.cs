@@ -301,7 +301,7 @@ namespace PM.ViewModel
             }
         }
 
-        public DelegateCommand<TreeListDragOverEventArgs> DragCommand
+        public DelegateCommand<TreeListDragOverEventArgs> FolderDragCommand
         {
             get
             {
@@ -309,6 +309,8 @@ namespace PM.ViewModel
                 {
                     try
                     {
+                        if (args.TargetNode == null)
+                            return;
                         var target = (DocumentFolder)args.TargetNode.Content;
                         if (target.IsDefault)
                             args.Manager.AllowDrop = false;
@@ -324,7 +326,7 @@ namespace PM.ViewModel
             }
         }
 
-        public DelegateCommand<TreeListDropEventArgs> DropCommand
+        public DelegateCommand<TreeListDropEventArgs> FolderDropCommand
         {
             get
             {

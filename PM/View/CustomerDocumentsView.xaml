@@ -71,8 +71,8 @@
             <dxmvvm:Interaction.Behaviors>
                 <dxg:TreeListDragDropManager AllowDrag="True" AllowDrop="True">
                     <dxmvvm:Interaction.Triggers>
-                        <dxmvvm:EventToCommand EventName="DragOver" Command="{Binding DragCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
-                        <dxmvvm:EventToCommand EventName="Drop" Command="{Binding DropCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
+                        <dxmvvm:EventToCommand EventName="DragOver" Command="{Binding FolderDragCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
+                        <dxmvvm:EventToCommand EventName="Drop" Command="{Binding FolderDropCommand, UpdateSourceTrigger=PropertyChanged}" PassEventArgsToCommand="True"  />
                     </dxmvvm:Interaction.Triggers>
                     <dxg:TreeListDragDropManager.DragElementTemplate>
                         <DataTemplate>
@@ -85,7 +85,6 @@
                         </DataTemplate>
                     </dxg:TreeListDragDropManager.DragElementTemplate>
                 </dxg:TreeListDragDropManager>
-                
             </dxmvvm:Interaction.Behaviors>
             
             <dxg:GridControl.View>
@@ -167,6 +166,24 @@
                 Grid.Column="1"
                 ItemsSource="{Binding Documents}"
                 SelectedItem="{Binding SelectedDocument}">
+
+                <dxmvvm:Interaction.Behaviors>
+                    <dxg:GridDragDropManager AllowDrag="True" AllowDrop="False">
+                        <dxmvvm:Interaction.Triggers>
+                            
+                        </dxmvvm:Interaction.Triggers>
+                        <dxg:GridDragDropManager.DragElementTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                Text="{Binding FirstDraggingObject.DocumentFileName}"
+                                FontWeight="Bold"
+                                Foreground="White"
+                                Background="Black"/>
+                            </DataTemplate>
+                        </dxg:GridDragDropManager.DragElementTemplate>
+                    </dxg:GridDragDropManager>
+                </dxmvvm:Interaction.Behaviors>
+                
                 <dxg:GridControl.View>
                     <dxg:TableView
                         ShowVerticalLines="False"
