@@ -59,8 +59,7 @@
         
         <dxg:GridControl
             ItemsSource="{Binding DocumentFolders}"
-            SelectedItem="{Binding SelectedDocumentFolder}"
-             >
+            SelectedItem="{Binding SelectedDocumentFolder}">
             <dxmvvm:Interaction.Triggers>
                 <dxmvvm:EventToCommand
                     Command="{Binding OnPreviewKeyDownCommand}"
@@ -100,7 +99,8 @@
                     ShowHorizontalLines="False"
                     ShowIndicator="False"
                     ShowNodeImages="True"
-                    ShowVerticalLines="False">
+                    ShowVerticalLines="False"
+                    AllowDragDrop="True">
                     <dxg:TreeListView.RowCellMenuCustomizations>
                         <dxb:BarButtonItem
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.RenameFolderCommand, RelativeSource={RelativeSource Self}}"
@@ -128,6 +128,11 @@
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.DeleteFolderCommand, RelativeSource={RelativeSource Self}}"
                             Content="Delete [Del]"
                             Glyph="{dx:DXImage Image=Delete_16x16.png}" />
+                        <dxb:BarItemSeparator />
+                        <dxb:BarButtonItem
+                            Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.PasteDocumentCommand, RelativeSource={RelativeSource Self}}"
+                            Content="Paste Document  [Ctrl + V]"
+                            Glyph="{dx:DXImage Image=Paste_16x16.png}" />
                     </dxg:TreeListView.RowCellMenuCustomizations>
                     <dxg:TreeListView.FormatConditions>
                         <dxg:FormatCondition ApplyToRow="True" Expression="[IsHidden]=True">
@@ -167,23 +172,13 @@
                 ItemsSource="{Binding Documents}"
                 SelectedItem="{Binding SelectedDocument}">
 
-                <dxmvvm:Interaction.Behaviors>
-                    <dxg:GridDragDropManager AllowDrag="True" AllowDrop="False">
-                        <dxmvvm:Interaction.Triggers>
-                            
-                        </dxmvvm:Interaction.Triggers>
-                        <dxg:GridDragDropManager.DragElementTemplate>
-                            <DataTemplate>
-                                <TextBlock
-                                Text="{Binding FirstDraggingObject.DocumentFileName}"
-                                FontWeight="Bold"
-                                Foreground="White"
-                                Background="Black"/>
-                            </DataTemplate>
-                        </dxg:GridDragDropManager.DragElementTemplate>
-                    </dxg:GridDragDropManager>
-                </dxmvvm:Interaction.Behaviors>
-                
+                <dxmvvm:Interaction.Triggers>
+                    <dxmvvm:EventToCommand
+                    Command="{Binding OnPreviewKeyDown_DocumentGrid_Command}"
+                    EventName="PreviewKeyDown"
+                    PassEventArgsToCommand="True" />
+                </dxmvvm:Interaction.Triggers>
+
                 <dxg:GridControl.View>
                     <dxg:TableView
                         ShowVerticalLines="False"
@@ -194,6 +189,16 @@
                                 <Setter Property="Height" Value="32"/>
                             </Style>
                         </dxg:TableView.RowStyle>
+                        <dxg:TableView.RowCellMenuCustomizations>
+                            <dxb:BarButtonItem
+                                Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.CopyDocumentCommand, RelativeSource={RelativeSource Self}}"
+                                Content="Copy  [Ctrl + C]"
+                                Glyph="{dx:DXImage Image=Copy_16x16.png}" />
+                            <dxb:BarButtonItem
+                                Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.MoveDocumentCommand, RelativeSource={RelativeSource Self}}"
+                                Content="Cut    [Ctrl + X]"
+                                Glyph="{dx:DXImage Image=Cut_16x16.png}" />
+                        </dxg:TableView.RowCellMenuCustomizations>
                     </dxg:TableView>
                 </dxg:GridControl.View>
                 <dxg:GridColumn

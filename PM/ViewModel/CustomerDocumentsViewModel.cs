@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Core;
+using DevExpress.Xpf.Grid;
 using DevExpress.Xpf.Grid.DragDrop;
 using PM.Model;
 using PM.Shared;
@@ -308,10 +311,10 @@ namespace PM.ViewModel
                 return new DelegateCommand<TreeListDragOverEventArgs>(args =>
                 {
                     try
-                    {
+                    {                        
                         if (args.TargetNode == null)
                             return;
-                        var target = (DocumentFolder)args.TargetNode.Content;
+                        var target = args.TargetNode.Content as DocumentFolder;
                         if (target.IsDefault)
                             args.Manager.AllowDrop = false;
                         else if (SelectedDocumentFolder.IsRoot)
@@ -334,6 +337,7 @@ namespace PM.ViewModel
                 {
                     try
                     {
+                        
                         var target = args.TargetNode.Content as DocumentFolder;
                         SelectedDocumentFolder.ParentID = target.ID;
                         SelectedDocumentFolder.SaveChanges();
@@ -342,7 +346,8 @@ namespace PM.ViewModel
                 });
             }
         }
-        
+                
+
         public DelegateCommand ImportFileCommand
         {
             get
