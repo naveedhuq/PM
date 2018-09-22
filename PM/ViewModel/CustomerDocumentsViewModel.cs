@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
-using DevExpress.Xpf.Core;
-using DevExpress.Xpf.Grid;
 using DevExpress.Xpf.Grid.DragDrop;
 using PM.Model;
 using PM.Shared;
@@ -21,9 +18,11 @@ namespace PM.ViewModel
         protected IDialogService DialogService { get { return GetService<IDialogService>(); } }
         protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
         protected IOpenFileDialogService OpenFileDialogService { get { return GetService<IOpenFileDialogService>(); } }
+        protected INotificationService AppNotificationService { get { return GetService<INotificationService>(); ; } }
 
 
-        
+        private Document _ClipboardCopyDocument = null;
+        private Document _ClipboardCutDocument = null;
 
 
         private Customer _SelectedCustomer;
@@ -42,17 +41,10 @@ namespace PM.ViewModel
             }
         }
 
-        private ObservableCollection<DocumentFolder> _DocumntFolders;
         public ObservableCollection<DocumentFolder> DocumentFolders
         {
-            get { return _DocumntFolders; }
-            set
-            {
-                if (_DocumntFolders == value)
-                    return;
-                _DocumntFolders = value;
-                RaisePropertyChanged("DocumentFolders");
-            }
+            get { return GetProperty(() => DocumentFolders); }
+            set { SetProperty(() => DocumentFolders, value); }
         }
 
         private DocumentFolder _SelectedDocumentFolder;
@@ -95,6 +87,7 @@ namespace PM.ViewModel
                 IsDocumentSelectionValid = (_SelectedDocument != null);
             }
         }
+
 
         private string _InputDialogText;
         public string InputDialogText
@@ -304,6 +297,22 @@ namespace PM.ViewModel
             }
         }
 
+        public DelegateCommand<KeyEventArgs> OnDocumentGrid_PreviewKeyDownCommand
+        {
+            get
+            {
+                return new DelegateCommand<KeyEventArgs>(args =>
+                {
+                    bool ctrlKey = Keyboard.Modifiers == ModifierKeys.Control;
+                    if (args.Key == Key.C && ctrlKey)
+                        CopyDocumentCommand.Execute(null);
+                    else if (args.Key == Key.X && ctrlKey)
+                        CutDocumentCommand.Execute(null);
+                });
+            }
+        }
+
+
         public DelegateCommand<TreeListDragOverEventArgs> FolderDragCommand
         {
             get
@@ -379,7 +388,76 @@ namespace PM.ViewModel
             }
         }
 
+        public DelegateCommand CopyDocumentCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    ClearClipboard();
+                    _ClipboardCopyDocument = SelectedDocument;
+                    ShowNotification($"File [{_ClipboardCopyDocument.DocumentFileName}] copied to clipboard.");
 
+                }, () => SelectedDocument != null);
+            }
+        }
+
+        public DelegateCommand CutDocumentCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    ClearClipboard();
+                    _ClipboardCutDocument = SelectedDocument;
+                    ShowNotification($"File [{_ClipboardCutDocument.DocumentFileName}] cut to clipboard.");
+                }, () => SelectedDocument != null);
+            }
+        }
+
+        public DelegateCommand PasteDocumentCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        if (_ClipboardCopyDocument != null)
+                        {
+                            var newdoc = new Document()
+                            {
+                                CustomerID = SelectedCustomer.ID,                                
+                                DocumentFileName = _ClipboardCopyDocument.DocumentFileName,
+                                DocumentType = _ClipboardCopyDocument.DocumentType,
+                                UploadDate = DateTime.Today,
+                                FileTimestamp = _ClipboardCopyDocument.FileTimestamp,
+                                ExpirationDate = _ClipboardCopyDocument.ExpirationDate,
+                                Comments = _ClipboardCopyDocument.Comments
+                            };
+                            if (!SelectedDocumentFolder.IsDefault)
+                                newdoc.DocumentFolderID = SelectedDocumentFolder.ID;
+                            newdoc.SaveChanges();
+                            // TODO: Import BLOB
+                        }
+                        else if (_ClipboardCutDocument != null)
+                        {
+                            _ClipboardCutDocument.CustomerID = SelectedCustomer.ID;
+                            if (!SelectedDocumentFolder.IsDefault)
+                                _ClipboardCutDocument.DocumentFolderID = SelectedDocumentFolder.ID;
+                            else
+                                _ClipboardCutDocument.DocumentFolderID = null;
+                            _ClipboardCutDocument.SaveChanges();
+                        }
+                        ClearClipboard();
+                        RefreshDocumentGrid();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+
+                }, () => SelectedCustomer != null && SelectedDocumentFolder != null && !IsClipboardEmpty() && SelectedDocumentFolder.ID != 0);
+            }
+        }
+        
 
 
         public CustomerDocumentsViewModel()
@@ -425,6 +503,22 @@ namespace PM.ViewModel
             };
             doc.SaveChanges();
             //TODO: Import BLOB
+        }
+
+        private void ShowNotification(string text)
+        {
+            INotification n = AppNotificationService.CreatePredefinedNotification(text, null, null);
+            n.ShowAsync();
+        }
+        private void ClearClipboard()
+        {
+            _ClipboardCopyDocument = null;
+            _ClipboardCutDocument = null;
+        }
+
+        private bool IsClipboardEmpty()
+        {
+            return (_ClipboardCopyDocument == null && _ClipboardCutDocument == null);
         }
 
     }

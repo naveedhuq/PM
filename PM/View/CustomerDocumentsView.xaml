@@ -41,6 +41,8 @@
         </dxwui:WinUIDialogService>
         <dx:DXMessageBoxService />
         <dxmvvm:OpenFileDialogService Multiselect="True"/>
+        <dxmvvm:NotificationService UseWin8NotificationsIfAvailable="False" PredefinedNotificationDuration="Default"/>
+
     </dxmvvm:Interaction.Behaviors>
 
     <UserControl.DataContext>
@@ -169,21 +171,19 @@
 
             <dxg:GridControl
                 Grid.Column="1"
+                SelectionMode="None"
                 ItemsSource="{Binding Documents}"
                 SelectedItem="{Binding SelectedDocument}">
 
                 <dxmvvm:Interaction.Triggers>
                     <dxmvvm:EventToCommand
-                    Command="{Binding OnPreviewKeyDown_DocumentGrid_Command}"
-                    EventName="PreviewKeyDown"
-                    PassEventArgsToCommand="True" />
+                        Command="{Binding OnDocumentGrid_PreviewKeyDownCommand}"
+                        EventName="PreviewKeyDown"
+                        PassEventArgsToCommand="True" />
                 </dxmvvm:Interaction.Triggers>
 
                 <dxg:GridControl.View>
-                    <dxg:TableView
-                        ShowVerticalLines="False"
-                        ShowAutoFilterRow="True"
-                        AllowEditing="False">
+                    <dxg:TableView ShowVerticalLines="False" >
                         <dxg:TableView.RowStyle>
                             <Style TargetType="dxg:RowControl">
                                 <Setter Property="Height" Value="32"/>
@@ -195,7 +195,7 @@
                                 Content="Copy  [Ctrl + C]"
                                 Glyph="{dx:DXImage Image=Copy_16x16.png}" />
                             <dxb:BarButtonItem
-                                Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.MoveDocumentCommand, RelativeSource={RelativeSource Self}}"
+                                Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.CutDocumentCommand, RelativeSource={RelativeSource Self}}"
                                 Content="Cut    [Ctrl + X]"
                                 Glyph="{dx:DXImage Image=Cut_16x16.png}" />
                         </dxg:TableView.RowCellMenuCustomizations>

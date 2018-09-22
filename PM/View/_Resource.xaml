@@ -47,7 +47,6 @@
 
     <Style TargetType="dxg:TableView">
         <Setter Property="AllowPerPixelScrolling" Value="True" />
-        <Setter Property="NavigationStyle" Value="Cell" />
         <Setter Property="AllowEditing" Value="False" />
         <Setter Property="ShowGroupPanel" Value="False" />
         <Setter Property="ShowAutoFilterRow" Value="True" />
