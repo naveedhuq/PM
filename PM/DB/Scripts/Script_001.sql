@@ -92,6 +92,21 @@ CREATE TABLE dbo.Documents
 GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.Documents TO PUBLIC
 GO
 
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.DocumentData','U') IS NOT NULL
+	DROP TABLE dbo.DocumentData
+CREATE TABLE dbo.DocumentData
+(
+	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	INSERT_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INSERT_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
+	IsActive BIT NOT NULL DEFAULT 1,
+	
+	DocumentID INT NOT NULL,
+	RawData VARBINARY(MAX)
+)
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.DocumentData TO PUBLIC
+GO
 
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.Lookups','U') IS NOT NULL
@@ -364,4 +379,26 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON dbo.sp_SaveDocuments TO PUBLIC
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveDocumentData','P') IS NOT NULL
+	DROP PROCEDURE dbo.sp_SaveDocumentData
+GO
+CREATE PROCEDURE dbo.sp_SaveDocumentData
+	@DocumentID INT,
+	@FileName NVARCHAR(255)
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM dbo.DocumentData WHERE DocumentID=@DocumentID AND IsActive=1)
+		UPDATE dbo.DocumentData SET IsActive=0 WHERE DocumentID=@DocumentID
+
+	DECLARE @sql NVARCHAR(1000) = '
+	INSERT INTO dbo.DocumentData(DocumentID, RawData)
+	SELECT '+CAST(@DocumentID AS NVARCHAR(10))+', *
+	FROM OPENROWSET(BULK '''+ @FileName +''', SINGLE_BLOB) AS x'
+	EXEC sp_executesql @sql
+END
+GO
+GRANT EXECUTE ON sp_SaveDocumentData TO PUBLIC
 GO

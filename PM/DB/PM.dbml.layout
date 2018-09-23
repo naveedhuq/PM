@@ -38,5 +38,11 @@
         <elementListCompartment Id="2dad6c57-e27d-4a8a-8bd0-1f774cb2eac3" absoluteBounds="3.0149999999999997, 2.71, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="7d08bd37-b367-4f65-8789-e2b16483acf7" isExpanded="false" absoluteBounds="3, 3, 2, 0.45">
+      <DataClassMoniker Name="/PMDataContext/DocumentData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0ac40df0-968c-497f-9020-d1080f7c0c54" absoluteBounds="3.0149999999999997, 3.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

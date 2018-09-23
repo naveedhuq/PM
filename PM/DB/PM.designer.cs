@@ -48,6 +48,9 @@ namespace PM.DB
     partial void InsertDocument(Document instance);
     partial void UpdateDocument(Document instance);
     partial void DeleteDocument(Document instance);
+    partial void InsertDocumentData(DocumentData instance);
+    partial void UpdateDocumentData(DocumentData instance);
+    partial void DeleteDocumentData(DocumentData instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -128,6 +131,14 @@ namespace PM.DB
 			}
 		}
 		
+		public System.Data.Linq.Table<DocumentData> DocumentDatas
+		{
+			get
+			{
+				return this.GetTable<DocumentData>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_CreateDefaultDocumentFolders")]
 		public int sp_CreateDefaultDocumentFolders([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
 		{
@@ -172,6 +183,13 @@ namespace PM.DB
 		public IQueryable<fn_GetDocumentsForCustomerResult> fn_GetDocumentsForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocumentData")]
+		public int sp_SaveDocumentData([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentID", DbType="Int")] System.Nullable<int> documentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileName", DbType="NVarChar(255)")] string fileName)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), documentID, fileName);
+			return ((int)(result.ReturnValue));
 		}
 	}
 	
@@ -1554,6 +1572,188 @@ namespace PM.DB
 					this._Comments = value;
 					this.SendPropertyChanged("Comments");
 					this.OnCommentsChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DocumentData")]
+	public partial class DocumentData : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.DateTime _INSERT_TIMESTAMP;
+		
+		private string _INSERT_USER;
+		
+		private bool _IsActive;
+		
+		private int _DocumentID;
+		
+		private System.Data.Linq.Binary _RawData;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnINSERT_TIMESTAMPChanging(System.DateTime value);
+    partial void OnINSERT_TIMESTAMPChanged();
+    partial void OnINSERT_USERChanging(string value);
+    partial void OnINSERT_USERChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnDocumentIDChanging(int value);
+    partial void OnDocumentIDChanged();
+    partial void OnRawDataChanging(System.Data.Linq.Binary value);
+    partial void OnRawDataChanged();
+    #endregion
+		
+		public DocumentData()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_TIMESTAMP", DbType="DateTime NOT NULL")]
+		public System.DateTime INSERT_TIMESTAMP
+		{
+			get
+			{
+				return this._INSERT_TIMESTAMP;
+			}
+			set
+			{
+				if ((this._INSERT_TIMESTAMP != value))
+				{
+					this.OnINSERT_TIMESTAMPChanging(value);
+					this.SendPropertyChanging();
+					this._INSERT_TIMESTAMP = value;
+					this.SendPropertyChanged("INSERT_TIMESTAMP");
+					this.OnINSERT_TIMESTAMPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string INSERT_USER
+		{
+			get
+			{
+				return this._INSERT_USER;
+			}
+			set
+			{
+				if ((this._INSERT_USER != value))
+				{
+					this.OnINSERT_USERChanging(value);
+					this.SendPropertyChanging();
+					this._INSERT_USER = value;
+					this.SendPropertyChanged("INSERT_USER");
+					this.OnINSERT_USERChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentID", DbType="Int NOT NULL")]
+		public int DocumentID
+		{
+			get
+			{
+				return this._DocumentID;
+			}
+			set
+			{
+				if ((this._DocumentID != value))
+				{
+					this.OnDocumentIDChanging(value);
+					this.SendPropertyChanging();
+					this._DocumentID = value;
+					this.SendPropertyChanged("DocumentID");
+					this.OnDocumentIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RawData", DbType="VarBinary(MAX)", UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary RawData
+		{
+			get
+			{
+				return this._RawData;
+			}
+			set
+			{
+				if ((this._RawData != value))
+				{
+					this.OnRawDataChanging(value);
+					this.SendPropertyChanging();
+					this._RawData = value;
+					this.SendPropertyChanged("RawData");
+					this.OnRawDataChanged();
 				}
 			}
 		}
