@@ -39,7 +39,7 @@
                             <dxr:RibbonPageGroup >
                                 <dxb:BarButtonItem
                                     Content="Customer Entry"
-                                     Glyph="{dx:DXImage Image=BOCustomer_16x16.png}"
+                                    Glyph="{dx:DXImage Image=BOCustomer_16x16.png}"
                                     LargeGlyph="{dx:DXImage Image=BOCustomer_32x32.png}" 
                                     Command="{Binding OpenViewCommand}"
                                     CommandParameter="CustomerEntryView"/>
@@ -60,9 +60,9 @@
                         <dxr:RibbonPage Caption="Settings">
                             <dxr:RibbonPageGroup Caption="Application Theme" SmallGlyph="{dx:DXImage Image=Palette_16x16.png}">
                                 <dxr:RibbonGalleryBarItem
-                            Content="Theme"
-                            Glyph="{dx:DXImage Image=Colors_16x16.png}"
-                            LargeGlyph="{dx:DXImage Image=Colors_32x32.png}">
+                                    Content="Theme"
+                                    Glyph="{dx:DXImage Image=Colors_16x16.png}"
+                                    LargeGlyph="{dx:DXImage Image=Colors_32x32.png}">
                                     <dxmvvm:Interaction.Behaviors>
                                         <dxr:RibbonGalleryItemThemeSelectorBehavior />
                                     </dxmvvm:Interaction.Behaviors>
@@ -82,13 +82,38 @@
                 <dxr:RibbonStatusBarControl Grid.Row="2">
                     <dxr:RibbonStatusBarControl.LeftItems>
                         <dxb:BarStaticItem
-                    Content="{Binding UserName}"
-                    Glyph="{dx:DXImage Image=User_16x16.png}"
-                    LargeGlyph="{dx:DXImage Image=User_32x32.png}" />
+                            Content="{Binding UserName}"
+                            Glyph="{dx:DXImage Image=User_16x16.png}"
+                            LargeGlyph="{dx:DXImage Image=User_32x32.png}">
+                            <dxb:BarStaticItem.SuperTip>
+                                <dx:SuperTip>
+                                    <dx:SuperTipHeaderItem Content="Username"/>
+                                    <dx:SuperTipItem Content="Current Logged in user in Windows OS"/>
+                                </dx:SuperTip>
+                            </dxb:BarStaticItem.SuperTip>
+                        </dxb:BarStaticItem>
                         <dxb:BarStaticItem
-                    Content="{Binding AppDirectory}"
-                    Glyph="{dx:DXImage Image=Open_16x16.png}"
-                    LargeGlyph="{dx:DXImage Image=Open_32x32.png}" />
+                            Content="{Binding AppDirectory}"
+                            Glyph="{dx:DXImage Image=Open_16x16.png}"
+                            LargeGlyph="{dx:DXImage Image=Open_32x32.png}">
+                            <dxb:BarStaticItem.SuperTip>
+                                <dx:SuperTip>
+                                    <dx:SuperTipHeaderItem Content="Program Folder"/>
+                                    <dx:SuperTipItem Content="Program execution folder"/>
+                                </dx:SuperTip>
+                            </dxb:BarStaticItem.SuperTip>
+                        </dxb:BarStaticItem>
+                        <dxb:BarStaticItem
+                            Content="{Binding ClipboardContent}"
+                            Glyph="{dx:DXImage Image=Clip_16x16.png}"
+                            LargeGlyph="{dx:DXImage Image=Clip_32x32.png}">
+                            <dxb:BarStaticItem.SuperTip>
+                                <dx:SuperTip>
+                                    <dx:SuperTipHeaderItem Content="Clipboard"/>
+                                    <dx:SuperTipItem Content="Current clipboard content for Document"/>
+                                </dx:SuperTip>
+                            </dxb:BarStaticItem.SuperTip>
+                        </dxb:BarStaticItem>
                     </dxr:RibbonStatusBarControl.LeftItems>
                 </dxr:RibbonStatusBarControl>
 

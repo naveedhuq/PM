@@ -19,7 +19,8 @@ namespace PM.Model
 
         public enum MessageTokenEnum
         {
-            SelectedCustomerChanged
+            SelectedCustomerChanged,
+            DocumentClipboardChanged
         }
 
 

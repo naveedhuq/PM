@@ -25,16 +25,12 @@ namespace PM.ViewModel
         private Document _ClipboardCutDocument = null;
 
 
-        private Customer _SelectedCustomer;
         public Customer SelectedCustomer
         {
-            get { return _SelectedCustomer; }
+            get { return GetProperty(() => SelectedCustomer); }
             set
             {
-                if (_SelectedCustomer == value)
-                    return;
-                _SelectedCustomer = value;
-                RaisePropertyChanged("SelectedCustomer");
+                SetProperty(() => SelectedCustomer, value);
                 RefreshFolderTree();
                 SelectedDocumentFolder = null;
                 RefreshDocumentGrid();
@@ -47,99 +43,58 @@ namespace PM.ViewModel
             set { SetProperty(() => DocumentFolders, value); }
         }
 
-        private DocumentFolder _SelectedDocumentFolder;
         public DocumentFolder SelectedDocumentFolder
         {
-            get { return _SelectedDocumentFolder; }
+            get { return GetProperty(() => SelectedDocumentFolder); }
             set
             {
-                if (_SelectedDocumentFolder == value)
-                    return;
-                _SelectedDocumentFolder = value;
-                RaisePropertyChanged("SelectedDocumentFolder");
+                SetProperty(() => SelectedDocumentFolder, value);
                 RefreshDocumentGrid();
             }
         }
 
-        private ObservableCollection<Document> _Documents;
         public ObservableCollection<Document> Documents
         {
-            get { return _Documents; }
-            set
-            {
-                if (_Documents == value)
-                    return;
-                _Documents = value;
-                RaisePropertyChanged("Documents");
-            }
+            get { return GetProperty(() => Documents); }
+            set { SetProperty(() => Documents, value); }
         }
 
-        private Document _SelectedDocument;
         public Document SelectedDocument
         {
-            get { return _SelectedDocument; }
+            get { return GetProperty(() => SelectedDocument); }
             set
             {
-                if (_SelectedDocument == value)
-                    return;
-                _SelectedDocument = value;
-                RaisePropertyChanged("SelectedDocument");
-                IsDocumentSelectionValid = (_SelectedDocument != null);
+                SetProperty(() => SelectedDocument, value);
+                IsDocumentSelectionValid = (value != null);
             }
         }
 
-
-        private string _InputDialogText;
         public string InputDialogText
         {
-            get { return _InputDialogText; }
-            set
-            {
-                if (_InputDialogText == value)
-                    return;
-                _InputDialogText = value;
-                RaisePropertyChanged("InputDialogText");
-            }
+            get { return GetProperty(() => InputDialogText); }
+            set { SetProperty(() => InputDialogText, value); }
         }
 
-        private bool _ShowHiddenFolders;
         public bool ShowHiddenFolders
         {
-            get { return _ShowHiddenFolders; }
+            get { return GetProperty(() => ShowHiddenFolders); }
             set
             {
-                if (_ShowHiddenFolders == value)
-                    return;
-                _ShowHiddenFolders = value;
-                RaisePropertyChanged("ShowHiddenFolders");
+                SetProperty(() => ShowHiddenFolders, value);
                 RefreshFolderTree();
             }
         }
 
-        private bool _IsDocumentSelectionValid;
         public bool IsDocumentSelectionValid
         {
-            get { return _IsDocumentSelectionValid; }
-            set
-            {
-                if (_IsDocumentSelectionValid == value)
-                    return;
-                _IsDocumentSelectionValid = value;
-                RaisePropertyChanged("IsDocumentSelectionValid");
-            }
+            get { return GetProperty(() => IsDocumentSelectionValid); }
+            set { SetProperty(() => IsDocumentSelectionValid, value); }
         }
 
-        private ObservableCollection<string> _DocumentTypes = new ObservableCollection<string>();
         public ObservableCollection<string> DocumentTypes
         {
-            get { return _DocumentTypes; }
-            set
-            {
-                if (_DocumentTypes == value)
-                    return;
-                _DocumentTypes = value;
-                RaisePropertyChanged("DocumentTypes");
-            }
+            get { return GetProperty(() => DocumentTypes); }
+            set { SetProperty(() => DocumentTypes, value); }
         }
 
 
@@ -292,6 +247,10 @@ namespace PM.ViewModel
                         case Key.Add:
                             NewSubFolderCommand.Execute(null);
                             break;
+                        case Key.V:
+                            if (Keyboard.Modifiers == ModifierKeys.Control)
+                                PasteDocumentCommand.Execute(null);
+                            break;
                     }
                 }, (args) => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
@@ -397,7 +356,7 @@ namespace PM.ViewModel
                     ClearClipboard();
                     _ClipboardCopyDocument = SelectedDocument;
                     ShowNotification($"File [{_ClipboardCopyDocument.DocumentFileName}] copied to clipboard.");
-
+                    Messenger.Default.Send(message: SelectedDocument, token: MessageTokenEnum.DocumentClipboardChanged);
                 }, () => SelectedDocument != null);
             }
         }
@@ -411,6 +370,7 @@ namespace PM.ViewModel
                     ClearClipboard();
                     _ClipboardCutDocument = SelectedDocument;
                     ShowNotification($"File [{_ClipboardCutDocument.DocumentFileName}] cut to clipboard.");
+                    Messenger.Default.Send(message: SelectedDocument, token: MessageTokenEnum.DocumentClipboardChanged);
                 }, () => SelectedDocument != null);
             }
         }
@@ -477,16 +437,16 @@ namespace PM.ViewModel
 
         private void RefreshFolderTree()
         {
-            if (_SelectedCustomer != null)
-                DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(_SelectedCustomer.ID, ShowHiddenFolders);
+            if (SelectedCustomer != null)
+                DocumentFolders = DocumentFolder.GetCustomerDocumentFolders(SelectedCustomer.ID, ShowHiddenFolders);
             else
                 DocumentFolders = null;
         }
 
         private void RefreshDocumentGrid()
         {
-            if (_SelectedCustomer != null && _SelectedDocumentFolder != null)
-                Documents = Document.GetCustomerDocuments(_SelectedCustomer.ID, _SelectedDocumentFolder.ID);
+            if (SelectedCustomer != null && SelectedDocumentFolder != null)
+                Documents = Document.GetCustomerDocuments(SelectedCustomer.ID, SelectedDocumentFolder.ID);
             else
                 Documents = null;
         }
@@ -514,6 +474,7 @@ namespace PM.ViewModel
         {
             _ClipboardCopyDocument = null;
             _ClipboardCutDocument = null;
+            Messenger.Default.Send<Document>(message: null, token: MessageTokenEnum.DocumentClipboardChanged);
         }
 
         private bool IsClipboardEmpty()

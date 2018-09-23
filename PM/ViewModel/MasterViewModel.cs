@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using DevExpress.Mvvm;
+using PM.Model;
 using PM.Shared;
-
+using static PM.Model.Enumerators;
 
 namespace PM.ViewModel
 {
@@ -31,7 +30,11 @@ namespace PM.ViewModel
             set { SetProperty(() => ChildView, value); }
         }
 
-        
+        public string ClipboardContent
+        {
+            get { return GetProperty(() => ClipboardContent ); }
+            set { SetProperty(() => ClipboardContent, value); }
+        }
 
 
 
@@ -64,13 +67,10 @@ namespace PM.ViewModel
         {
             _logger = LogManager.GetLogger(GetType());
             _WaitIndicatorService = DevExpress.Mvvm.ServiceContainer.Default.GetService<ISplashScreenService>("WaitIndicatorService");
-        }
-
-
-        private async void ShowNotification(string message)
-        {
-            INotification notification = AppNotificationService.CreatePredefinedNotification(message, null, null, null);
-            await notification.ShowAsync();
+            Messenger.Default.Register<Document>(
+                recipient: this,
+                token: MessageTokenEnum.DocumentClipboardChanged,
+                action: doc => ClipboardContent = doc?.DocumentFileName );
         }
 
     }
