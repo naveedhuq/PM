@@ -15,8 +15,11 @@
     
     mc:Ignorable="d"
     d:DesignHeight="450"
-    d:DesignWidth="800"
-    DataContext="{Binding MasterViewModel, Source={StaticResource Locator}}">
+    d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <Binding Path="MasterViewModel" Source="{StaticResource Locator}" />
+    </UserControl.DataContext>
 
     <dxmvvm:Interaction.Behaviors>
         <dx:DXMessageBoxService />
@@ -52,7 +55,12 @@
                             </dxr:RibbonPageGroup>
 
                             <dxr:RibbonPageGroup Caption="Document Management">
-                                
+                                <dxb:BarButtonItem
+                                    Content="Search Documents"
+                                    Glyph="{dx:DXImage Image=Find_16x16.png}"
+                                    LargeGlyph="{dx:DXImage Image=Find_32x32.png}" 
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="DocumentSearchView"/>
                             </dxr:RibbonPageGroup>
 
                             <dxr:RibbonPageGroup Caption="Service Management">

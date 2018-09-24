@@ -1,5 +1,4 @@
-﻿using DevExpress.Mvvm;
-using Unity;
+﻿using Unity;
 
 
 namespace PM.ViewModel
@@ -14,6 +13,8 @@ namespace PM.ViewModel
         public static CustomerDetailsViewModel CustomerDetailsViewModel { get { return _container.Resolve<CustomerDetailsViewModel>(); } }
         public static CustomerContactsViewModel CustomerContactsViewModel { get { return _container.Resolve<CustomerContactsViewModel>(); } }
         public static CustomerDocumentsViewModel CustomerDocumentsViewModel { get { return _container.Resolve<CustomerDocumentsViewModel>(); } }
+        public static DocumentSearchViewModel DocumentSearchViewModel { get { return _container.Resolve<DocumentSearchViewModel>(); } }
+
 
         static ViewModelLocator()
         {
@@ -23,6 +24,7 @@ namespace PM.ViewModel
             _container.RegisterType<CustomerDetailsViewModel>();
             _container.RegisterType<CustomerContactsViewModel>();
             _container.RegisterType<CustomerDocumentsViewModel>();
+            _container.RegisterType<DocumentSearchViewModel>();
         }
     }
 }

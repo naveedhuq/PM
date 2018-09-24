@@ -52,6 +52,7 @@
     <Reference Include="DevExpress.Xpf.Grid.v18.1.Extensions, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Layout.v18.1.Core, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.LayoutControl.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.NavBar.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Ribbon.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.DXStyle.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.HybridApp.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -172,6 +173,7 @@
     <Compile Include="ViewModel\CustomerDocumentsViewModel.cs" />
     <Compile Include="ViewModel\CustomerEntryViewModel.cs" />
     <Compile Include="ViewModel\CustomerSelectionPaneViewModel.cs" />
+    <Compile Include="ViewModel\DocumentSearchViewModel.cs" />
     <Compile Include="ViewModel\MasterViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\CustomerContactsView.xaml.cs">
@@ -188,6 +190,9 @@
     </Compile>
     <Compile Include="View\CustomerSelectionPaneView.xaml.cs">
       <DependentUpon>CustomerSelectionPaneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DocumentSearchView.xaml.cs">
+      <DependentUpon>DocumentSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\InputBoxDialogView.xaml.cs">
       <DependentUpon>InputBoxDialogView.xaml</DependentUpon>
@@ -266,6 +271,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CustomerSelectionPaneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DocumentSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

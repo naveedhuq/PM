@@ -1,9 +1,5 @@
 ﻿using DevExpress.Mvvm;
 using PM.Model;
-using PM.Shared;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using static PM.Model.Enumerators;
 
 namespace PM.ViewModel
