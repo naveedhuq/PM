@@ -91,15 +91,6 @@
     <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
-  <Function Name="dbo.sp_SaveDocumentFolders" Method="sp_SaveDocumentFolders">
-    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
-    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="ParentID" Parameter="parentID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="FolderName" Parameter="folderName" Type="System.String" DbType="NVarChar(1000)" />
-    <Parameter Name="IsStarred" Parameter="isStarred" Type="System.Boolean" DbType="Bit" />
-    <Parameter Name="IsHidden" Parameter="isHidden" Type="System.Boolean" DbType="Bit" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.sp_DeleteDocumentFolder" Method="sp_DeleteDocumentFolder">
     <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
@@ -118,18 +109,6 @@
       <Column Name="IsHidden" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.sp_SaveDocuments" Method="sp_SaveDocuments">
-    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
-    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="DocumentFolderID" Parameter="documentFolderID" Type="System.Int32" DbType="Int" />
-    <Parameter Name="DocumentFileName" Parameter="documentFileName" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="DocumentType" Parameter="documentType" Type="System.String" DbType="NVarChar(100)" />
-    <Parameter Name="FileTimestamp" Parameter="fileTimestamp" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="UploadDate" Parameter="uploadDate" Type="System.DateTime" DbType="Date" />
-    <Parameter Name="ExpirationDate" Parameter="expirationDate" Type="System.DateTime" DbType="Date" />
-    <Parameter Name="Comments" Parameter="comments" Type="System.String" DbType="NVarChar(1000)" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.fn_GetDocumentsForCustomer" Method="fn_GetDocumentsForCustomer" IsComposable="true">
     <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
     <ElementType Name="fn_GetDocumentsForCustomerResult">
@@ -145,9 +124,43 @@
       <Column Name="Comments" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.sp_DeleteDocument" Method="sp_DeleteDocument">
+    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.sp_SaveDocument" Method="sp_SaveDocument">
+    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="DocumentFolderID" Parameter="documentFolderID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="DocumentFileName" Parameter="documentFileName" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="DocumentType" Parameter="documentType" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="FileTimestamp" Parameter="fileTimestamp" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="UploadDate" Parameter="uploadDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="ExpirationDate" Parameter="expirationDate" Type="System.DateTime" DbType="Date" />
+    <Parameter Name="Comments" Parameter="comments" Type="System.String" DbType="NVarChar(1000)" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.sp_SaveDocumentData" Method="sp_SaveDocumentData">
+    <Parameter Name="DocumentID" Parameter="documentID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="RawData" Parameter="rawData" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.sp_SaveDocumentFolder" Method="sp_SaveDocumentFolder">
+    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ParentID" Parameter="parentID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="FolderName" Parameter="folderName" Type="System.String" DbType="NVarChar(1000)" />
+    <Parameter Name="IsStarred" Parameter="isStarred" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="IsHidden" Parameter="isHidden" Type="System.Boolean" DbType="Bit" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.sp_UploadDocumentData" Method="sp_UploadDocumentData">
     <Parameter Name="DocumentID" Parameter="documentID" Type="System.Int32" DbType="Int" />
     <Parameter Name="FileName" Parameter="fileName" Type="System.String" DbType="NVarChar(255)" />
     <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.fn_GetRawDocumentData" Method="fn_GetRawDocumentData" IsComposable="true">
+    <Parameter Name="DocumentID" Parameter="documentID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Data.Linq.Binary" />
   </Function>
 </Database>

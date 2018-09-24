@@ -249,10 +249,10 @@ GO
 
 
 -----------------------------------------------------------------------------------------------------------------------------
-IF OBJECT_ID('dbo.sp_SaveDocumentFolders','P') IS NOT NULL
-    DROP PROCEDURE dbo.sp_SaveDocumentFolders
+IF OBJECT_ID('dbo.sp_SaveDocumentFolder','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveDocumentFolder
 GO
-CREATE PROCEDURE dbo.sp_SaveDocumentFolders
+CREATE PROCEDURE dbo.sp_SaveDocumentFolder
     @ID INT,
     @CustomerID INT,
     @ParentID INT,
@@ -276,7 +276,7 @@ BEGIN
     RETURN SCOPE_IDENTITY()
 END
 GO
-GRANT EXECUTE ON dbo.sp_SaveDocumentFolders TO PUBLIC
+GRANT EXECUTE ON dbo.sp_SaveDocumentFolder TO PUBLIC
 GO
 
 
@@ -346,10 +346,10 @@ GO
 
 
 -----------------------------------------------------------------------------------------------------------------------------
-IF OBJECT_ID('dbo.sp_SaveDocuments','P') IS NOT NULL
-    DROP PROCEDURE dbo.sp_SaveDocuments
+IF OBJECT_ID('dbo.sp_SaveDocument','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveDocument
 GO
-CREATE PROCEDURE dbo.sp_SaveDocuments
+CREATE PROCEDURE dbo.sp_SaveDocument
     @ID INT,
     @CustomerID INT,
     @DocumentFolderID INT,
@@ -378,14 +378,35 @@ BEGIN
     RETURN SCOPE_IDENTITY()
 END
 GO
-GRANT EXECUTE ON dbo.sp_SaveDocuments TO PUBLIC
+GRANT EXECUTE ON dbo.sp_SaveDocument TO PUBLIC
 GO
 
 -----------------------------------------------------------------------------------------------------------------------------
-IF OBJECT_ID('dbo.sp_SaveDocumentData','P') IS NOT NULL
-	DROP PROCEDURE dbo.sp_SaveDocumentData
+IF OBJECT_ID('dbo.sp_DeleteDocument','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_DeleteDocument
 GO
-CREATE PROCEDURE dbo.sp_SaveDocumentData
+CREATE PROCEDURE dbo.sp_DeleteDocument
+    @ID INT
+AS
+BEGIN
+	UPDATE dbo.Documents
+	SET IsActive = 0
+	WHERE ID=@ID
+
+	UPDATE dbo.DocumentData
+	SET IsActive = 0
+	WHERE DocumentID=@ID
+END
+GO
+GRANT EXECUTE ON dbo.sp_DeleteDocument TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_UploadDocumentData','P') IS NOT NULL
+	DROP PROCEDURE dbo.sp_UploadDocumentData
+GO
+CREATE PROCEDURE dbo.sp_UploadDocumentData
 	@DocumentID INT,
 	@FileName NVARCHAR(255)
 AS
@@ -398,7 +419,46 @@ BEGIN
 	SELECT '+CAST(@DocumentID AS NVARCHAR(10))+', *
 	FROM OPENROWSET(BULK '''+ @FileName +''', SINGLE_BLOB) AS x'
 	EXEC sp_executesql @sql
+	RETURN SCOPE_IDENTITY()
+END
+GO
+GRANT EXECUTE ON sp_UploadDocumentData TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveDocumentData','P') IS NOT NULL
+	DROP PROCEDURE dbo.sp_SaveDocumentData
+GO
+CREATE PROCEDURE dbo.sp_SaveDocumentData
+	@DocumentID INT,
+	@RawData VARBINARY(MAX)
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM dbo.DocumentData WHERE DocumentID=@DocumentID AND IsActive=1)
+		UPDATE dbo.DocumentData SET RawData=@RawData WHERE DocumentID=@DocumentID
+	ELSE
+		INSERT INTO	dbo.DocumentData (DocumentID, RawData)
+		VALUES (@DocumentID, @RawData)
+
+	RETURN SCOPE_IDENTITY()
 END
 GO
 GRANT EXECUTE ON sp_SaveDocumentData TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetRawDocumentData','FN') IS NOT NULL
+	DROP FUNCTION dbo.fn_GetRawDocumentData
+GO
+CREATE FUNCTION dbo.fn_GetRawDocumentData(@DocumentID INT)
+RETURNS VARBINARY(MAX) AS
+BEGIN
+	DECLARE @ret VARBINARY(MAX)
+	SELECT @ret=RawData FROM dbo.DocumentData WHERE DocumentID=@DocumentID AND IsActive=1
+	RETURN @ret
+END
+GO
+GRANT EXECUTE ON dbo.fn_GetRawDocumentData TO PUBLIC
 GO

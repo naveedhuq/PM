@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Linq;
 using System.Linq;
 using m = PM.Model;
 
@@ -134,11 +135,11 @@ namespace PM.Shared
 
 
 
-        #region Save Methods
+        #region DML Methods
 
         public m.DocumentFolder SaveDocumentFolder(m.DocumentFolder f)
         {
-            var id = _cx.sp_SaveDocumentFolders(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
+            var id = _cx.sp_SaveDocumentFolder(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
             if (id != 0)
                 f.ID = id;
             return f;
@@ -151,11 +152,27 @@ namespace PM.Shared
 
         public m.Document SaveDocument(m.Document d)
         {
-            var id = _cx.sp_SaveDocuments(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
+            var id = _cx.sp_SaveDocument(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
             if (id != 0)
                 d.ID = id;
             return d;
         }
+
+        public void DeleteDocument(m.Document d)
+        {
+            _cx.sp_DeleteDocument(d.ID);
+        }
+
+        public void UploadDocumentData(int documentID, string fileName)
+        {
+            _cx.sp_UploadDocumentData(documentID, fileName);
+        }
+
+        public void SaveDocumentData(int documentID, Binary rawData)
+        {
+            _cx.sp_SaveDocumentData(documentID, rawData);
+        }
+
         #endregion
 
 
@@ -227,6 +244,11 @@ namespace PM.Shared
         public string GetAppSetting(string settingName)
         {
             return (from x in AppSettingsRepository where x.SettingsName == settingName select x.SettingsValue).FirstOrDefault();
+        }
+
+        public Binary GetRawDocumentData(int documentID)
+        {
+            return _cx.fn_GetRawDocumentData(documentID);
         }
 
 

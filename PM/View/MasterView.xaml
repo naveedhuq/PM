@@ -35,8 +35,8 @@
                 <!-- Top Ribbon Bar -->
                 <dxr:RibbonControl ShowApplicationButton="False">
                     <dxr:RibbonDefaultPageCategory>
-                        <dxr:RibbonPage Caption="Customer Maintenance">
-                            <dxr:RibbonPageGroup >
+                        <dxr:RibbonPage Caption="Portfolio Manager">
+                            <dxr:RibbonPageGroup Caption="Customer Maintenance">
                                 <dxb:BarButtonItem
                                     Content="Customer Entry"
                                     Glyph="{dx:DXImage Image=BOCustomer_16x16.png}"
@@ -50,12 +50,26 @@
                                     Command="{Binding OpenViewCommand}"
                                     CommandParameter="WalkInCustomerEntryView"/>
                             </dxr:RibbonPageGroup>
-                            
+
+                            <dxr:RibbonPageGroup Caption="Document Management">
+                                
+                            </dxr:RibbonPageGroup>
+
+                            <dxr:RibbonPageGroup Caption="Service Management">
+
+                            </dxr:RibbonPageGroup>
+
+                            <dxr:RibbonPageGroup Caption="Messaging">
+
+                            </dxr:RibbonPageGroup>
+
+                            <dxr:RibbonPageGroup Caption="Reporting">
+
+                            </dxr:RibbonPageGroup>
+
                         </dxr:RibbonPage>
-                        <dxr:RibbonPage Caption="Services" />
-                        <dxr:RibbonPage Caption="Messaging" />
-                        <dxr:RibbonPage Caption="Reporting" />
                     </dxr:RibbonDefaultPageCategory>
+                    
                     <dxr:RibbonPageCategory>
                         <dxr:RibbonPage Caption="Settings">
                             <dxr:RibbonPageGroup Caption="Application Theme" SmallGlyph="{dx:DXImage Image=Palette_16x16.png}">

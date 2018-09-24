@@ -152,13 +152,6 @@ namespace PM.DB
 			return ((System.Nullable<int>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID).ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocumentFolders")]
-		public int sp_SaveDocumentFolders([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ParentID", DbType="Int")] System.Nullable<int> parentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FolderName", DbType="NVarChar(1000)")] string folderName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsStarred", DbType="Bit")] System.Nullable<bool> isStarred, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsHidden", DbType="Bit")] System.Nullable<bool> isHidden)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, parentID, folderName, isStarred, isHidden);
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_DeleteDocumentFolder")]
 		public int sp_DeleteDocumentFolder([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD)
 		{
@@ -172,24 +165,51 @@ namespace PM.DB
 			return this.CreateMethodCallQuery<fn_GetDocumentFoldersForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocuments")]
-		public int sp_SaveDocuments([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileTimestamp", DbType="DateTime")] System.Nullable<System.DateTime> fileTimestamp, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, fileTimestamp, uploadDate, expirationDate, comments);
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentsForCustomer", IsComposable=true)]
 		public IQueryable<fn_GetDocumentsForCustomerResult> fn_GetDocumentsForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_DeleteDocument")]
+		public int sp_DeleteDocument([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocument")]
+		public int sp_SaveDocument([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileTimestamp", DbType="DateTime")] System.Nullable<System.DateTime> fileTimestamp, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, fileTimestamp, uploadDate, expirationDate, comments);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocumentData")]
-		public int sp_SaveDocumentData([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentID", DbType="Int")] System.Nullable<int> documentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileName", DbType="NVarChar(255)")] string fileName)
+		public int sp_SaveDocumentData([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentID", DbType="Int")] System.Nullable<int> documentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="RawData", DbType="VarBinary(MAX)")] System.Data.Linq.Binary rawData)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), documentID, rawData);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocumentFolder")]
+		public int sp_SaveDocumentFolder([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ParentID", DbType="Int")] System.Nullable<int> parentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FolderName", DbType="NVarChar(1000)")] string folderName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsStarred", DbType="Bit")] System.Nullable<bool> isStarred, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsHidden", DbType="Bit")] System.Nullable<bool> isHidden)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, parentID, folderName, isStarred, isHidden);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_UploadDocumentData")]
+		public int sp_UploadDocumentData([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentID", DbType="Int")] System.Nullable<int> documentID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileName", DbType="NVarChar(255)")] string fileName)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), documentID, fileName);
 			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetRawDocumentData", IsComposable=true)]
+		public System.Data.Linq.Binary fn_GetRawDocumentData([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentID", DbType="Int")] System.Nullable<int> documentID)
+		{
+			return ((System.Data.Linq.Binary)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), documentID).ReturnValue));
 		}
 	}
 	

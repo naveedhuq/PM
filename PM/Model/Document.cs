@@ -1,6 +1,7 @@
 ﻿using PM.Shared;
 using System;
 using System.Collections.ObjectModel;
+using System.Data.Linq;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -130,7 +131,6 @@ namespace PM.Model
             }
         }
 
-
         private ImageSource _FileImage;
         public ImageSource FileImage
         {
@@ -143,6 +143,7 @@ namespace PM.Model
                 NotifyPropertyChanged(m => m.FileImage);
             }
         }
+
 
 
         private void ChangeFileImage()
@@ -184,6 +185,20 @@ namespace PM.Model
             return new ObservableCollection<Document>(docs);
         }
 
+        public void Delete()
+        {
+            DBHelper.Instance.DeleteDocument(this);
+        }
+
+        public void UploadRawDataFromFile(string fileName)
+        {
+            DBHelper.Instance.UploadDocumentData(ID, fileName);            
+        }
+
+        public Binary GetRawDocumentData()
+        {
+            return DBHelper.Instance.GetRawDocumentData(ID);
+        }
 
     }
 }

@@ -115,7 +115,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.FolderName = InputDialogText;
                         SelectedDocumentFolder.SaveChanges();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
@@ -132,7 +132,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.SaveChanges();
                         RefreshFolderTree();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
@@ -148,7 +148,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.IsStarred = !SelectedDocumentFolder.IsStarred;
                         SelectedDocumentFolder.SaveChanges();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
@@ -176,7 +176,7 @@ namespace PM.ViewModel
                         DocumentFolders.Add(folder);
                         SelectedDocumentFolder = folder;
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 });
             }
         }
@@ -204,7 +204,7 @@ namespace PM.ViewModel
                         DocumentFolders.Add(folder);
                         SelectedDocumentFolder = folder;
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
@@ -222,7 +222,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.Delete();
                         DocumentFolders.Remove(SelectedDocumentFolder);
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
             }
         }
@@ -267,6 +267,8 @@ namespace PM.ViewModel
                         CopyDocumentCommand.Execute(null);
                     else if (args.Key == Key.X && ctrlKey)
                         CutDocumentCommand.Execute(null);
+                    else if (args.Key == Key.Delete)
+                        DeleteDocumentCommand.Execute(null);
                 });
             }
         }
@@ -292,7 +294,7 @@ namespace PM.ViewModel
                         else
                             args.Manager.AllowDrop = true;
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 });
             }
         }
@@ -310,7 +312,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.ParentID = target.ID;
                         SelectedDocumentFolder.SaveChanges();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 });
             }
         }
@@ -330,7 +332,7 @@ namespace PM.ViewModel
                             ImportFileIntoFolder(file);
                         RefreshDocumentGrid();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder != null);
             }
         }
@@ -342,7 +344,7 @@ namespace PM.ViewModel
                 return new DelegateCommand(() =>
                 {
                     try { SelectedDocument.SaveChanges(); }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocument != null && SelectedDocument.IsDirty);
             }
         }
@@ -412,12 +414,29 @@ namespace PM.ViewModel
                         ClearClipboard();
                         RefreshDocumentGrid();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
 
                 }, () => SelectedCustomer != null && SelectedDocumentFolder != null && !IsClipboardEmpty() && SelectedDocumentFolder.ID != 0);
             }
         }
         
+        public DelegateCommand DeleteDocumentCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        if (MessageBoxService.ShowMessage("Are you sure you want to Delete this Document", "Confirmation", MessageButton.OKCancel, MessageIcon.Exclamation) == MessageResult.Cancel)
+                            return;
+                        SelectedDocument.Delete();
+                        RefreshDocumentGrid();
+                    }
+                    catch (Exception ex) { ShowError(ex); }
+                }, () => SelectedDocument != null);
+            }
+        }
 
 
         public CustomerDocumentsViewModel()
@@ -434,6 +453,9 @@ namespace PM.ViewModel
                 token: MessageTokenEnum.SelectedCustomerChanged,
                 action: customer => SelectedCustomer = customer);
         }
+
+
+
 
         private void RefreshFolderTree()
         {
@@ -453,16 +475,17 @@ namespace PM.ViewModel
 
         private void ImportFileIntoFolder(IFileInfo file)
         {
+            var fullFileName = file.GetFullName();
             Document doc = new Document
             {
                 CustomerID = SelectedDocumentFolder.CustomerID,
                 DocumentFolderID = SelectedDocumentFolder.ID,
                 DocumentFileName = file.Name,
-                FileTimestamp = File.GetLastWriteTime(file.GetFullName()),
+                FileTimestamp = File.GetLastWriteTime(fullFileName),
                 UploadDate = DateTime.Today
             };
             doc.SaveChanges();
-            //TODO: Import BLOB
+            doc.UploadRawDataFromFile(fullFileName);
         }
 
         private void ShowNotification(string text)
@@ -482,5 +505,6 @@ namespace PM.ViewModel
             return (_ClipboardCopyDocument == null && _ClipboardCutDocument == null);
         }
 
+        private void ShowError(Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
     }
 }

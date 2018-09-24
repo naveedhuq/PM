@@ -192,12 +192,16 @@
                         <dxg:TableView.RowCellMenuCustomizations>
                             <dxb:BarButtonItem
                                 Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.CopyDocumentCommand, RelativeSource={RelativeSource Self}}"
-                                Content="Copy  [Ctrl + C]"
+                                Content="Copy [Ctrl + C]"
                                 Glyph="{dx:DXImage Image=Copy_16x16.png}" />
                             <dxb:BarButtonItem
                                 Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.CutDocumentCommand, RelativeSource={RelativeSource Self}}"
-                                Content="Cut    [Ctrl + X]"
+                                Content="Cut  [Ctrl + X]"
                                 Glyph="{dx:DXImage Image=Cut_16x16.png}" />
+                            <dxb:BarButtonItem
+                                Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.DeleteDocumentCommand, RelativeSource={RelativeSource Self}}"
+                                Content="Delete [Del]"
+                                Glyph="{dx:DXImage Image=Delete_16x16.png}" />
                         </dxg:TableView.RowCellMenuCustomizations>
                     </dxg:TableView>
                 </dxg:GridControl.View>
