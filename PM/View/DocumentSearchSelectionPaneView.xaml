@@ -1,0 +1,177 @@
+﻿<UserControl
+    x:Class="PM.View.DocumentSearchSelectionPaneView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:dxn="http://schemas.devexpress.com/winfx/2008/xaml/navbar"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:shared="clr-namespace:PM.Shared"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="_Resource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <Binding Path="DocumentSearchSelectionPaneViewModel" Source="{StaticResource Locator}" />
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <dxn:NavBarControl>
+            
+            <dxn:NavBarGroup Header="Customer Filters">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Content="Customer Name"/>
+                    <dxg:LookUpEdit
+                        Grid.Column="1"
+                        ItemsSource="{Binding Customers}"
+                        SelectedItem="{Binding SelectedCustomer}"
+                        AutoPopulateColumns="False"
+                        PopupWidth="500">
+                        <dxg:LookUpEdit.PopupContentTemplate>
+                            <ControlTemplate>
+                                <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
+                                    <dxg:GridControl.Columns>
+                                        <dxg:GridColumn Binding="{Binding Path=CustomerName}" Header="Customer Name"/>
+                                        <dxg:GridColumn Binding="{Binding Path=IsActive}" Header="Active?"/>
+                                        <dxg:GridColumn Binding="{Binding Path=CustomerType}" Header="Type"/>
+                                    </dxg:GridControl.Columns>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView shared:BestFitHelper.DoBestFit="True"/>
+                                    </dxg:GridControl.View>
+                                </dxg:GridControl>
+                            </ControlTemplate>
+                        </dxg:LookUpEdit.PopupContentTemplate>
+                    </dxg:LookUpEdit>
+                    
+                    <Label Grid.Row="1" Content="Inactive Customers"/>
+                    <dxe:CheckEdit Grid.Row="1" Grid.Column="1"/>
+                </Grid>
+            </dxn:NavBarGroup>
+
+            <dxn:NavBarGroup Header="Folder Filters">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Folder Name"/>
+                    <dxe:ComboBoxEdit Grid.Column="1" IsTextEditable="True"/>
+                    <Label Grid.Row="1" Content="Bookmarked"/>
+                    <dxe:CheckEdit Grid.Row="1" Grid.Column="1"/>
+                    <Label Grid.Row="2" Content="Hidden"/>
+                    <dxe:CheckEdit Grid.Row="2" Grid.Column="1"/>
+                </Grid>
+            </dxn:NavBarGroup>
+
+            <dxn:NavBarGroup Header="Document Filters">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Document Filename"/>
+                    <dxe:TextEdit Grid.Column="1"/>
+
+                    <Label Grid.Row="1" Content="File Type"/>
+                    <dxe:ComboBoxEdit Grid.Row="1" Grid.Column="1" IsTextEditable="True"/>
+
+                    <Label Grid.Row="2" Content="Document Type"/>
+                    <dxe:ComboBoxEdit Grid.Row="2" Grid.Column="1" IsTextEditable="True"/>
+
+                    <Label Grid.Row="3" Content="File Creation Date"/>
+                    <Grid Grid.Row="3" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="From"/>
+                        <dxe:DateEdit Grid.Column="1" Width="100"/>
+                        <Label Grid.Column="2" Content="To"/>
+                        <dxe:DateEdit Grid.Column="3" Width="100"/>
+                    </Grid>
+
+                    <Label Grid.Row="4" Content="File Upload Date"/>
+                    <Grid Grid.Row="4" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="From"/>
+                        <dxe:DateEdit Grid.Column="1" Width="100"/>
+                        <Label Grid.Column="2" Content="To"/>
+                        <dxe:DateEdit Grid.Column="3"  Width="100"/>
+                    </Grid>
+
+                    <Label Grid.Row="5" Content="File Expiry Date"/>
+                    <Grid Grid.Row="5" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="From"/>
+                        <dxe:DateEdit Grid.Column="1" Width="100"/>
+                        <Label Grid.Column="2" Content="To"/>
+                        <dxe:DateEdit Grid.Column="3"  Width="100"/>
+                    </Grid>
+
+                    <Label Grid.Row="6" Content="Comments Contains"/>
+                    <dxe:TextEdit Grid.Row="6" Grid.Column="1"/>
+
+                    <Label Grid.Row="7" Content="Deleted Documents"/>
+                    <dxe:CheckEdit Grid.Row="7" Grid.Column="1"/>
+
+                </Grid>
+            </dxn:NavBarGroup>
+        </dxn:NavBarControl>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
+            <dx:SimpleButton Content="Apply Filter(s)" Glyph="{dx:DXImage Image=MultipleMasterFilter_16x16.png}"/>
+            <dx:SimpleButton Content="Clear" Glyph="{dx:DXImage Image=ClearFilter_16x16.png}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

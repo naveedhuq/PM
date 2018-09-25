@@ -156,6 +156,7 @@
     <Compile Include="Model\LookupItem.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\AppSetting.cs" />
+    <Compile Include="Shared\BestFitHelper.cs" />
     <Compile Include="Shared\DBHelper.cs" />
     <Compile Include="DB\PM.designer.cs">
       <AutoGen>True</AutoGen>
@@ -173,6 +174,7 @@
     <Compile Include="ViewModel\CustomerDocumentsViewModel.cs" />
     <Compile Include="ViewModel\CustomerEntryViewModel.cs" />
     <Compile Include="ViewModel\CustomerSelectionPaneViewModel.cs" />
+    <Compile Include="ViewModel\DocumentSearchSelectionPaneViewModel.cs" />
     <Compile Include="ViewModel\DocumentSearchViewModel.cs" />
     <Compile Include="ViewModel\MasterViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -190,6 +192,9 @@
     </Compile>
     <Compile Include="View\CustomerSelectionPaneView.xaml.cs">
       <DependentUpon>CustomerSelectionPaneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DocumentSearchSelectionPaneView.xaml.cs">
+      <DependentUpon>DocumentSearchSelectionPaneView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DocumentSearchView.xaml.cs">
       <DependentUpon>DocumentSearchView.xaml</DependentUpon>
@@ -271,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CustomerSelectionPaneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DocumentSearchSelectionPaneView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

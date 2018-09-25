@@ -61,6 +61,12 @@
                                     LargeGlyph="{dx:DXImage Image=Find_32x32.png}" 
                                     Command="{Binding OpenViewCommand}"
                                     CommandParameter="DocumentSearchView"/>
+                                <dxb:BarButtonItem
+                                    Content="Document Expiry Calendar"
+                                    Glyph="{dx:DXImage Image=Calendar_16x16.png}"
+                                    LargeGlyph="{dx:DXImage Image=Calendar_32x32.png}" 
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="DocumentSearchView"/>
                             </dxr:RibbonPageGroup>
 
                             <dxr:RibbonPageGroup Caption="Service Management">

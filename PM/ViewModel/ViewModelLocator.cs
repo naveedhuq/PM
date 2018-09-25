@@ -14,7 +14,9 @@ namespace PM.ViewModel
         public static CustomerContactsViewModel CustomerContactsViewModel { get { return _container.Resolve<CustomerContactsViewModel>(); } }
         public static CustomerDocumentsViewModel CustomerDocumentsViewModel { get { return _container.Resolve<CustomerDocumentsViewModel>(); } }
         public static DocumentSearchViewModel DocumentSearchViewModel { get { return _container.Resolve<DocumentSearchViewModel>(); } }
+        public static DocumentSearchSelectionPaneViewModel DocumentSearchSelectionPaneViewModel { get { return _container.Resolve<DocumentSearchSelectionPaneViewModel>(); } }
 
+        
 
         static ViewModelLocator()
         {
@@ -25,6 +27,7 @@ namespace PM.ViewModel
             _container.RegisterType<CustomerContactsViewModel>();
             _container.RegisterType<CustomerDocumentsViewModel>();
             _container.RegisterType<DocumentSearchViewModel>();
+            _container.RegisterType<DocumentSearchSelectionPaneViewModel>();
         }
     }
 }
