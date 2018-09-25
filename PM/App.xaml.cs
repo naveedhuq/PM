@@ -1,6 +1,6 @@
-﻿using DevExpress.Xpf.Core;
+﻿using System;
 using System.Windows;
-
+using DevExpress.Xpf.Core;
 
 namespace PM
 {
@@ -11,11 +11,16 @@ namespace PM
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            ApplicationThemeHelper.ApplicationThemeName = PM.Properties.Settings.Default.ApplicationThemeName;
-            DevExpress.Xpf.Grid.DataControlBase.AllowInfiniteGridSize = true;
+            try
+            {
+                Shared.EventLog.AddEventLog(Shared.EventLog.LogEventType.Login, "User started the application");
+                ApplicationThemeHelper.ApplicationThemeName = PM.Properties.Settings.Default.ApplicationThemeName;
+                DevExpress.Xpf.Grid.DataControlBase.AllowInfiniteGridSize = true;
 
-            MainWindow window = new MainWindow();
-            window.Show();
+                MainWindow window = new MainWindow();
+                window.Show();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
     }
 }

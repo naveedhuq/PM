@@ -109,6 +109,21 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.DocumentData TO PUBLIC
 GO
 
 -----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.EventLog','U') IS NOT NULL
+	DROP TABLE dbo.EventLog
+CREATE TABLE dbo.EventLog
+(
+	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	LOG_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	LOG_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
+	
+	EventType NVARCHAR(100) NOT NULL,
+	EventMessage NVARCHAR(1000)
+)
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.EventLog TO PUBLIC
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.Lookups','U') IS NOT NULL
 	DROP TABLE dbo.Lookups
 CREATE TABLE dbo.Lookups
@@ -184,7 +199,14 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('DocumentType', 9, 'Property Records'),
 ('DocumentType', 10, 'Car Documents'),
 ('DocumentType', 11, 'Business Documents'),
-('DocumentType', 12, 'Other Documents')
+('DocumentType', 12, 'Other Documents'),
+
+('FileType', 1, 'Word/RTF'),
+('FileType', 2, 'Excel'),
+('FileType', 3, 'PDF'),
+('FileType', 4, 'Image'),
+('FileType', 5, 'Text'),
+('FileType', 6, 'Other')
 
 GO
 
@@ -318,7 +340,7 @@ GO
 IF OBJECT_ID('dbo.fn_GetDocumentsForCustomer','IF') IS NOT NULL
 	DROP FuNCTION dbo.fn_GetDocumentsForCustomer
 GO
-CREATE FUNCTION dbo.fn_GetDocumentsForCustomer(@CustomerID INT)
+CREATE FUNCTION dbo.fn_GetDocumentsForCustomer(@CustomerID INT, @ActiveOnly BIT = 1)
 RETURNS TABLE AS RETURN
 (
 	SELECT
@@ -337,7 +359,7 @@ RETURNS TABLE AS RETURN
 		d.ExpirationDate,
 		d.Comments
 	FROM dbo.Documents d
-	WHERE d.IsActive=1
+	WHERE (CASE WHEN @ActiveOnly=1 THEN d.IsActive ELSE 1 END)=1
 	AND d.CustomerID=@CustomerID
 )
 GO
@@ -461,4 +483,61 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON dbo.fn_GetRawDocumentData TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetAllFolderNames','IF') IS NOT NULL
+    DROP FUNCTION dbo.fn_GetAllFolderNames
+GO
+CREATE FUNCTION dbo.fn_GetAllFolderNames(@ActiveOnly BIT = 1)
+RETURNS TABLE AS RETURN
+(
+    SELECT DISTINCT FolderName
+    FROM dbo.DocumentFolders
+    WHERE (CASE WHEN @ActiveOnly=1 THEN IsActive ELSE 1 END)=1
+)
+GO
+GRANT SELECT ON dbo.fn_GetAllFolderNames TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SyncDocumentType','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SyncDocumentType
+GO
+CREATE PROCEDURE dbo.sp_SyncDocumentType
+AS
+BEGIN
+    DECLARE @MaxSortOrder INT = (SELECT MAX(SortOrder) FROM dbo.Lookups WHERE LookupType='DocumentType')
+
+    ;WITH cte AS
+    (
+        SELECT DISTINCT ID, DocumentType
+        FROM dbo.Documents
+        WHERE DocumentType NOT IN (SELECT LookupName FROM dbo.Lookups WHERE LookupType='DocumentType')
+    )
+    INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName)
+    SELECT
+        'DocumentType' LookupType,
+        (ROW_NUMBER() OVER(ORDER BY ID))+@MaxSortOrder AS SortOrder,
+        DocumentType LookupName    
+    FROM cte
+END
+GO
+GRANT EXECUTE ON dbo.sp_SyncDocumentType TO PUBLIC
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_AddEventLog','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_AddEventLog
+GO
+CREATE PROCEDURE dbo.sp_AddEventLog
+    @EventType NVARCHAR(100),
+    @EventMessage NVARCHAR(1000)
+AS
+BEGIN
+    INSERT INTO dbo.EventLog (EventType, EventMessage)
+    VALUES (@EventType, @EventMessage)
+END
 GO

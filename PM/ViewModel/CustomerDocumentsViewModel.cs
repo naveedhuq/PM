@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid.DragDrop;
 using PM.Model;
-using PM.Shared;
 using static PM.Model.Enumerators;
+using static PM.Shared.EventLog;
+
 
 namespace PM.ViewModel
 {
@@ -33,6 +33,7 @@ namespace PM.ViewModel
                 SetProperty(() => SelectedCustomer, value);
                 RefreshFolderTree();
                 SelectedDocumentFolder = null;
+                SelectedDocument = null;
                 RefreshDocumentGrid();
             }
         }
@@ -108,12 +109,14 @@ namespace PM.ViewModel
                 {
                     try
                     {
+                        var oldName = SelectedDocumentFolder?.FolderName;
                         InputDialogText = SelectedDocumentFolder?.FolderName;
                         var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter Folder Name", viewModel: this);
                         if (ret != MessageResult.OK)
                             return;
                         SelectedDocumentFolder.FolderName = InputDialogText;
                         SelectedDocumentFolder.SaveChanges();
+                        AddEventLog(LogEventType.RenameFolder, $"Folder {oldName} renamed to {SelectedDocumentFolder.FolderName} for customer {SelectedCustomer.CustomerName}");
                     }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
@@ -130,6 +133,8 @@ namespace PM.ViewModel
                     {
                         SelectedDocumentFolder.IsHidden = !SelectedDocumentFolder.IsHidden;
                         SelectedDocumentFolder.SaveChanges();
+                        var hideOpration = SelectedDocumentFolder.IsHidden ? "Hidden" : "Visible";
+                        AddEventLog(LogEventType.HideFolder, $"Folder {SelectedDocumentFolder.FolderName} was marked as {hideOpration} for customer {SelectedCustomer.CustomerName}");
                         RefreshFolderTree();
                     }
                     catch (Exception ex) { ShowError(ex); }
@@ -175,6 +180,7 @@ namespace PM.ViewModel
                         folder.SaveChanges();
                         DocumentFolders.Add(folder);
                         SelectedDocumentFolder = folder;
+                        AddEventLog(LogEventType.NewFolder, $"New folder {SelectedDocumentFolder.FolderName} was created for customer {SelectedCustomer.CustomerName}");
                     }
                     catch (Exception ex) { ShowError(ex); }
                 });
@@ -343,7 +349,11 @@ namespace PM.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    try { SelectedDocument.SaveChanges(); }
+                    try
+                    {
+                        SelectedDocument.SaveChanges();
+                        DocumentTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.DocumentType);
+                    }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocument != null && SelectedDocument.IsDirty);
             }

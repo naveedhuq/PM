@@ -8,6 +8,7 @@
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:shared="clr-namespace:PM.Shared"
     mc:Ignorable="d">
 
@@ -22,6 +23,11 @@
     <UserControl.DataContext>
         <Binding Path="DocumentSearchSelectionPaneViewModel" Source="{StaticResource Locator}" />
     </UserControl.DataContext>
+
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+        <dxmvvm:NotificationService x:Name="AppNotificationService" UseWin8NotificationsIfAvailable="False"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -49,7 +55,7 @@
                         ItemsSource="{Binding Customers}"
                         SelectedItem="{Binding SelectedCustomer}"
                         AutoPopulateColumns="False"
-                        PopupWidth="500">
+                        PopupWidth="300">
                         <dxg:LookUpEdit.PopupContentTemplate>
                             <ControlTemplate>
                                 <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
@@ -67,7 +73,9 @@
                     </dxg:LookUpEdit>
                     
                     <Label Grid.Row="1" Content="Inactive Customers"/>
-                    <dxe:CheckEdit Grid.Row="1" Grid.Column="1"/>
+                    <dxe:CheckEdit
+                        Grid.Row="1" Grid.Column="1"
+                        IsChecked="{Binding InactiveCustomersOnly}"/>
                 </Grid>
             </dxn:NavBarGroup>
 
@@ -83,12 +91,23 @@
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
+                    
                     <Label Content="Folder Name"/>
-                    <dxe:ComboBoxEdit Grid.Column="1" IsTextEditable="True"/>
+                    <dxe:ComboBoxEdit
+                        Grid.Column="1"
+                        IsTextEditable="True"
+                        ItemsSource="{Binding AllFolderNames}"
+                        SelectedItem="{Binding SelectedFolderName}"/>
+                    
                     <Label Grid.Row="1" Content="Bookmarked"/>
-                    <dxe:CheckEdit Grid.Row="1" Grid.Column="1"/>
+                    <dxe:CheckEdit
+                        Grid.Row="1" Grid.Column="1"
+                        IsChecked="{Binding BookmarkedFoldersOnly}"/>
+                    
                     <Label Grid.Row="2" Content="Hidden"/>
-                    <dxe:CheckEdit Grid.Row="2" Grid.Column="1"/>
+                    <dxe:CheckEdit
+                        Grid.Row="2" Grid.Column="1"
+                        IsChecked="{Binding HiddenFoldersOnly}"/>
                 </Grid>
             </dxn:NavBarGroup>
 
@@ -108,14 +127,26 @@
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
+                    
                     <Label Content="Document Filename"/>
-                    <dxe:TextEdit Grid.Column="1"/>
+                    <dxe:TextEdit
+                        Grid.Column="1"
+                        EditValue="{Binding DocumentFilename}"/>
 
-                    <Label Grid.Row="1" Content="File Type"/>
-                    <dxe:ComboBoxEdit Grid.Row="1" Grid.Column="1" IsTextEditable="True"/>
+                    <Label Grid.Row="1" Content="File Format Type"/>
+                    <dxe:ComboBoxEdit
+                        Grid.Row="1" Grid.Column="1"
+                        IsTextEditable="False"
+                        ItemsSource="{Binding FileTypes}"
+                        SelectedItem="{Binding SelectedFileType}"/>
 
                     <Label Grid.Row="2" Content="Document Type"/>
-                    <dxe:ComboBoxEdit Grid.Row="2" Grid.Column="1" IsTextEditable="True"/>
+                    <dxe:ComboBoxEdit
+                        Grid.Row="2" Grid.Column="1"
+                        IsTextEditable="False"
+                        AllowNullInput="True"
+                        ItemsSource="{Binding DocumentTypes}"
+                        SelectedIndex="{Binding SelectedDocumentType}"/>
 
                     <Label Grid.Row="3" Content="File Creation Date"/>
                     <Grid Grid.Row="3" Grid.Column="1">
@@ -126,9 +157,13 @@
                             <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="From"/>
-                        <dxe:DateEdit Grid.Column="1" Width="100"/>
+                        <dxe:DateEdit
+                            Grid.Column="1" Width="100"
+                            EditValue="{Binding FileCreationDateFrom}"/>
                         <Label Grid.Column="2" Content="To"/>
-                        <dxe:DateEdit Grid.Column="3" Width="100"/>
+                        <dxe:DateEdit
+                            Grid.Column="3" Width="100"
+                            EditValue="{Binding FileCreationDateTo}"/>
                     </Grid>
 
                     <Label Grid.Row="4" Content="File Upload Date"/>
@@ -140,9 +175,13 @@
                             <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="From"/>
-                        <dxe:DateEdit Grid.Column="1" Width="100"/>
+                        <dxe:DateEdit
+                            Grid.Column="1" Width="100"
+                            EditValue="{Binding FileUploadDateFrom}"/>
                         <Label Grid.Column="2" Content="To"/>
-                        <dxe:DateEdit Grid.Column="3"  Width="100"/>
+                        <dxe:DateEdit
+                            Grid.Column="3"  Width="100"
+                            EditValue="{Binding FileUploadDateTo}"/>
                     </Grid>
 
                     <Label Grid.Row="5" Content="File Expiry Date"/>
@@ -154,24 +193,37 @@
                             <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="From"/>
-                        <dxe:DateEdit Grid.Column="1" Width="100"/>
+                        <dxe:DateEdit
+                            Grid.Column="1" Width="100"
+                            EditValue="{Binding FileExpiryDateFrom}"/>
                         <Label Grid.Column="2" Content="To"/>
-                        <dxe:DateEdit Grid.Column="3"  Width="100"/>
+                        <dxe:DateEdit
+                            Grid.Column="3"  Width="100"
+                            EditValue="{Binding FileExpiryDateTo}"/>
                     </Grid>
 
                     <Label Grid.Row="6" Content="Comments Contains"/>
-                    <dxe:TextEdit Grid.Row="6" Grid.Column="1"/>
+                    <dxe:TextEdit
+                        Grid.Row="6" Grid.Column="1"
+                        EditValue="{Binding Comments}"/>
 
-                    <Label Grid.Row="7" Content="Deleted Documents"/>
-                    <dxe:CheckEdit Grid.Row="7" Grid.Column="1"/>
-
+                    <Label Grid.Row="7" Content="Include Deleted"/>
+                    <dxe:CheckEdit
+                        Grid.Row="7" Grid.Column="1"
+                        IsChecked="{Binding IncludeDeletedDocuments}"/>
                 </Grid>
             </dxn:NavBarGroup>
         </dxn:NavBarControl>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
-            <dx:SimpleButton Content="Apply Filter(s)" Glyph="{dx:DXImage Image=MultipleMasterFilter_16x16.png}"/>
-            <dx:SimpleButton Content="Clear" Glyph="{dx:DXImage Image=ClearFilter_16x16.png}"/>
+            <dx:SimpleButton
+                Content="Apply Filter(s)"
+                Command="{Binding ApplyFilterCommand}"
+                Glyph="{dx:DXImage Image=MultipleMasterFilter_16x16.png}"/>
+            <dx:SimpleButton
+                Content="Clear"
+                Command="{Binding ClearFilterCommand}"
+                Glyph="{dx:DXImage Image=ClearFilter_16x16.png}"/>
         </StackPanel>
     </Grid>
 </UserControl>

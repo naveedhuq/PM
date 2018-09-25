@@ -44,5 +44,11 @@
         <elementListCompartment Id="0ac40df0-968c-497f-9020-d1080f7c0c54" absoluteBounds="3.0149999999999997, 3.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="cc9067f0-f21f-441f-914d-8e09ffa2ae50" isExpanded="false" absoluteBounds="3, 3.75, 2, 0.45">
+      <DataClassMoniker Name="/PMDataContext/EventLog" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8d96bc1f-029a-49f4-996e-8700ccbfa5e4" absoluteBounds="3.0149999999999997, 4.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

@@ -27,7 +27,7 @@ namespace PM.Model
                 _ID = value;
                 NotifyPropertyChanged(m => m.ID);
             }
-        }
+        }        
         private int? _ParentID;
         public int? ParentID
         {
@@ -186,6 +186,11 @@ namespace PM.Model
             folders.Insert(0, new DocumentFolder { ID = -1, FolderName = _SpecialFolderName_UnCategorized, IsDefault = true, CustomerID = customerID, ParentID = 0 });
             folders.Insert(0, new DocumentFolder { ID = 0, FolderName = _SpecialFolderName_All, IsRoot = true, CustomerID = customerID });
             return new ObservableCollection<DocumentFolder>(folders);
+        }
+
+        public static ObservableCollection<string> GetAllFolderNames()
+        {
+            return DBHelper.Instance.GetAllFolderNames();
         }
 
 

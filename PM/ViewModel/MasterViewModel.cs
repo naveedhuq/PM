@@ -15,8 +15,7 @@ namespace PM.ViewModel
         protected INotificationService AppNotificationService { get { return GetService<INotificationService>(); } }
 
         private readonly ISplashScreenService _WaitIndicatorService;
-
-
+        
         private ILogger _logger;
 
 

@@ -51,6 +51,9 @@ namespace PM.DB
     partial void InsertDocumentData(DocumentData instance);
     partial void UpdateDocumentData(DocumentData instance);
     partial void DeleteDocumentData(DocumentData instance);
+    partial void InsertEventLog(EventLog instance);
+    partial void UpdateEventLog(EventLog instance);
+    partial void DeleteEventLog(EventLog instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -139,6 +142,14 @@ namespace PM.DB
 			}
 		}
 		
+		public System.Data.Linq.Table<EventLog> EventLog
+		{
+			get
+			{
+				return this.GetTable<EventLog>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_CreateDefaultDocumentFolders")]
 		public int sp_CreateDefaultDocumentFolders([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
 		{
@@ -163,12 +174,6 @@ namespace PM.DB
 		public IQueryable<fn_GetDocumentFoldersForCustomerResult> fn_GetDocumentFoldersForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentFoldersForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentsForCustomer", IsComposable=true)]
-		public IQueryable<fn_GetDocumentsForCustomerResult> fn_GetDocumentsForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
-		{
-			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_DeleteDocument")]
@@ -210,6 +215,32 @@ namespace PM.DB
 		public System.Data.Linq.Binary fn_GetRawDocumentData([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentID", DbType="Int")] System.Nullable<int> documentID)
 		{
 			return ((System.Data.Linq.Binary)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), documentID).ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetAllFolderNames", IsComposable=true)]
+		public IQueryable<fn_GetAllFolderNamesResult> fn_GetAllFolderNames([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ActiveOnly", DbType="Bit")] System.Nullable<bool> activeOnly)
+		{
+			return this.CreateMethodCallQuery<fn_GetAllFolderNamesResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), activeOnly);
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SyncDocumentType")]
+		public int sp_SyncDocumentType()
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentsForCustomer", IsComposable=true)]
+		public IQueryable<fn_GetDocumentsForCustomerResult> fn_GetDocumentsForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ActiveOnly", DbType="Bit")] System.Nullable<bool> activeOnly)
+		{
+			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID, activeOnly);
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_AddEventLog")]
+		public int sp_AddEventLog([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventType", DbType="NVarChar(100)")] string eventType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventMessage", DbType="NVarChar(1000)")] string eventMessage)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventType, eventMessage);
+			return ((int)(result.ReturnValue));
 		}
 	}
 	
@@ -1799,6 +1830,164 @@ namespace PM.DB
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EventLog")]
+	public partial class EventLog : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.DateTime _LOG_TIMESTAMP;
+		
+		private string _LOG_USER;
+		
+		private string _EventType;
+		
+		private string _EventMessage;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnLOG_TIMESTAMPChanging(System.DateTime value);
+    partial void OnLOG_TIMESTAMPChanged();
+    partial void OnLOG_USERChanging(string value);
+    partial void OnLOG_USERChanged();
+    partial void OnEventTypeChanging(string value);
+    partial void OnEventTypeChanged();
+    partial void OnEventMessageChanging(string value);
+    partial void OnEventMessageChanged();
+    #endregion
+		
+		public EventLog()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LOG_TIMESTAMP", DbType="DateTime NOT NULL")]
+		public System.DateTime LOG_TIMESTAMP
+		{
+			get
+			{
+				return this._LOG_TIMESTAMP;
+			}
+			set
+			{
+				if ((this._LOG_TIMESTAMP != value))
+				{
+					this.OnLOG_TIMESTAMPChanging(value);
+					this.SendPropertyChanging();
+					this._LOG_TIMESTAMP = value;
+					this.SendPropertyChanged("LOG_TIMESTAMP");
+					this.OnLOG_TIMESTAMPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LOG_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string LOG_USER
+		{
+			get
+			{
+				return this._LOG_USER;
+			}
+			set
+			{
+				if ((this._LOG_USER != value))
+				{
+					this.OnLOG_USERChanging(value);
+					this.SendPropertyChanging();
+					this._LOG_USER = value;
+					this.SendPropertyChanged("LOG_USER");
+					this.OnLOG_USERChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EventType", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string EventType
+		{
+			get
+			{
+				return this._EventType;
+			}
+			set
+			{
+				if ((this._EventType != value))
+				{
+					this.OnEventTypeChanging(value);
+					this.SendPropertyChanging();
+					this._EventType = value;
+					this.SendPropertyChanged("EventType");
+					this.OnEventTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EventMessage", DbType="NVarChar(1000)")]
+		public string EventMessage
+		{
+			get
+			{
+				return this._EventMessage;
+			}
+			set
+			{
+				if ((this._EventMessage != value))
+				{
+					this.OnEventMessageChanging(value);
+					this.SendPropertyChanging();
+					this._EventMessage = value;
+					this.SendPropertyChanged("EventMessage");
+					this.OnEventMessageChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	public partial class fn_GetDocumentFoldersForCustomerResult
 	{
 		
@@ -1964,6 +2153,32 @@ namespace PM.DB
 				if ((this._IsHidden != value))
 				{
 					this._IsHidden = value;
+				}
+			}
+		}
+	}
+	
+	public partial class fn_GetAllFolderNamesResult
+	{
+		
+		private string _FolderName;
+		
+		public fn_GetAllFolderNamesResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderName", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
+		public string FolderName
+		{
+			get
+			{
+				return this._FolderName;
+			}
+			set
+			{
+				if ((this._FolderName != value))
+				{
+					this._FolderName = value;
 				}
 			}
 		}

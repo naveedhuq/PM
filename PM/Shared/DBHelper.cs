@@ -75,20 +75,21 @@ namespace PM.Shared
         }
 
 
-        private List<m.LookupItem> _LookupsRepository;
         public List<m.LookupItem> LookupsRepository
         {
             get
             {
-                if (_LookupsRepository == null)
-                    _LookupsRepository = (from x in _cx.Lookups
-                                          select new m.LookupItem
-                                          {
-                                              LookupName = x.LookupName,
-                                              LookupType = x.LookupType,
-                                              SortOrder = x.SortOrder
-                                          }).ToList();
-                return _LookupsRepository;
+                return
+                (
+                    from x in _cx.Lookups
+                    orderby x.SortOrder
+                    select new m.LookupItem
+                    {
+                        LookupName = x.LookupName,
+                        LookupType = x.LookupType,
+                        SortOrder = x.SortOrder
+                    }
+                ).ToList();
             }
         }
 
@@ -173,6 +174,15 @@ namespace PM.Shared
             _cx.sp_SaveDocumentData(documentID, rawData);
         }
 
+        public void SyncDocumentType()
+        {
+            _cx.sp_SyncDocumentType();
+        }
+        public void AddEventLog(EventLog.LogEventType eventType, string message)
+        {
+            _cx.sp_AddEventLog(eventType.ToString(), message);
+        }
+
         #endregion
 
 
@@ -223,12 +233,13 @@ namespace PM.Shared
             return new ObservableCollection<m.DocumentFolder>(folders);
         }
 
-        public ObservableCollection<m.Document> GetDocumentsForCustomer(int customerID)
+        public ObservableCollection<m.Document> GetDocumentsForCustomer(int customerID, bool activeOnly = true)
         {
-            var docs = from x in _cx.fn_GetDocumentsForCustomer(customerID)
+            var docs = from x in _cx.fn_GetDocumentsForCustomer(customerID, activeOnly)
                        select new m.Document
                        {
                            ID = x.ID,
+                           IsActive = x.IsActive,
                            CustomerID = x.CustomerID,
                            DocumentFolderID = x.DocumentFolderID,
                            DocumentFileName = x.DocumentFileName,
@@ -251,6 +262,13 @@ namespace PM.Shared
             return _cx.fn_GetRawDocumentData(documentID);
         }
 
+        public ObservableCollection<string> GetAllFolderNames(bool activeOnly = true)
+        {
+            var folders = from x in _cx.fn_GetAllFolderNames(activeOnly)
+                          orderby x.FolderName
+                          select x.FolderName;
+            return new ObservableCollection<string>(folders);
+        }
 
     }
 }

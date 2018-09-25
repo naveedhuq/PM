@@ -18,7 +18,8 @@ namespace PM.Model
             ServiceType,
             DefaultFolder,
             ExtensionToImageMapping,
-            DocumentType
+            DocumentType,
+            FileType
         }
 
 

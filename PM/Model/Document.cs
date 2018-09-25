@@ -24,7 +24,18 @@ namespace PM.Model
                 NotifyPropertyChanged(m => m.ID);
             }
         }
-
+        private bool _IsActive = true;
+        public bool IsActive
+        {
+            get { return _IsActive; }
+            set
+            {
+                if (_IsActive == value)
+                    return;
+                _IsActive = value;
+                NotifyPropertyChanged(m => m.IsActive);
+            }
+        }
         private int _CustomerID;
         public int CustomerID
         {
@@ -158,7 +169,7 @@ namespace PM.Model
                                           where x.LookupType == "ExtensionToImageMapping"
                                           where x.LookupName.Contains(fileExtension)
                                           select x.LookupName).FirstOrDefault();
-                    if (lookupValue.Contains("|"))
+                    if (lookupValue != null && lookupValue.Contains("|"))
                         imageResourceName = lookupValue.Split('|')[1];
                 }
                 FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject(imageResourceName) as Bitmap);
@@ -170,6 +181,7 @@ namespace PM.Model
         public override void SaveChanges()
         {
             var ret = DBHelper.Instance.SaveDocument(this);
+            DBHelper.Instance.SyncDocumentType();
             IsDirty = false;
         }
 
@@ -177,7 +189,7 @@ namespace PM.Model
         {
             throw new NotImplementedException();
         }
-        public static ObservableCollection<Document> GetCustomerDocuments(int customerID, int folderID)
+        public static ObservableCollection<Document> GetCustomerDocuments(int customerID, int folderID, bool activeOnly = true)
         {
             var docs = from f in DBHelper.Instance.GetDocumentsForCustomer(customerID)
                        where (folderID == 0 ? true : ((f.DocumentFolderID ?? -1) == folderID)) == true
@@ -188,6 +200,7 @@ namespace PM.Model
         public void Delete()
         {
             DBHelper.Instance.DeleteDocument(this);
+            IsActive = false;
         }
 
         public void UploadRawDataFromFile(string fileName)
