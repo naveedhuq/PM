@@ -102,7 +102,9 @@
                     ShowIndicator="False"
                     ShowNodeImages="True"
                     ShowVerticalLines="False"
-                    AllowDragDrop="True">
+                    AllowDragDrop="True"
+                    CellStyle="{StaticResource FocusedCellStyle}"
+                    RowStyle="{StaticResource FocusedRowStyle}">
                     <dxg:TreeListView.RowCellMenuCustomizations>
                         <dxb:BarButtonItem
                             Command="{Binding Path=(dxg:GridPopupMenu.GridMenuInfo).View.DataContext.RenameFolderCommand, RelativeSource={RelativeSource Self}}"

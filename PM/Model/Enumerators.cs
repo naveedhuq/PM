@@ -20,7 +20,8 @@ namespace PM.Model
         public enum MessageTokenEnum
         {
             SelectedCustomerChanged,
-            DocumentClipboardChanged
+            DocumentClipboardChanged,
+            ApplyFilterInvoked
         }
 
 

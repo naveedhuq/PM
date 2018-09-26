@@ -4,6 +4,7 @@ using System.Linq;
 using DevExpress.Mvvm;
 using PM.Model;
 using PM.Shared;
+using static PM.Model.Enumerators;
 
 namespace PM.ViewModel
 {
@@ -20,10 +21,10 @@ namespace PM.ViewModel
             get { return GetProperty(() => Customers); }
             set { SetProperty(() => Customers, value); }
         }
-        public Customer SelectedCustomer
+        public string CustomerName
         {
-            get { return GetProperty(() => SelectedCustomer); }
-            set { SetProperty(() => SelectedCustomer, value); }
+            get { return GetProperty(() => CustomerName); }
+            set { SetProperty(() => CustomerName, value); }
         }
         public bool ShowInactiveCustomers
         {
@@ -53,10 +54,10 @@ namespace PM.ViewModel
             get { return GetProperty(() => BookmarkedFoldersOnly); }
             set { SetProperty(() => BookmarkedFoldersOnly, value); }
         }
-        public bool HiddenFoldersOnly
+        public bool IncludeHiddenFolders
         {
-            get { return GetProperty(() => HiddenFoldersOnly); }
-            set { SetProperty(() => HiddenFoldersOnly, value); }
+            get { return GetProperty(() => IncludeHiddenFolders); }
+            set { SetProperty(() => IncludeHiddenFolders, value); }
         }
         #endregion
 
@@ -133,7 +134,13 @@ namespace PM.ViewModel
         #region Commands
         public DelegateCommand ClearFilterCommand
         {
-            get { return new DelegateCommand(() => { ClearData(); }); }
+            get { return new DelegateCommand(() =>
+            {
+                ClearData();
+                Messenger.Default.Send(
+                        message: new ObservableCollection<DocumentFilter>(new ObservableCollection<DocumentFilter>()),
+                        token: MessageTokenEnum.ApplyFilterInvoked);
+            }); }
         }
 
         public DelegateCommand ApplyFilterCommand
@@ -143,8 +150,59 @@ namespace PM.ViewModel
                 return new DelegateCommand(() =>
                 {
                     _WaitIndicatorService.ShowSplashScreen();
-                    var docs = from doc in DBHelper.Instance.GetAllDocuments(!IncludeDeletedDocuments);
+                    var docs = from x in DBHelper.Instance.GetDocumentsForFilter()
+                               select x;
 
+                    // Applying Filters
+                    if (!ShowInactiveCustomers)
+                        docs = docs.Where(x => x.IsCustomerActive == true);
+
+                    if (CustomerName != null)
+                        docs = docs.Where(x => x.CustomerName.ToLower().Contains(CustomerName.ToLower()));
+
+                    if (SelectedFolderName != null)
+                        docs = docs.Where(x => x.FolderTree.ToLower().Contains(SelectedFolderName.ToLower()));
+
+                    if (BookmarkedFoldersOnly)
+                        docs = docs.Where(x => x.IsFolderBookmarked == true);
+
+                    if (!IncludeHiddenFolders)
+                        docs = docs.Where(x => x.IsFolderHidden == false);
+
+                    if (DocumentFilename != null)
+                        docs = docs.Where(x => x.DocumentFileName.ToLower().Contains(DocumentFilename.ToLower()));
+
+                    if (SelectedFileType != null)
+                        docs = docs.Where(x => x.FileType == SelectedFileType);
+
+                    if (SelectedDocumentType != null)
+                        docs = docs.Where(x => x.DocumentType == SelectedDocumentType);
+
+                    if (FileCreationDateFrom != null)
+                        docs = docs.Where(x => (x.FileTimestamp >= FileCreationDateFrom));
+                    if (FileCreationDateTo != null)
+                        docs = docs.Where(x => (x.FileTimestamp <= FileCreationDateTo));
+
+                    if (FileUploadDateFrom != null)
+                        docs = docs.Where(x => (x.UploadDate >= FileUploadDateFrom));
+                    if (FileUploadDateTo != null)
+                        docs = docs.Where(x => (x.UploadDate <= FileUploadDateTo));
+
+                    if (FileExpiryDateFrom!= null)
+                        docs = docs.Where(x => (x.ExpirationDate!= null && x.ExpirationDate >= FileExpiryDateFrom));
+                    if (FileExpiryDateTo != null)
+                        docs = docs.Where(x => (x.ExpirationDate != null && x.ExpirationDate <= FileExpiryDateTo));
+
+                    if (Comments != null)
+                        docs = docs.Where(x => x.Comments.ToLower().Contains(Comments.ToLower()));
+
+                    if (!IncludeDeletedDocuments)
+                        docs = docs.Where(x => x.IsDocumentDeleted == false);
+
+                    // Send filtered document list
+                    Messenger.Default.Send(
+                        message: new ObservableCollection<DocumentFilter>(docs),
+                        token: MessageTokenEnum.ApplyFilterInvoked);
                     _WaitIndicatorService.HideSplashScreen();
                 });
             }
@@ -171,11 +229,11 @@ namespace PM.ViewModel
 
         private void ClearData()
         {
-            SelectedCustomer = null;
+            CustomerName = null;
             ShowInactiveCustomers = false;
             SelectedFolderName = null;
             BookmarkedFoldersOnly = false;
-            HiddenFoldersOnly = false;
+            IncludeHiddenFolders = false;
             DocumentFilename = null;
             SelectedFileType = null;
             SelectedDocumentType = null;

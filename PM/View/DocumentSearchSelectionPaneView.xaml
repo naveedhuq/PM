@@ -52,8 +52,8 @@
                     <Label Content="Customer Name"/>
                     <dxg:LookUpEdit
                         Grid.Column="1"
-                        ItemsSource="{Binding Customers}"
-                        SelectedItem="{Binding SelectedCustomer}"
+                        ItemsSource="{Binding Customers}"                        
+                        Text="{Binding CustomerName}"
                         AutoPopulateColumns="False"
                         PopupWidth="350">
                         <dxg:LookUpEdit.PopupContentTemplate>
@@ -98,17 +98,17 @@
                         Grid.Column="1"
                         IsTextEditable="True"
                         ItemsSource="{Binding AllFolderNames}"
-                        SelectedItem="{Binding SelectedFolderName}"/>
+                        Text="{Binding SelectedFolderName}"/>
                     
-                    <Label Grid.Row="1" Content="Bookmarked"/>
+                    <Label Grid.Row="1" Content="Show Only Bookmarked"/>
                     <dxe:CheckEdit
                         Grid.Row="1" Grid.Column="1"
                         IsChecked="{Binding BookmarkedFoldersOnly}"/>
                     
-                    <Label Grid.Row="2" Content="Hidden"/>
+                    <Label Grid.Row="2" Content="Include Hidden Folders"/>
                     <dxe:CheckEdit
                         Grid.Row="2" Grid.Column="1"
-                        IsChecked="{Binding HiddenFoldersOnly}"/>
+                        IsChecked="{Binding IncludeHiddenFolders}"/>
                 </Grid>
             </dxn:NavBarGroup>
 
@@ -147,7 +147,7 @@
                         IsTextEditable="False"
                         AllowNullInput="True"
                         ItemsSource="{Binding DocumentTypes}"
-                        SelectedIndex="{Binding SelectedDocumentType}"/>
+                        SelectedItem="{Binding SelectedDocumentType}"/>
 
                     <Label Grid.Row="3" Content="File Creation Date"/>
                     <Grid Grid.Row="3" Grid.Column="1">
@@ -208,7 +208,7 @@
                         Grid.Row="6" Grid.Column="1"
                         EditValue="{Binding Comments}"/>
 
-                    <Label Grid.Row="7" Content="Include Deleted"/>
+                    <Label Grid.Row="7" Content="Include Deleted Files"/>
                     <dxe:CheckEdit
                         Grid.Row="7" Grid.Column="1"
                         IsChecked="{Binding IncludeDeletedDocuments}"/>

@@ -174,7 +174,6 @@ namespace PM.Shared
         #endregion
 
 
-
         public ObservableCollection<m.Customer> GetCustomers(bool ActiveOnly = true, string CustomerType = null)
         {
             var customers = CustomerRepository;
@@ -275,5 +274,35 @@ namespace PM.Shared
             return new ObservableCollection<m.Document>(docs);
         }
 
+        public string GetDocumentFolderTree(int documentFolderID)
+        {
+            return _cx.fn_GetFolderTreeForDocumentFolderID(documentFolderID);
+        }
+
+        public ObservableCollection<m.DocumentFilter> GetDocumentsForFilter()
+        {
+            var docs = from x in _cx.fn_GetDocumentsForFilter()
+                       select new m.DocumentFilter()
+                       {
+                           DocumentID = x.DocumentID,
+                           CustomerID = x.CustomerID,
+                           DocumentFolderID = x.DocumentFolderID,
+                           IsDocumentDeleted = x.IsDocumentDeleted,
+                           DocumentFileName = x.DocumentFileName,
+                           FileType = x.FileType,
+                           DocumentType = x.DocumentType,
+                           FileTimestamp = x.FileTimestamp,
+                           UploadDate = x.UploadDate,
+                           ExpirationDate = x.ExpirationDate,
+                           Comments = x.Comments,
+                           CustomerName = x.CustomerName,
+                           IsCustomerActive = x.IsCustomerActive,
+                           FolderName = x.FolderName,
+                           FolderTree = x.FolderTree,
+                           IsFolderHidden = x.IsFolderHidden,
+                           IsFolderBookmarked = x.IsFolderBookmarked
+                       };
+            return new ObservableCollection<m.DocumentFilter>(docs);
+        }
     }
 }

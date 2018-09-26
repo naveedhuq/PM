@@ -32,10 +32,13 @@
             <dxg:GridControl
                 FilterString="[CustomerType] = 'Personal'"
                 ItemsSource="{Binding Customers}"
-                SelectedItem="{Binding SelectedCustomer}"
-                >
+                SelectedItem="{Binding SelectedCustomer}">
                 <dxg:GridControl.View>
-                    <dxg:TableView AllowPerPixelScrolling="True" ShowFilterPanelMode="Never">
+                    <dxg:TableView
+                        AllowPerPixelScrolling="True"
+                        ShowFilterPanelMode="Never"
+                        CellStyle="{StaticResource FocusedCellStyle}"
+                        RowStyle="{StaticResource FocusedRowStyle}">
                         <dxg:TableView.FormatConditions>
                             <dxg:FormatCondition Expression="[IsDirty] = true" FieldName="CustomerName">
                                 <dxg:FormatCondition.Format>
@@ -65,7 +68,11 @@
                 ItemsSource="{Binding Customers}"
                 SelectedItem="{Binding SelectedCustomer}">
                 <dxg:GridControl.View>
-                    <dxg:TableView AllowPerPixelScrolling="True" ShowFilterPanelMode="Never">
+                    <dxg:TableView
+                        AllowPerPixelScrolling="True"
+                        ShowFilterPanelMode="Never"
+                        CellStyle="{StaticResource FocusedCellStyle}"
+                        RowStyle="{StaticResource FocusedRowStyle}">
                         <dxg:TableView.FormatConditions>
                             <dxg:FormatCondition Expression="[IsDirty] = true" FieldName="CustomerName">
                                 <dxg:FormatCondition.Format>

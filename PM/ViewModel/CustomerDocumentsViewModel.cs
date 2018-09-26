@@ -50,6 +50,7 @@ namespace PM.ViewModel
             set
             {
                 SetProperty(() => SelectedDocumentFolder, value);
+                SelectedDocument = null;
                 RefreshDocumentGrid();
             }
         }
@@ -375,7 +376,9 @@ namespace PM.ViewModel
                     ClearClipboard();
                     _ClipboardCopyDocument = SelectedDocument;
                     ShowNotification($"File [{_ClipboardCopyDocument.DocumentFileName}] copied to clipboard.");
-                    Messenger.Default.Send(message: SelectedDocument, token: MessageTokenEnum.DocumentClipboardChanged);
+                    Messenger.Default.Send(
+                        message: SelectedDocument,
+                        token: MessageTokenEnum.DocumentClipboardChanged);
                 }, () => SelectedDocument != null);
             }
         }
@@ -389,7 +392,9 @@ namespace PM.ViewModel
                     ClearClipboard();
                     _ClipboardCutDocument = SelectedDocument;
                     ShowNotification($"File [{_ClipboardCutDocument.DocumentFileName}] cut to clipboard.");
-                    Messenger.Default.Send(message: SelectedDocument, token: MessageTokenEnum.DocumentClipboardChanged);
+                    Messenger.Default.Send(
+                        message: SelectedDocument,
+                        token: MessageTokenEnum.DocumentClipboardChanged);
                 }, () => SelectedDocument != null);
             }
         }
@@ -517,7 +522,10 @@ namespace PM.ViewModel
         {
             _ClipboardCopyDocument = null;
             _ClipboardCutDocument = null;
-            Messenger.Default.Send<Document>(message: null, token: MessageTokenEnum.DocumentClipboardChanged);
+
+            Messenger.Default.Send<Document>(
+                message: null, 
+                token: MessageTokenEnum.DocumentClipboardChanged);
         }
 
         private bool IsClipboardEmpty()

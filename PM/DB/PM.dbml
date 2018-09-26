@@ -201,4 +201,43 @@
     <Parameter Name="FolderName" Parameter="folderName" Type="System.String" DbType="NVarChar(1000)" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.fn_GetDocumentFolderTree" Method="fn_GetDocumentFolderTree" IsComposable="true">
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="fn_GetDocumentFolderTreeResult">
+      <Column Name="DocumentFolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentDocumentFolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CustomerName" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="FolderName" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="IsHidden" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsStarred" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="FolderTree" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="BranchLevel" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.fn_GetFolderTreeForDocumentFolderID" Method="fn_GetFolderTreeForDocumentFolderID" IsComposable="true">
+    <Parameter Name="DocumentFolderID" Parameter="documentFolderID" Type="System.Int32" DbType="Int" />
+    <Return Type="System.String" />
+  </Function>
+  <Function Name="dbo.fn_GetDocumentsForFilter" Method="fn_GetDocumentsForFilter" IsComposable="true">
+    <ElementType Name="fn_GetDocumentsForFilterResult">
+      <Column Name="DocumentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentFolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsDocumentDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DocumentFileName" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="FileType" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="DocumentType" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="FileTimestamp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UploadDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="ExpirationDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Comments" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="CustomerName" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="IsCustomerActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="FolderName" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="FolderTree" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="IsFolderHidden" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsFolderBookmarked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

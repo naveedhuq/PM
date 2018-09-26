@@ -568,3 +568,132 @@ END
 GO
 GRANT EXECUTE ON dbo.sp_AddDocumentActivityLog TO PUBLIC
 GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetDocumentFolderTree','IF') IS NOT NULL
+    DROP FUNCTION dbo.fn_GetDocumentFolderTree
+GO
+CREATE FUNCTION dbo.fn_GetDocumentFolderTree(@CustomerID INT=0)
+RETURNS TABLE AS RETURN
+(
+    WITH cte_active_folders AS
+    (
+        SELECT
+            f.ID DocumentFolderID,
+            f.ParentID ParentDocumentFolderID,
+            f.CustomerID,
+            c.CustomerName,        
+            f.FolderName,
+            f.IsHidden,
+            f.IsStarred
+        FROM dbo.DocumentFolders f
+        JOIN dbo.Customer c ON c.ID=f.CustomerID
+        WHERE f.IsActive=1
+        AND (CASE WHEN @CustomerID=0 THEN 1 ELSE (CASE WHEN CustomerID=@CustomerID THEN 1 ELSE 0 END) END)=1
+    ),
+    cte AS
+    (
+        SELECT
+            DocumentFolderID,
+            ParentDocumentFolderID,
+            CustomerID,
+            CustomerName,
+            FolderName,
+            IsHidden,
+            IsStarred,
+            FolderTree=CAST(FolderName AS NVARCHAR(1000)),
+            [level]=1        
+        FROM cte_active_folders
+        UNION ALL
+        SELECT
+            f.DocumentFolderID,
+            f.ParentDocumentFolderID,
+            f.CustomerID,
+            f.CustomerName,
+            f.FolderName,
+            f.IsHidden,
+            f.IsStarred,
+            FolderTree=CAST(cte.FolderTree+' -> '+f.FolderName AS NVARCHAR(1000)),
+            [level]=cte.[level]+1
+        FROM cte_active_folders f
+        JOIN cte ON cte.DocumentFolderID=f.ParentDocumentFolderID
+    )
+    SELECT a.DocumentFolderID, a.ParentDocumentFolderID, a.CustomerID, a.CustomerName, a.FolderName, a.IsHidden, a.IsStarred, a.FolderTree, a.BranchLevel
+    FROM
+    (
+        SELECT
+            DocumentFolderID,
+            ParentDocumentFolderID,
+            CustomerID,
+            CustomerName,
+            FolderName,
+            IsHidden,
+            IsStarred,
+            (CASE WHEN [level]=1 THEN NULL ELSE FolderTree END) FolderTree,
+            [level] BranchLevel,
+            RANK() OVER (PARTITION BY DocumentFolderID ORDER BY [level] DESC) row_rank
+        FROM cte
+    ) a
+    WHERE a.row_rank=1
+)
+GO
+GRANT SELECT ON dbo.fn_GetDocumentFolderTree TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetFolderTreeForDocumentFolderID','FN') IS NOT NULL
+    DROP FUNCTION dbo.fn_GetFolderTreeForDocumentFolderID
+GO
+CREATE FUNCTION dbo.fn_GetFolderTreeForDocumentFolderID(@DocumentFolderID INT)
+RETURNS NVARCHAR(1000)
+AS
+BEGIN
+    DECLARE @ret NVARCHAR(1000) = NULL
+    SELECT @ret=FolderTree
+    FROM dbo.fn_GetDocumentFolderTree(0)
+    WHERE DocumentFolderID=@DocumentFolderID
+    RETURN @ret
+END
+GO
+GRANT EXECUTE ON dbo.fn_GetFolderTreeForDocumentFolderID TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.fn_GetDocumentsForFilter','IF') IS NOT NULL
+    DROP FUNCTION dbo.fn_GetDocumentsForFilter
+GO
+CREATE FUNCTION dbo.fn_GetDocumentsForFilter()
+RETURNS TABLE AS RETURN
+(
+    SELECT
+        d.ID DocumentID,
+        d.CustomerID,
+        d.DocumentFolderID,
+        CAST((CASE WHEN d.IsActive=1 THEN 0 ELSE 1 END) AS BIT) IsDocumentDeleted,
+    
+        d.DocumentFileName,
+        d.FileType,
+        d.DocumentType,
+        d.FileTimestamp,
+        d.UploadDate,
+        d.ExpirationDate,
+        d.Comments,
+
+        c.CustomerName,
+        c.IsActive IsCustomerActive,
+        f.FolderName,
+        ISNULL(dbo.fn_GetFolderTreeForDocumentFolderID(f.ID), f.FolderName) FolderTree,
+        f.IsHidden IsFolderHidden,
+        f.IsStarred IsFolderBookmarked
+        
+    FROM dbo.Documents d
+    LEFT JOIN dbo.DocumentFolders f ON f.ID=d.DocumentFolderID
+    LEFT JOIN dbo.Customer c ON c.ID=d.CustomerID
+)
+GO
+GRANT SELECT ON dbo.fn_GetDocumentsForFilter TO PUBLIC
+GO
+

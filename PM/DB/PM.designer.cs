@@ -249,6 +249,24 @@ namespace PM.DB
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventType, customerName, documentFileName, folderName);
 			return ((int)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentFolderTree", IsComposable=true)]
+		public IQueryable<fn_GetDocumentFolderTreeResult> fn_GetDocumentFolderTree([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID)
+		{
+			return this.CreateMethodCallQuery<fn_GetDocumentFolderTreeResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID);
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetFolderTreeForDocumentFolderID", IsComposable=true)]
+		public string fn_GetFolderTreeForDocumentFolderID([global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID)
+		{
+			return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), documentFolderID).ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentsForFilter", IsComposable=true)]
+		public IQueryable<fn_GetDocumentsForFilterResult> fn_GetDocumentsForFilter()
+		{
+			return this.CreateMethodCallQuery<fn_GetDocumentsForFilterResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Customer")]
@@ -2512,6 +2530,490 @@ namespace PM.DB
 				if ((this._Comments != value))
 				{
 					this._Comments = value;
+				}
+			}
+		}
+	}
+	
+	public partial class fn_GetDocumentFolderTreeResult
+	{
+		
+		private System.Nullable<int> _DocumentFolderID;
+		
+		private System.Nullable<int> _ParentDocumentFolderID;
+		
+		private System.Nullable<int> _CustomerID;
+		
+		private string _CustomerName;
+		
+		private string _FolderName;
+		
+		private System.Nullable<bool> _IsHidden;
+		
+		private System.Nullable<bool> _IsStarred;
+		
+		private string _FolderTree;
+		
+		private System.Nullable<int> _BranchLevel;
+		
+		public fn_GetDocumentFolderTreeResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFolderID", DbType="Int")]
+		public System.Nullable<int> DocumentFolderID
+		{
+			get
+			{
+				return this._DocumentFolderID;
+			}
+			set
+			{
+				if ((this._DocumentFolderID != value))
+				{
+					this._DocumentFolderID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentDocumentFolderID", DbType="Int")]
+		public System.Nullable<int> ParentDocumentFolderID
+		{
+			get
+			{
+				return this._ParentDocumentFolderID;
+			}
+			set
+			{
+				if ((this._ParentDocumentFolderID != value))
+				{
+					this._ParentDocumentFolderID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerID", DbType="Int")]
+		public System.Nullable<int> CustomerID
+		{
+			get
+			{
+				return this._CustomerID;
+			}
+			set
+			{
+				if ((this._CustomerID != value))
+				{
+					this._CustomerID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerName", DbType="NVarChar(1000)")]
+		public string CustomerName
+		{
+			get
+			{
+				return this._CustomerName;
+			}
+			set
+			{
+				if ((this._CustomerName != value))
+				{
+					this._CustomerName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderName", DbType="NVarChar(1000)")]
+		public string FolderName
+		{
+			get
+			{
+				return this._FolderName;
+			}
+			set
+			{
+				if ((this._FolderName != value))
+				{
+					this._FolderName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsHidden", DbType="Bit")]
+		public System.Nullable<bool> IsHidden
+		{
+			get
+			{
+				return this._IsHidden;
+			}
+			set
+			{
+				if ((this._IsHidden != value))
+				{
+					this._IsHidden = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsStarred", DbType="Bit")]
+		public System.Nullable<bool> IsStarred
+		{
+			get
+			{
+				return this._IsStarred;
+			}
+			set
+			{
+				if ((this._IsStarred != value))
+				{
+					this._IsStarred = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderTree", DbType="NVarChar(1000)")]
+		public string FolderTree
+		{
+			get
+			{
+				return this._FolderTree;
+			}
+			set
+			{
+				if ((this._FolderTree != value))
+				{
+					this._FolderTree = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BranchLevel", DbType="Int")]
+		public System.Nullable<int> BranchLevel
+		{
+			get
+			{
+				return this._BranchLevel;
+			}
+			set
+			{
+				if ((this._BranchLevel != value))
+				{
+					this._BranchLevel = value;
+				}
+			}
+		}
+	}
+	
+	public partial class fn_GetDocumentsForFilterResult
+	{
+		
+		private int _DocumentID;
+		
+		private int _CustomerID;
+		
+		private System.Nullable<int> _DocumentFolderID;
+		
+		private System.Nullable<bool> _IsDocumentDeleted;
+		
+		private string _DocumentFileName;
+		
+		private string _FileType;
+		
+		private string _DocumentType;
+		
+		private System.Nullable<System.DateTime> _FileTimestamp;
+		
+		private System.Nullable<System.DateTime> _UploadDate;
+		
+		private System.Nullable<System.DateTime> _ExpirationDate;
+		
+		private string _Comments;
+		
+		private string _CustomerName;
+		
+		private System.Nullable<bool> _IsCustomerActive;
+		
+		private string _FolderName;
+		
+		private string _FolderTree;
+		
+		private System.Nullable<bool> _IsFolderHidden;
+		
+		private System.Nullable<bool> _IsFolderBookmarked;
+		
+		public fn_GetDocumentsForFilterResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentID", DbType="Int NOT NULL")]
+		public int DocumentID
+		{
+			get
+			{
+				return this._DocumentID;
+			}
+			set
+			{
+				if ((this._DocumentID != value))
+				{
+					this._DocumentID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerID", DbType="Int NOT NULL")]
+		public int CustomerID
+		{
+			get
+			{
+				return this._CustomerID;
+			}
+			set
+			{
+				if ((this._CustomerID != value))
+				{
+					this._CustomerID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFolderID", DbType="Int")]
+		public System.Nullable<int> DocumentFolderID
+		{
+			get
+			{
+				return this._DocumentFolderID;
+			}
+			set
+			{
+				if ((this._DocumentFolderID != value))
+				{
+					this._DocumentFolderID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDocumentDeleted", DbType="Bit")]
+		public System.Nullable<bool> IsDocumentDeleted
+		{
+			get
+			{
+				return this._IsDocumentDeleted;
+			}
+			set
+			{
+				if ((this._IsDocumentDeleted != value))
+				{
+					this._IsDocumentDeleted = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFileName", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
+		public string DocumentFileName
+		{
+			get
+			{
+				return this._DocumentFileName;
+			}
+			set
+			{
+				if ((this._DocumentFileName != value))
+				{
+					this._DocumentFileName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileType", DbType="NVarChar(100)")]
+		public string FileType
+		{
+			get
+			{
+				return this._FileType;
+			}
+			set
+			{
+				if ((this._FileType != value))
+				{
+					this._FileType = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentType", DbType="NVarChar(100)")]
+		public string DocumentType
+		{
+			get
+			{
+				return this._DocumentType;
+			}
+			set
+			{
+				if ((this._DocumentType != value))
+				{
+					this._DocumentType = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileTimestamp", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FileTimestamp
+		{
+			get
+			{
+				return this._FileTimestamp;
+			}
+			set
+			{
+				if ((this._FileTimestamp != value))
+				{
+					this._FileTimestamp = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadDate", DbType="Date")]
+		public System.Nullable<System.DateTime> UploadDate
+		{
+			get
+			{
+				return this._UploadDate;
+			}
+			set
+			{
+				if ((this._UploadDate != value))
+				{
+					this._UploadDate = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpirationDate", DbType="Date")]
+		public System.Nullable<System.DateTime> ExpirationDate
+		{
+			get
+			{
+				return this._ExpirationDate;
+			}
+			set
+			{
+				if ((this._ExpirationDate != value))
+				{
+					this._ExpirationDate = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Comments", DbType="NVarChar(1000)")]
+		public string Comments
+		{
+			get
+			{
+				return this._Comments;
+			}
+			set
+			{
+				if ((this._Comments != value))
+				{
+					this._Comments = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerName", DbType="NVarChar(1000)")]
+		public string CustomerName
+		{
+			get
+			{
+				return this._CustomerName;
+			}
+			set
+			{
+				if ((this._CustomerName != value))
+				{
+					this._CustomerName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCustomerActive", DbType="Bit")]
+		public System.Nullable<bool> IsCustomerActive
+		{
+			get
+			{
+				return this._IsCustomerActive;
+			}
+			set
+			{
+				if ((this._IsCustomerActive != value))
+				{
+					this._IsCustomerActive = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderName", DbType="NVarChar(1000)")]
+		public string FolderName
+		{
+			get
+			{
+				return this._FolderName;
+			}
+			set
+			{
+				if ((this._FolderName != value))
+				{
+					this._FolderName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderTree", DbType="NVarChar(1000)")]
+		public string FolderTree
+		{
+			get
+			{
+				return this._FolderTree;
+			}
+			set
+			{
+				if ((this._FolderTree != value))
+				{
+					this._FolderTree = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsFolderHidden", DbType="Bit")]
+		public System.Nullable<bool> IsFolderHidden
+		{
+			get
+			{
+				return this._IsFolderHidden;
+			}
+			set
+			{
+				if ((this._IsFolderHidden != value))
+				{
+					this._IsFolderHidden = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsFolderBookmarked", DbType="Bit")]
+		public System.Nullable<bool> IsFolderBookmarked
+		{
+			get
+			{
+				return this._IsFolderBookmarked;
+			}
+			set
+			{
+				if ((this._IsFolderBookmarked != value))
+				{
+					this._IsFolderBookmarked = value;
 				}
 			}
 		}

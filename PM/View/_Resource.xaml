@@ -54,6 +54,28 @@
         <Setter Property="ShowIndicator" Value="False"/>
     </Style>
 
+    <Style x:Key="FocusedCellStyle" TargetType="dxg:LightweightCellEditor">
+        <Style.Triggers>
+            <Trigger Property="dxg:DataViewBase.IsFocusedCell" Value="True">
+                <Setter Property="Background" Value="Black" />
+                <Setter Property="Foreground" Value="LightGray" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="FocusedRowStyle" TargetType="dxg:RowControl">
+        <Style.Triggers>
+            <Trigger Property="dxg:DataViewBase.IsFocusedRow" Value="True">
+                <Setter Property="Background" Value="Black" />
+                <Setter Property="Foreground" Value="LightGray" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="dxg:GridColumn">
+        <Setter Property="AutoFilterCriteria" Value="Contains"/>
+    </Style>
+
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
 </ResourceDictionary>

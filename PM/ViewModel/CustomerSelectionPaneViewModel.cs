@@ -21,7 +21,9 @@ namespace PM.ViewModel
             set
             {
                 SetProperty(() => SelectedCustomer, value);
-                Messenger.Default.Send(value, MessageTokenEnum.SelectedCustomerChanged);
+                Messenger.Default.Send(
+                    value,
+                    MessageTokenEnum.SelectedCustomerChanged);
             }
         }
 

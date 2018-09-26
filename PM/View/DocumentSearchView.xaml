@@ -6,7 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:view="clr-namespace:PM.View"
+    xmlns:shared="clr-namespace:PM.Shared"
     mc:Ignorable="d" 
     d:DesignHeight="600" d:DesignWidth="1024">
 
@@ -49,10 +51,70 @@
                                 <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"/>
                             </DataTemplate>
                         </dxdo:LayoutPanel.CaptionTemplate>
-                        <dxg:GridControl>
+                        
+                        <dxg:GridControl
+                            ItemsSource="{Binding FilteredDocuments}"
+                            SelectedItem="{Binding SelectedDocument}">
                             <dxg:GridControl.View>
-                                <dxg:TableView/>
+                                <dxg:TableView AllowSorting="True">
+                                    <dxg:TableView.FormatConditions>
+                                        <dxg:FormatCondition ApplyToRow="True" Expression="[IsDocumentDeleted]=True">
+                                            <dxg:Format Background="LightPink" />
+                                        </dxg:FormatCondition>
+                                    </dxg:TableView.FormatConditions>
+                                </dxg:TableView>
                             </dxg:GridControl.View>
+                            <dxg:GridColumn
+                                FieldName="FileImage"
+                                Header=" "
+                                Width="32">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:ImageEdit
+                                            Source="{Binding Value}"
+                                            Margin="2"
+                                            ShowBorder="False"
+                                            IsEnabled="False"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="DocumentFileName" Header="Filename" Width="150"/>
+                            <dxg:GridColumn FieldName="DocumentType" Width="120"/>
+                            <dxg:GridColumn FieldName="CustomerName" Width="150"/>
+                            <dxg:GridColumn FieldName="IsCustomerActive" Header="Active?" Width="50"/>
+                            <dxg:GridColumn FieldName="FileTimestamp" Width="130">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="MM/dd/yyyy  hh:mm tt" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="UploadDate" Width="85">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="MM/dd/yyyy" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="ExpirationDate" Width="85" Header="Expiration">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="MM/dd/yyyy" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="FolderImage" Width="20" Header=" ">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:ImageEdit
+                                            Source="{Binding Value}"
+                                            Margin="2"
+                                            Width="16"
+                                            Height="16"
+                                            ShowBorder="False"
+                                            IsEnabled="False"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="FolderTree" Width="200" />
+                            
+
+
+
                         </dxg:GridControl>
                     </dxdo:LayoutPanel>
 
