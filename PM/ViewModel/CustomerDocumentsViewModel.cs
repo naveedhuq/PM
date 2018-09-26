@@ -116,7 +116,7 @@ namespace PM.ViewModel
                             return;
                         SelectedDocumentFolder.FolderName = InputDialogText;
                         SelectedDocumentFolder.SaveChanges();
-                        AddEventLog(LogEventType.RenameFolder, $"Folder {oldName} renamed to {SelectedDocumentFolder.FolderName} for customer {SelectedCustomer.CustomerName}");
+                        AddDocumentActivityLog(LogEventType.RenameFolder, $"{SelectedCustomer}", null, $"{oldName} ->  {SelectedDocumentFolder}");
                     }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
@@ -134,7 +134,7 @@ namespace PM.ViewModel
                         SelectedDocumentFolder.IsHidden = !SelectedDocumentFolder.IsHidden;
                         SelectedDocumentFolder.SaveChanges();
                         var hideOpration = SelectedDocumentFolder.IsHidden ? "Hidden" : "Visible";
-                        AddEventLog(LogEventType.HideFolder, $"Folder {SelectedDocumentFolder.FolderName} was marked as {hideOpration} for customer {SelectedCustomer.CustomerName}");
+                        AddDocumentActivityLog(LogEventType.HideFolder, $"{SelectedCustomer}", null, $"{SelectedDocumentFolder}");
                         RefreshFolderTree();
                     }
                     catch (Exception ex) { ShowError(ex); }
@@ -180,7 +180,7 @@ namespace PM.ViewModel
                         folder.SaveChanges();
                         DocumentFolders.Add(folder);
                         SelectedDocumentFolder = folder;
-                        AddEventLog(LogEventType.NewFolder, $"New folder {SelectedDocumentFolder.FolderName} was created for customer {SelectedCustomer.CustomerName}");
+                        AddDocumentActivityLog(LogEventType.NewFolder, $"{SelectedCustomer}", null, $"{SelectedDocumentFolder}");
                     }
                     catch (Exception ex) { ShowError(ex); }
                 });
@@ -209,6 +209,7 @@ namespace PM.ViewModel
                         folder.SaveChanges();
                         DocumentFolders.Add(folder);
                         SelectedDocumentFolder = folder;
+                        AddDocumentActivityLog(LogEventType.NewFolder, $"{SelectedCustomer}", null, $"{SelectedDocumentFolder}");
                     }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
@@ -227,6 +228,8 @@ namespace PM.ViewModel
                             return;
                         SelectedDocumentFolder.Delete();
                         DocumentFolders.Remove(SelectedDocumentFolder);
+                        AddDocumentActivityLog(LogEventType.DeleteFolder, $"{SelectedCustomer}", null, $"{SelectedDocumentFolder}");
+                        SelectedDocumentFolder = null;
                     }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocumentFolder?.IsDefault == false && SelectedDocumentFolder?.IsRoot == false);
@@ -335,7 +338,10 @@ namespace PM.ViewModel
                         if (!OpenFileDialogService.ShowDialog())
                             return;
                         foreach (var file in OpenFileDialogService.Files)
+                        {
                             ImportFileIntoFolder(file);
+                            AddDocumentActivityLog(LogEventType.DocumentImport, $"{SelectedCustomer}", file.Name, $"{SelectedDocumentFolder}");
+                        }
                         RefreshDocumentGrid();
                     }
                     catch (Exception ex) { ShowError(ex); }
@@ -353,6 +359,7 @@ namespace PM.ViewModel
                     {
                         SelectedDocument.SaveChanges();
                         DocumentTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.DocumentType);
+                        AddDocumentActivityLog(LogEventType.DocumentUpdate, $"{SelectedCustomer}", $"{SelectedDocument}", $"{SelectedDocumentFolder}");
                     }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocument != null && SelectedDocument.IsDirty);
@@ -441,7 +448,9 @@ namespace PM.ViewModel
                         if (MessageBoxService.ShowMessage("Are you sure you want to Delete this Document", "Confirmation", MessageButton.OKCancel, MessageIcon.Exclamation) == MessageResult.Cancel)
                             return;
                         SelectedDocument.Delete();
+                        AddDocumentActivityLog(LogEventType.DocumentDelete, $"{SelectedCustomer}", $"{SelectedDocument}", $"{SelectedDocumentFolder}");
                         RefreshDocumentGrid();
+                        SelectedDocument = null;
                     }
                     catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedDocument != null);
@@ -492,7 +501,8 @@ namespace PM.ViewModel
                 DocumentFolderID = SelectedDocumentFolder.ID,
                 DocumentFileName = file.Name,
                 FileTimestamp = File.GetLastWriteTime(fullFileName),
-                UploadDate = DateTime.Today
+                UploadDate = DateTime.Today,
+                FileType = Document.GetFileType(file.Name)
             };
             doc.SaveChanges();
             doc.UploadRawDataFromFile(fullFileName);

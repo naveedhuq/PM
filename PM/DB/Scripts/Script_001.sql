@@ -82,8 +82,9 @@ CREATE TABLE dbo.Documents
 	
 	CustomerID INT NOT NULL,
 	DocumentFolderID INT, 
-	DocumentFileName NVARCHAR(100) NOT NULL,
+	DocumentFileName NVARCHAR(1000) NOT NULL,
 	DocumentType NVARCHAR(100),
+	FileType NVARCHAR(100),
 	FileTimestamp DATETIME,
 	UploadDate DATE,
 	ExpirationDate DATE,
@@ -122,6 +123,24 @@ CREATE TABLE dbo.EventLog
 )
 GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.EventLog TO PUBLIC
 GO
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.DocumentActivityLog','U') IS NOT NULL
+	DROP TABLE dbo.DocumentActivityLog
+CREATE TABLE dbo.DocumentActivityLog
+(
+	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	LOG_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	LOG_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
+	
+	EventType NVARCHAR(100) NOT NULL,
+	CustomerName NVARCHAR(1000),
+	DocumentFileName NVARCHAR(1000),
+	FolderName NVARCHAR(1000)
+)
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.DocumentActivityLog TO PUBLIC
+GO
+
 
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.Lookups','U') IS NOT NULL
@@ -171,23 +190,6 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('DefaultFolder', 7, 'Other Legal'),
 ('DefaultFolder', 8, 'Miscellaneous'),
 
-('ExtensionToImageMapping', 1, '.pdf|IconPDF'),
-('ExtensionToImageMapping', 2, '.xls|IconExcel'),
-('ExtensionToImageMapping', 3, '.xlsx|IconExcel'),
-('ExtensionToImageMapping', 4, '.doc|IconWord'),
-('ExtensionToImageMapping', 5, '.docx|IconWord'),
-('ExtensionToImageMapping', 6, '.rtf|IconWord'),
-('ExtensionToImageMapping', 7, '.ppt|IconPowerPoint'),
-('ExtensionToImageMapping', 8, '.pptx|IconPowerPoint'),
-('ExtensionToImageMapping', 9, '.txt|IconPowerText'),
-('ExtensionToImageMapping', 10, '.jpg|IconImage'),
-('ExtensionToImageMapping', 11, '.jpeg|IconImage'),
-('ExtensionToImageMapping', 12, '.gif|IconImage'),
-('ExtensionToImageMapping', 13, '.png|IconImage'),
-('ExtensionToImageMapping', 14, '.tiff|IconImage'),
-('ExtensionToImageMapping', 15, '.gif|IconImage'),
-('ExtensionToImageMapping', 16, '.bmp|IconImage'),
-
 ('DocumentType', 1, 'Driver''s License'),
 ('DocumentType', 2, 'Social Security'),
 ('DocumentType', 3, 'Tax Returns'),
@@ -201,12 +203,30 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('DocumentType', 11, 'Business Documents'),
 ('DocumentType', 12, 'Other Documents'),
 
-('FileType', 1, 'Word/RTF'),
+('FileType', 1, 'Word'),
 ('FileType', 2, 'Excel'),
+('FileType', 3, 'PowerPoint'),
 ('FileType', 3, 'PDF'),
 ('FileType', 4, 'Image'),
 ('FileType', 5, 'Text'),
-('FileType', 6, 'Other')
+('FileType', 6, 'Other'),
+
+('ExtensionMapping', 1, '.pdf|PDF'),
+('ExtensionMapping', 2, '.xls|Excel'),
+('ExtensionMapping', 3, '.xlsx|Excel'),
+('ExtensionMapping', 4, '.doc|Word'),
+('ExtensionMapping', 5, '.docx|Word'),
+('ExtensionMapping', 6, '.rtf|Word'),
+('ExtensionMapping', 7, '.ppt|PowerPoint'),
+('ExtensionMapping', 8, '.pptx|PowerPoint'),
+('ExtensionMapping', 9, '.txt|Text'),
+('ExtensionMapping', 10, '.jpg|Image'),
+('ExtensionMapping', 11, '.jpeg|Image'),
+('ExtensionMapping', 12, '.gif|Image'),
+('ExtensionMapping', 13, '.png|Image'),
+('ExtensionMapping', 14, '.tiff|Image'),
+('ExtensionMapping', 15, '.gif|Image'),
+('ExtensionMapping', 16, '.bmp|Image')
 
 GO
 
@@ -354,6 +374,7 @@ RETURNS TABLE AS RETURN
 		END) DocumentFolderID,
 		d.DocumentFileName,
 		d.DocumentType,
+		d.FileType,
 		d.FileTimestamp,
 		d.UploadDate,
 		d.ExpirationDate,
@@ -377,6 +398,7 @@ CREATE PROCEDURE dbo.sp_SaveDocument
     @DocumentFolderID INT,
     @DocumentFileName NVARCHAR(100),
     @DocumentType NVARCHAR(100),
+	@FileType NVARCHAR(100),
 	@FileTimestamp DATETIME,
     @UploadDate DATE,
 	@ExpirationDate DATE,
@@ -389,14 +411,15 @@ BEGIN
             DocumentFolderID=@DocumentFolderID,
             DocumentFileName=@DocumentFileName,
 			DocumentType=@DocumentType,
+			FileType=@FileType,
 			FileTimestamp=@FileTimestamp,
             UploadDate=@UploadDate,
             ExpirationDate=@ExpirationDate,
 			Comments=@Comments
         WHERE ID=@ID
     ELSE
-        INSERT INTO dbo.Documents (CustomerID, DocumentFolderID, DocumentFileName, DocumentType, FileTimestamp, UploadDate, ExpirationDate, Comments)
-        VALUES (@CustomerID, @DocumentFolderID, @DocumentFileName, @DocumentType, @FileTimestamp, @UploadDate, @ExpirationDate, @Comments)
+        INSERT INTO dbo.Documents (CustomerID, DocumentFolderID, DocumentFileName, DocumentType, FileType, FileTimestamp, UploadDate, ExpirationDate, Comments)
+        VALUES (@CustomerID, @DocumentFolderID, @DocumentFileName, @DocumentType, @FileType, @FileTimestamp, @UploadDate, @ExpirationDate, @Comments)
     RETURN SCOPE_IDENTITY()
 END
 GO
@@ -528,6 +551,7 @@ GO
 GRANT EXECUTE ON dbo.sp_SyncDocumentType TO PUBLIC
 GO
 
+
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.sp_AddEventLog','P') IS NOT NULL
     DROP PROCEDURE dbo.sp_AddEventLog
@@ -540,4 +564,25 @@ BEGIN
     INSERT INTO dbo.EventLog (EventType, EventMessage)
     VALUES (@EventType, @EventMessage)
 END
+GO
+GRANT EXECUTE ON dbo.sp_AddEventLog TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_AddDocumentActivityLog','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_AddDocumentActivityLog
+GO
+CREATE PROCEDURE dbo.sp_AddDocumentActivityLog
+    @EventType NVARCHAR(100),
+	@CustomerName NVARCHAR(1000),
+	@DocumentFileName NVARCHAR(1000),
+	@FolderName NVARCHAR(1000)
+AS
+BEGIN
+    INSERT INTO dbo.DocumentActivityLog (EventType, CustomerName, DocumentFileName, FolderName)
+    VALUES (@EventType, @CustomerName, @DocumentFileName, @FolderName)
+END
+GO
+GRANT EXECUTE ON dbo.sp_AddDocumentActivityLog TO PUBLIC
 GO

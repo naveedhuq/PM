@@ -89,6 +89,20 @@ namespace PM.Model
             }
         }
 
+        private string _FileType;
+        public string FileType
+        {
+            get { return _FileType; }
+            set
+            {
+                if (_FileType == value)
+                    return;
+                _FileType = value;
+                NotifyPropertyChanged(m => m.FileType);
+                ChangeFileImage();
+            }
+        }
+
         private DateTime? _FileTimestamp;
         public DateTime? FileTimestamp
         {
@@ -101,7 +115,6 @@ namespace PM.Model
                 NotifyPropertyChanged(m => m.FileTimestamp);
             }
         }
-
 
         private DateTime? _UploadDate;
         public DateTime? UploadDate
@@ -161,20 +174,11 @@ namespace PM.Model
         {                        
             try
             {
-                string imageResourceName = "IconUnknown";
-                if (DocumentFileName != null)
-                {
-                    var fileExtension = Path.GetExtension(DocumentFileName.ToLower());
-                    string lookupValue = (from x in DBHelper.Instance.LookupsRepository
-                                          where x.LookupType == "ExtensionToImageMapping"
-                                          where x.LookupName.Contains(fileExtension)
-                                          select x.LookupName).FirstOrDefault();
-                    if (lookupValue != null && lookupValue.Contains("|"))
-                        imageResourceName = lookupValue.Split('|')[1];
-                }
-                FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject(imageResourceName) as Bitmap);
+                if (FileType == null)
+                    return;
+                FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject($"Icon{FileType}") as Bitmap);
             }
-            catch { FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("IconUnknown") as Bitmap); }
+            catch { FileImage = SharedUtils.Instance.ConvertBitmapToImageSource(Properties.Resources.ResourceManager.GetObject("IconOther") as Bitmap); }
         }
 
 
@@ -211,6 +215,23 @@ namespace PM.Model
         public Binary GetRawDocumentData()
         {
             return DBHelper.Instance.GetRawDocumentData(ID);
+        }
+        public static string GetFileType(string filename)
+        {
+            var fileExtension = Path.GetExtension(filename.ToLower());
+            string lookupValue = (from x in DBHelper.Instance.LookupsRepository
+                                  where x.LookupType == "ExtensionMapping"
+                                  where x.LookupName.Contains(fileExtension)
+                                  select x.LookupName).FirstOrDefault();
+            if (lookupValue != null && lookupValue.Contains("|"))
+                return lookupValue.Split('|')[1];
+            else
+                return "Other";
+        }
+
+        public override string ToString()
+        {
+            return DocumentFileName;
         }
 
     }

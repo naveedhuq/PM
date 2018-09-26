@@ -153,7 +153,7 @@ namespace PM.Shared
 
         public m.Document SaveDocument(m.Document d)
         {
-            var id = _cx.sp_SaveDocument(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
+            var id = _cx.sp_SaveDocument(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
             if (id != 0)
                 d.ID = id;
             return d;
@@ -181,6 +181,11 @@ namespace PM.Shared
         public void AddEventLog(EventLog.LogEventType eventType, string message)
         {
             _cx.sp_AddEventLog(eventType.ToString(), message);
+        }
+
+        public void AddDocumentActivityLog(EventLog.LogEventType eventType, string customerName, string documentFileName, string folderName)
+        {
+            _cx.sp_AddDocumentActivityLog(eventType.ToString(), customerName, documentFileName, folderName);
         }
 
         #endregion
@@ -244,6 +249,7 @@ namespace PM.Shared
                            DocumentFolderID = x.DocumentFolderID,
                            DocumentFileName = x.DocumentFileName,
                            DocumentType = x.DocumentType,
+                           FileType = x.FileType,
                            FileTimestamp = x.FileTimestamp,
                            UploadDate = x.UploadDate,
                            ExpirationDate = x.ExpirationDate,

@@ -193,6 +193,10 @@ namespace PM.Model
             return DBHelper.Instance.GetAllFolderNames();
         }
 
+        public override string ToString()
+        {
+            return FolderName;
+        }
 
         private void ChangeFolderImage()
         {

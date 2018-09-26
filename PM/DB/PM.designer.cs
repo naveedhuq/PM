@@ -45,15 +45,18 @@ namespace PM.DB
     partial void InsertDocumentFolder(DocumentFolder instance);
     partial void UpdateDocumentFolder(DocumentFolder instance);
     partial void DeleteDocumentFolder(DocumentFolder instance);
-    partial void InsertDocument(Document instance);
-    partial void UpdateDocument(Document instance);
-    partial void DeleteDocument(Document instance);
     partial void InsertDocumentData(DocumentData instance);
     partial void UpdateDocumentData(DocumentData instance);
     partial void DeleteDocumentData(DocumentData instance);
     partial void InsertEventLog(EventLog instance);
     partial void UpdateEventLog(EventLog instance);
     partial void DeleteEventLog(EventLog instance);
+    partial void InsertDocument(Document instance);
+    partial void UpdateDocument(Document instance);
+    partial void DeleteDocument(Document instance);
+    partial void InsertDocumentActivityLog(DocumentActivityLog instance);
+    partial void UpdateDocumentActivityLog(DocumentActivityLog instance);
+    partial void DeleteDocumentActivityLog(DocumentActivityLog instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -126,14 +129,6 @@ namespace PM.DB
 			}
 		}
 		
-		public System.Data.Linq.Table<Document> Documents
-		{
-			get
-			{
-				return this.GetTable<Document>();
-			}
-		}
-		
 		public System.Data.Linq.Table<DocumentData> DocumentDatas
 		{
 			get
@@ -147,6 +142,22 @@ namespace PM.DB
 			get
 			{
 				return this.GetTable<EventLog>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Document> Documents
+		{
+			get
+			{
+				return this.GetTable<Document>();
+			}
+		}
+		
+		public System.Data.Linq.Table<DocumentActivityLog> DocumentActivityLogs
+		{
+			get
+			{
+				return this.GetTable<DocumentActivityLog>();
 			}
 		}
 		
@@ -180,13 +191,6 @@ namespace PM.DB
 		public int sp_DeleteDocument([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD);
-			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocument")]
-		public int sp_SaveDocument([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileTimestamp", DbType="DateTime")] System.Nullable<System.DateTime> fileTimestamp, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, fileTimestamp, uploadDate, expirationDate, comments);
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -230,16 +234,30 @@ namespace PM.DB
 			return ((int)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_AddEventLog")]
+		public int sp_AddEventLog([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventType", DbType="NVarChar(100)")] string eventType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventMessage", DbType="NVarChar(1000)")] string eventMessage)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventType, eventMessage);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_GetDocumentsForCustomer", IsComposable=true)]
 		public IQueryable<fn_GetDocumentsForCustomerResult> fn_GetDocumentsForCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ActiveOnly", DbType="Bit")] System.Nullable<bool> activeOnly)
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentsForCustomerResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerID, activeOnly);
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_AddEventLog")]
-		public int sp_AddEventLog([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventType", DbType="NVarChar(100)")] string eventType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventMessage", DbType="NVarChar(1000)")] string eventMessage)
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveDocument")]
+		public int sp_SaveDocument([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFolderID", DbType="Int")] System.Nullable<int> documentFolderID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(100)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentType", DbType="NVarChar(100)")] string documentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileType", DbType="NVarChar(100)")] string fileType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FileTimestamp", DbType="DateTime")] System.Nullable<System.DateTime> fileTimestamp, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="UploadDate", DbType="Date")] System.Nullable<System.DateTime> uploadDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ExpirationDate", DbType="Date")] System.Nullable<System.DateTime> expirationDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Comments", DbType="NVarChar(1000)")] string comments)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventType, eventMessage);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, customerID, documentFolderID, documentFileName, documentType, fileType, fileTimestamp, uploadDate, expirationDate, comments);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_AddDocumentActivityLog")]
+		public int sp_AddDocumentActivityLog([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventType", DbType="NVarChar(100)")] string eventType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerName", DbType="NVarChar(1000)")] string customerName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="DocumentFileName", DbType="NVarChar(1000)")] string documentFileName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="FolderName", DbType="NVarChar(1000)")] string folderName)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventType, customerName, documentFileName, folderName);
 			return ((int)(result.ReturnValue));
 		}
 	}
@@ -1322,332 +1340,6 @@ namespace PM.DB
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Documents")]
-	public partial class Document : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private System.DateTime _INSERT_TIMESTAMP;
-		
-		private string _INSERT_USER;
-		
-		private bool _IsActive;
-		
-		private int _CustomerID;
-		
-		private System.Nullable<int> _DocumentFolderID;
-		
-		private string _DocumentFileName;
-		
-		private string _DocumentType;
-		
-		private System.Nullable<System.DateTime> _FileTimestamp;
-		
-		private System.Nullable<System.DateTime> _UploadDate;
-		
-		private System.Nullable<System.DateTime> _ExpirationDate;
-		
-		private string _Comments;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnINSERT_TIMESTAMPChanging(System.DateTime value);
-    partial void OnINSERT_TIMESTAMPChanged();
-    partial void OnINSERT_USERChanging(string value);
-    partial void OnINSERT_USERChanged();
-    partial void OnIsActiveChanging(bool value);
-    partial void OnIsActiveChanged();
-    partial void OnCustomerIDChanging(int value);
-    partial void OnCustomerIDChanged();
-    partial void OnDocumentFolderIDChanging(System.Nullable<int> value);
-    partial void OnDocumentFolderIDChanged();
-    partial void OnDocumentFileNameChanging(string value);
-    partial void OnDocumentFileNameChanged();
-    partial void OnDocumentTypeChanging(string value);
-    partial void OnDocumentTypeChanged();
-    partial void OnFileTimestampChanging(System.Nullable<System.DateTime> value);
-    partial void OnFileTimestampChanged();
-    partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnUploadDateChanged();
-    partial void OnExpirationDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnExpirationDateChanged();
-    partial void OnCommentsChanging(string value);
-    partial void OnCommentsChanged();
-    #endregion
-		
-		public Document()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_TIMESTAMP", DbType="DateTime NOT NULL")]
-		public System.DateTime INSERT_TIMESTAMP
-		{
-			get
-			{
-				return this._INSERT_TIMESTAMP;
-			}
-			set
-			{
-				if ((this._INSERT_TIMESTAMP != value))
-				{
-					this.OnINSERT_TIMESTAMPChanging(value);
-					this.SendPropertyChanging();
-					this._INSERT_TIMESTAMP = value;
-					this.SendPropertyChanged("INSERT_TIMESTAMP");
-					this.OnINSERT_TIMESTAMPChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string INSERT_USER
-		{
-			get
-			{
-				return this._INSERT_USER;
-			}
-			set
-			{
-				if ((this._INSERT_USER != value))
-				{
-					this.OnINSERT_USERChanging(value);
-					this.SendPropertyChanging();
-					this._INSERT_USER = value;
-					this.SendPropertyChanged("INSERT_USER");
-					this.OnINSERT_USERChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
-		public bool IsActive
-		{
-			get
-			{
-				return this._IsActive;
-			}
-			set
-			{
-				if ((this._IsActive != value))
-				{
-					this.OnIsActiveChanging(value);
-					this.SendPropertyChanging();
-					this._IsActive = value;
-					this.SendPropertyChanged("IsActive");
-					this.OnIsActiveChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerID", DbType="Int NOT NULL")]
-		public int CustomerID
-		{
-			get
-			{
-				return this._CustomerID;
-			}
-			set
-			{
-				if ((this._CustomerID != value))
-				{
-					this.OnCustomerIDChanging(value);
-					this.SendPropertyChanging();
-					this._CustomerID = value;
-					this.SendPropertyChanged("CustomerID");
-					this.OnCustomerIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFolderID", DbType="Int")]
-		public System.Nullable<int> DocumentFolderID
-		{
-			get
-			{
-				return this._DocumentFolderID;
-			}
-			set
-			{
-				if ((this._DocumentFolderID != value))
-				{
-					this.OnDocumentFolderIDChanging(value);
-					this.SendPropertyChanging();
-					this._DocumentFolderID = value;
-					this.SendPropertyChanged("DocumentFolderID");
-					this.OnDocumentFolderIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFileName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string DocumentFileName
-		{
-			get
-			{
-				return this._DocumentFileName;
-			}
-			set
-			{
-				if ((this._DocumentFileName != value))
-				{
-					this.OnDocumentFileNameChanging(value);
-					this.SendPropertyChanging();
-					this._DocumentFileName = value;
-					this.SendPropertyChanged("DocumentFileName");
-					this.OnDocumentFileNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentType", DbType="NVarChar(100)")]
-		public string DocumentType
-		{
-			get
-			{
-				return this._DocumentType;
-			}
-			set
-			{
-				if ((this._DocumentType != value))
-				{
-					this.OnDocumentTypeChanging(value);
-					this.SendPropertyChanging();
-					this._DocumentType = value;
-					this.SendPropertyChanged("DocumentType");
-					this.OnDocumentTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileTimestamp", DbType="DateTime")]
-		public System.Nullable<System.DateTime> FileTimestamp
-		{
-			get
-			{
-				return this._FileTimestamp;
-			}
-			set
-			{
-				if ((this._FileTimestamp != value))
-				{
-					this.OnFileTimestampChanging(value);
-					this.SendPropertyChanging();
-					this._FileTimestamp = value;
-					this.SendPropertyChanged("FileTimestamp");
-					this.OnFileTimestampChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadDate", DbType="Date")]
-		public System.Nullable<System.DateTime> UploadDate
-		{
-			get
-			{
-				return this._UploadDate;
-			}
-			set
-			{
-				if ((this._UploadDate != value))
-				{
-					this.OnUploadDateChanging(value);
-					this.SendPropertyChanging();
-					this._UploadDate = value;
-					this.SendPropertyChanged("UploadDate");
-					this.OnUploadDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpirationDate", DbType="Date")]
-		public System.Nullable<System.DateTime> ExpirationDate
-		{
-			get
-			{
-				return this._ExpirationDate;
-			}
-			set
-			{
-				if ((this._ExpirationDate != value))
-				{
-					this.OnExpirationDateChanging(value);
-					this.SendPropertyChanging();
-					this._ExpirationDate = value;
-					this.SendPropertyChanged("ExpirationDate");
-					this.OnExpirationDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Comments", DbType="NVarChar(1000)")]
-		public string Comments
-		{
-			get
-			{
-				return this._Comments;
-			}
-			set
-			{
-				if ((this._Comments != value))
-				{
-					this.OnCommentsChanging(value);
-					this.SendPropertyChanging();
-					this._Comments = value;
-					this.SendPropertyChanged("Comments");
-					this.OnCommentsChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DocumentData")]
 	public partial class DocumentData : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1988,6 +1680,562 @@ namespace PM.DB
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Documents")]
+	public partial class Document : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.DateTime _INSERT_TIMESTAMP;
+		
+		private string _INSERT_USER;
+		
+		private bool _IsActive;
+		
+		private int _CustomerID;
+		
+		private System.Nullable<int> _DocumentFolderID;
+		
+		private string _DocumentFileName;
+		
+		private string _DocumentType;
+		
+		private string _FileType;
+		
+		private System.Nullable<System.DateTime> _FileTimestamp;
+		
+		private System.Nullable<System.DateTime> _UploadDate;
+		
+		private System.Nullable<System.DateTime> _ExpirationDate;
+		
+		private string _Comments;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnINSERT_TIMESTAMPChanging(System.DateTime value);
+    partial void OnINSERT_TIMESTAMPChanged();
+    partial void OnINSERT_USERChanging(string value);
+    partial void OnINSERT_USERChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnCustomerIDChanging(int value);
+    partial void OnCustomerIDChanged();
+    partial void OnDocumentFolderIDChanging(System.Nullable<int> value);
+    partial void OnDocumentFolderIDChanged();
+    partial void OnDocumentFileNameChanging(string value);
+    partial void OnDocumentFileNameChanged();
+    partial void OnDocumentTypeChanging(string value);
+    partial void OnDocumentTypeChanged();
+    partial void OnFileTypeChanging(string value);
+    partial void OnFileTypeChanged();
+    partial void OnFileTimestampChanging(System.Nullable<System.DateTime> value);
+    partial void OnFileTimestampChanged();
+    partial void OnUploadDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnUploadDateChanged();
+    partial void OnExpirationDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnExpirationDateChanged();
+    partial void OnCommentsChanging(string value);
+    partial void OnCommentsChanged();
+    #endregion
+		
+		public Document()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_TIMESTAMP", DbType="DateTime NOT NULL")]
+		public System.DateTime INSERT_TIMESTAMP
+		{
+			get
+			{
+				return this._INSERT_TIMESTAMP;
+			}
+			set
+			{
+				if ((this._INSERT_TIMESTAMP != value))
+				{
+					this.OnINSERT_TIMESTAMPChanging(value);
+					this.SendPropertyChanging();
+					this._INSERT_TIMESTAMP = value;
+					this.SendPropertyChanged("INSERT_TIMESTAMP");
+					this.OnINSERT_TIMESTAMPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string INSERT_USER
+		{
+			get
+			{
+				return this._INSERT_USER;
+			}
+			set
+			{
+				if ((this._INSERT_USER != value))
+				{
+					this.OnINSERT_USERChanging(value);
+					this.SendPropertyChanging();
+					this._INSERT_USER = value;
+					this.SendPropertyChanged("INSERT_USER");
+					this.OnINSERT_USERChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerID", DbType="Int NOT NULL")]
+		public int CustomerID
+		{
+			get
+			{
+				return this._CustomerID;
+			}
+			set
+			{
+				if ((this._CustomerID != value))
+				{
+					this.OnCustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._CustomerID = value;
+					this.SendPropertyChanged("CustomerID");
+					this.OnCustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFolderID", DbType="Int")]
+		public System.Nullable<int> DocumentFolderID
+		{
+			get
+			{
+				return this._DocumentFolderID;
+			}
+			set
+			{
+				if ((this._DocumentFolderID != value))
+				{
+					this.OnDocumentFolderIDChanging(value);
+					this.SendPropertyChanging();
+					this._DocumentFolderID = value;
+					this.SendPropertyChanged("DocumentFolderID");
+					this.OnDocumentFolderIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFileName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string DocumentFileName
+		{
+			get
+			{
+				return this._DocumentFileName;
+			}
+			set
+			{
+				if ((this._DocumentFileName != value))
+				{
+					this.OnDocumentFileNameChanging(value);
+					this.SendPropertyChanging();
+					this._DocumentFileName = value;
+					this.SendPropertyChanged("DocumentFileName");
+					this.OnDocumentFileNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentType", DbType="NVarChar(100)")]
+		public string DocumentType
+		{
+			get
+			{
+				return this._DocumentType;
+			}
+			set
+			{
+				if ((this._DocumentType != value))
+				{
+					this.OnDocumentTypeChanging(value);
+					this.SendPropertyChanging();
+					this._DocumentType = value;
+					this.SendPropertyChanged("DocumentType");
+					this.OnDocumentTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileType", DbType="NVarChar(100)")]
+		public string FileType
+		{
+			get
+			{
+				return this._FileType;
+			}
+			set
+			{
+				if ((this._FileType != value))
+				{
+					this.OnFileTypeChanging(value);
+					this.SendPropertyChanging();
+					this._FileType = value;
+					this.SendPropertyChanged("FileType");
+					this.OnFileTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileTimestamp", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FileTimestamp
+		{
+			get
+			{
+				return this._FileTimestamp;
+			}
+			set
+			{
+				if ((this._FileTimestamp != value))
+				{
+					this.OnFileTimestampChanging(value);
+					this.SendPropertyChanging();
+					this._FileTimestamp = value;
+					this.SendPropertyChanged("FileTimestamp");
+					this.OnFileTimestampChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UploadDate", DbType="Date")]
+		public System.Nullable<System.DateTime> UploadDate
+		{
+			get
+			{
+				return this._UploadDate;
+			}
+			set
+			{
+				if ((this._UploadDate != value))
+				{
+					this.OnUploadDateChanging(value);
+					this.SendPropertyChanging();
+					this._UploadDate = value;
+					this.SendPropertyChanged("UploadDate");
+					this.OnUploadDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpirationDate", DbType="Date")]
+		public System.Nullable<System.DateTime> ExpirationDate
+		{
+			get
+			{
+				return this._ExpirationDate;
+			}
+			set
+			{
+				if ((this._ExpirationDate != value))
+				{
+					this.OnExpirationDateChanging(value);
+					this.SendPropertyChanging();
+					this._ExpirationDate = value;
+					this.SendPropertyChanged("ExpirationDate");
+					this.OnExpirationDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Comments", DbType="NVarChar(1000)")]
+		public string Comments
+		{
+			get
+			{
+				return this._Comments;
+			}
+			set
+			{
+				if ((this._Comments != value))
+				{
+					this.OnCommentsChanging(value);
+					this.SendPropertyChanging();
+					this._Comments = value;
+					this.SendPropertyChanged("Comments");
+					this.OnCommentsChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DocumentActivityLog")]
+	public partial class DocumentActivityLog : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.DateTime _LOG_TIMESTAMP;
+		
+		private string _LOG_USER;
+		
+		private string _EventType;
+		
+		private string _CustomerName;
+		
+		private string _DocumentFileName;
+		
+		private string _FolderName;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnLOG_TIMESTAMPChanging(System.DateTime value);
+    partial void OnLOG_TIMESTAMPChanged();
+    partial void OnLOG_USERChanging(string value);
+    partial void OnLOG_USERChanged();
+    partial void OnEventTypeChanging(string value);
+    partial void OnEventTypeChanged();
+    partial void OnCustomerNameChanging(string value);
+    partial void OnCustomerNameChanged();
+    partial void OnDocumentFileNameChanging(string value);
+    partial void OnDocumentFileNameChanged();
+    partial void OnFolderNameChanging(string value);
+    partial void OnFolderNameChanged();
+    #endregion
+		
+		public DocumentActivityLog()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LOG_TIMESTAMP", DbType="DateTime NOT NULL")]
+		public System.DateTime LOG_TIMESTAMP
+		{
+			get
+			{
+				return this._LOG_TIMESTAMP;
+			}
+			set
+			{
+				if ((this._LOG_TIMESTAMP != value))
+				{
+					this.OnLOG_TIMESTAMPChanging(value);
+					this.SendPropertyChanging();
+					this._LOG_TIMESTAMP = value;
+					this.SendPropertyChanged("LOG_TIMESTAMP");
+					this.OnLOG_TIMESTAMPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LOG_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string LOG_USER
+		{
+			get
+			{
+				return this._LOG_USER;
+			}
+			set
+			{
+				if ((this._LOG_USER != value))
+				{
+					this.OnLOG_USERChanging(value);
+					this.SendPropertyChanging();
+					this._LOG_USER = value;
+					this.SendPropertyChanged("LOG_USER");
+					this.OnLOG_USERChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EventType", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string EventType
+		{
+			get
+			{
+				return this._EventType;
+			}
+			set
+			{
+				if ((this._EventType != value))
+				{
+					this.OnEventTypeChanging(value);
+					this.SendPropertyChanging();
+					this._EventType = value;
+					this.SendPropertyChanged("EventType");
+					this.OnEventTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerName", DbType="NVarChar(1000)")]
+		public string CustomerName
+		{
+			get
+			{
+				return this._CustomerName;
+			}
+			set
+			{
+				if ((this._CustomerName != value))
+				{
+					this.OnCustomerNameChanging(value);
+					this.SendPropertyChanging();
+					this._CustomerName = value;
+					this.SendPropertyChanged("CustomerName");
+					this.OnCustomerNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DocumentFileName", DbType="NVarChar(1000)")]
+		public string DocumentFileName
+		{
+			get
+			{
+				return this._DocumentFileName;
+			}
+			set
+			{
+				if ((this._DocumentFileName != value))
+				{
+					this.OnDocumentFileNameChanging(value);
+					this.SendPropertyChanging();
+					this._DocumentFileName = value;
+					this.SendPropertyChanged("DocumentFileName");
+					this.OnDocumentFileNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FolderName", DbType="NVarChar(1000)")]
+		public string FolderName
+		{
+			get
+			{
+				return this._FolderName;
+			}
+			set
+			{
+				if ((this._FolderName != value))
+				{
+					this.OnFolderNameChanging(value);
+					this.SendPropertyChanging();
+					this._FolderName = value;
+					this.SendPropertyChanged("FolderName");
+					this.OnFolderNameChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	public partial class fn_GetDocumentFoldersForCustomerResult
 	{
 		
@@ -2199,6 +2447,8 @@ namespace PM.DB
 		
 		private string _DocumentType;
 		
+		private string _FileType;
+		
 		private System.Nullable<System.DateTime> _FileTimestamp;
 		
 		private System.Nullable<System.DateTime> _UploadDate;
@@ -2303,6 +2553,22 @@ namespace PM.DB
 				if ((this._DocumentType != value))
 				{
 					this._DocumentType = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FileType", DbType="NVarChar(100)")]
+		public string FileType
+		{
+			get
+			{
+				return this._FileType;
+			}
+			set
+			{
+				if ((this._FileType != value))
+				{
+					this._FileType = value;
 				}
 			}
 		}

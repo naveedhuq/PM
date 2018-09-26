@@ -17,9 +17,9 @@ namespace PM.Model
             TypeOfCompany,
             ServiceType,
             DefaultFolder,
-            ExtensionToImageMapping,
             DocumentType,
-            FileType
+            FileType,
+            ExtensionMapping
         }
 
 
