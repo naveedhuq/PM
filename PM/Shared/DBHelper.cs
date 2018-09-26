@@ -115,23 +115,6 @@ namespace PM.Shared
             }
         }
 
-        public List<m.AppSetting> AppSettingsRepository
-        {
-            get
-            {
-                return
-                (
-                    from x in _cx.AppSettings
-                    select new m.AppSetting
-                    {
-                        ID = x.ID,
-                        SettingsName = x.SettingsName,
-                        SettingsValue = x.SettingsValue
-                    }
-                ).ToList();
-            }
-        }
-
         #endregion
 
 
@@ -258,11 +241,6 @@ namespace PM.Shared
             return new ObservableCollection<m.Document>(docs);
         }
 
-        public string GetAppSetting(string settingName)
-        {
-            return (from x in AppSettingsRepository where x.SettingsName == settingName select x.SettingsValue).FirstOrDefault();
-        }
-
         public Binary GetRawDocumentData(int documentID)
         {
             return _cx.fn_GetRawDocumentData(documentID);
@@ -274,6 +252,27 @@ namespace PM.Shared
                           orderby x.FolderName
                           select x.FolderName;
             return new ObservableCollection<string>(folders);
+        }
+
+        public ObservableCollection<m.Document> GetAllDocuments(bool activeOnly = true)
+        {
+            var docs = from x in _cx.Documents
+                       where (activeOnly ? x.IsActive : true)
+                       select new m.Document
+                       {
+                           ID = x.ID,
+                           IsActive = x.IsActive,
+                           CustomerID = x.CustomerID,
+                           DocumentFolderID = x.DocumentFolderID,
+                           DocumentFileName = x.DocumentFileName,
+                           DocumentType = x.DocumentType,
+                           FileType = x.FileType,
+                           FileTimestamp = x.FileTimestamp,
+                           UploadDate = x.UploadDate,
+                           ExpirationDate = x.ExpirationDate,
+                           Comments = x.Comments
+                       };
+            return new ObservableCollection<m.Document>(docs);
         }
 
     }

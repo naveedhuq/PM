@@ -25,6 +25,8 @@ namespace PM.Shared
                 var json = File.ReadAllText(configFile);
                 AppSettings = JsonConvert.DeserializeObject<AppSetting>(json);
             }
+            else
+                throw new FileNotFoundException($"Application settings file '{configFile}' not found.");
 
             // Populate Default Properties
             UserName = Environment.UserName;
@@ -41,7 +43,7 @@ namespace PM.Shared
         }
         #endregion
 
-        public AppSetting AppSettings { get; }
+        public AppSetting AppSettings { get; private set; }
         public string UserName { get; }
         public string AppDirectory { get; }
         public string RegisteredName { get; }

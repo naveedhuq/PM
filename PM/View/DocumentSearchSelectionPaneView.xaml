@@ -55,11 +55,12 @@
                         ItemsSource="{Binding Customers}"
                         SelectedItem="{Binding SelectedCustomer}"
                         AutoPopulateColumns="False"
-                        PopupWidth="300">
+                        PopupWidth="350">
                         <dxg:LookUpEdit.PopupContentTemplate>
                             <ControlTemplate>
                                 <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
                                     <dxg:GridControl.Columns>
+                                        <dxg:GridColumn Binding="{Binding Path=ID}" Header="ID"/>
                                         <dxg:GridColumn Binding="{Binding Path=CustomerName}" Header="Customer Name"/>
                                         <dxg:GridColumn Binding="{Binding Path=IsActive}" Header="Active?"/>
                                         <dxg:GridColumn Binding="{Binding Path=CustomerType}" Header="Type"/>
@@ -72,10 +73,10 @@
                         </dxg:LookUpEdit.PopupContentTemplate>
                     </dxg:LookUpEdit>
                     
-                    <Label Grid.Row="1" Content="Inactive Customers"/>
+                    <Label Grid.Row="1" Content="Show Inactive Customers"/>
                     <dxe:CheckEdit
                         Grid.Row="1" Grid.Column="1"
-                        IsChecked="{Binding InactiveCustomersOnly}"/>
+                        IsChecked="{Binding ShowInactiveCustomers}"/>
                 </Grid>
             </dxn:NavBarGroup>
 

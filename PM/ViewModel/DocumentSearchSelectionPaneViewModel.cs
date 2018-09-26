@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using DevExpress.Mvvm;
 using PM.Model;
 using PM.Shared;
@@ -24,10 +25,14 @@ namespace PM.ViewModel
             get { return GetProperty(() => SelectedCustomer); }
             set { SetProperty(() => SelectedCustomer, value); }
         }
-        public bool InactiveCustomersOnly
+        public bool ShowInactiveCustomers
         {
-            get { return GetProperty(() => InactiveCustomersOnly); }
-            set { SetProperty(() => InactiveCustomersOnly, value); }
+            get { return GetProperty(() => ShowInactiveCustomers); }
+            set
+            {
+                SetProperty(() => ShowInactiveCustomers, value);
+                Customers = DBHelper.Instance.GetCustomers(ActiveOnly: !value);
+            }
         }
         #endregion
 
@@ -138,6 +143,8 @@ namespace PM.ViewModel
                 return new DelegateCommand(() =>
                 {
                     _WaitIndicatorService.ShowSplashScreen();
+                    var docs = from doc in DBHelper.Instance.GetAllDocuments(!IncludeDeletedDocuments);
+
                     _WaitIndicatorService.HideSplashScreen();
                 });
             }
@@ -165,7 +172,7 @@ namespace PM.ViewModel
         private void ClearData()
         {
             SelectedCustomer = null;
-            InactiveCustomersOnly = false;
+            ShowInactiveCustomers = false;
             SelectedFolderName = null;
             BookmarkedFoldersOnly = false;
             HiddenFoldersOnly = false;

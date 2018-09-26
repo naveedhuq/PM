@@ -230,24 +230,6 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 
 GO
 
------------------------------------------------------------------------------------------------------------------------------
-IF OBJECT_ID('dbo.AppSettings','U') IS NOT NULL
-	DROP TABLE dbo.AppSettings
-CREATE TABLE dbo.AppSettings
-(
-	ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
-	SettingsName NVARCHAR(100) NOT NULL UNIQUE,
-	SettingsValue NVARCHAR(1000)
-)
-GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.AppSettings TO PUBLIC
-GO
-INSERT INTO dbo.AppSettings(SettingsName, SettingsValue) VALUES
-('SPECIAL_FOLDERNAME_ALL', 'ALL'),
-('SPECIAL_FOLDERNAME_UNCATEGORIZED', 'Un-Categorized')
-GO
-
-
-
 
 -----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.sp_CreateDefaultDocumentFolders','P') IS NOT NULL

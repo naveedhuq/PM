@@ -3,8 +3,6 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using DevExpress.Images;
 using PM.Shared;
 
 
@@ -12,8 +10,8 @@ namespace PM.Model
 {
     public class DocumentFolder : ModelBase<DocumentFolder>
     {
-        private static string _SpecialFolderName_All = DBHelper.Instance.GetAppSetting("SPECIAL_FOLDERNAME_ALL");
-        private static string _SpecialFolderName_UnCategorized = DBHelper.Instance.GetAppSetting("SPECIAL_FOLDERNAME_UNCATEGORIZED");
+        private static string _SpecialFolderName_All = SharedUtils.Instance.AppSettings.SpecialFolderName_All;
+        private static string _SpecialFolderName_UnCategorized = SharedUtils.Instance.AppSettings.SpecialFolderName_UnCategorized;
 
 
         private int _ID = 0;
