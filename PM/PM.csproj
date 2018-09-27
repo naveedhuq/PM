@@ -191,9 +191,11 @@
     <Compile Include="ViewModel\DocumentExpiryCalendarViewModel.cs" />
     <Compile Include="ViewModel\DocumentSearchSelectionPaneViewModel.cs" />
     <Compile Include="ViewModel\DocumentSearchViewModel.cs" />
+    <Compile Include="ViewModel\ExcelDocumentViewModel.cs" />
     <Compile Include="ViewModel\MasterViewModel.cs" />
     <Compile Include="ViewModel\ReminderCalendarViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\WordDocumentViewModel.cs" />
     <Compile Include="View\CustomerContactsView.xaml.cs">
       <DependentUpon>CustomerContactsView.xaml</DependentUpon>
     </Compile>
