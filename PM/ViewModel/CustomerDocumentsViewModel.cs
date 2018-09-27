@@ -14,6 +14,9 @@ namespace PM.ViewModel
 {
     public class CustomerDocumentsViewModel : ViewModelBase
     {
+        Shared.ILogger _logger;
+
+
         [ServiceProperty(Key = "InputDialog")]
         protected IDialogService DialogService { get { return GetService<IDialogService>(); } }
         protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
@@ -533,6 +536,10 @@ namespace PM.ViewModel
             return (_ClipboardCopyDocument == null && _ClipboardCutDocument == null);
         }
 
-        private void ShowError(Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+        private void ShowError(Exception ex)
+        {
+            MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error);
+            _logger.Error(ex.Message, ex);
+        }
     }
 }

@@ -62,7 +62,19 @@
                                     Glyph="{dx:DXImage Image=Calendar_16x16.png}"
                                     LargeGlyph="{dx:DXImage Image=Calendar_32x32.png}" 
                                     Command="{Binding OpenViewCommand}"
-                                    CommandParameter="DocumentSearchView"/>
+                                    CommandParameter="DocumentExpiryCalendarView"/>
+                                <dxb:BarButtonItem
+                                    Content="New Word Document"
+                                    Glyph="pack://application:,,,/Images/word.png"
+                                    LargeGlyph="pack://application:,,,/Images/word32.png"
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="WordDocumentView"/>
+                                <dxb:BarButtonItem
+                                    Content="New Excel Document"
+                                    Glyph="pack://application:,,,/Images/excel.png"
+                                    LargeGlyph="pack://application:,,,/Images/excel32.png"
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="ExcelDocumentView"/>
                             </dxr:RibbonPageGroup>
 
                             <dxr:RibbonPageGroup Caption="Service Management">
@@ -74,7 +86,12 @@
                             </dxr:RibbonPageGroup>
 
                             <dxr:RibbonPageGroup Caption="Reporting">
-
+                                <dxb:BarButtonItem
+                                    Content="Reminder Calendar"
+                                    Glyph="{dx:DXImage Image=Reminder_16x16.png}"
+                                    LargeGlyph="{dx:DXImage Image=Reminder_32x32.png}" 
+                                    Command="{Binding OpenViewCommand}"
+                                    CommandParameter="ReminderCalendarView"/>
                             </dxr:RibbonPageGroup>
 
                         </dxr:RibbonPage>

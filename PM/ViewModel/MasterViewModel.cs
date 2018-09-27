@@ -53,11 +53,7 @@ namespace PM.ViewModel
                         ChildView = view;
                         _WaitIndicatorService.HideSplashScreen();
                     }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex.Message, ex);
-                        MessageBoxService.ShowMessage(ex.Message, "Error", MessageButton.OK, MessageIcon.Error);
-                    }
+                    catch (Exception ex) { ShowError(ex); }
                 });
             }
         }
@@ -66,10 +62,22 @@ namespace PM.ViewModel
         {
             _logger = LogManager.GetLogger(GetType());
             _WaitIndicatorService = DevExpress.Mvvm.ServiceContainer.Default.GetService<ISplashScreenService>("WaitIndicatorService");
+
             Messenger.Default.Register<Document>(
                 recipient: this,
                 token: MessageTokenEnum.DocumentClipboardChanged,
                 action: doc => ClipboardContent = doc?.DocumentFileName );
+
+            Messenger.Default.Register<object>(
+                recipient: this,
+                token: MessageTokenEnum.CloseUserControl,
+                action: (vm) => ChildView = null);
+        }
+
+        private void ShowError(Exception ex)
+        {
+            MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error);
+            _logger.Error(ex.Message, ex);
         }
 
     }

@@ -15,7 +15,8 @@ namespace PM.ViewModel
         public static CustomerDocumentsViewModel CustomerDocumentsViewModel { get { return _container.Resolve<CustomerDocumentsViewModel>(); } }
         public static DocumentSearchViewModel DocumentSearchViewModel { get { return _container.Resolve<DocumentSearchViewModel>(); } }
         public static DocumentSearchSelectionPaneViewModel DocumentSearchSelectionPaneViewModel { get { return _container.Resolve<DocumentSearchSelectionPaneViewModel>(); } }
-
+        public static ReminderCalendarViewModel ReminderCalendarViewModel { get { return _container.Resolve<ReminderCalendarViewModel>(); } }
+        public static DocumentExpiryCalendarViewModel DocumentExpiryCalendarViewModel { get { return _container.Resolve<DocumentExpiryCalendarViewModel>(); } }
         
 
         static ViewModelLocator()
@@ -28,6 +29,8 @@ namespace PM.ViewModel
             _container.RegisterType<CustomerDocumentsViewModel>();
             _container.RegisterType<DocumentSearchViewModel>();
             _container.RegisterType<DocumentSearchSelectionPaneViewModel>();
+            _container.RegisterType<ReminderCalendarViewModel>();
+            _container.RegisterType<DocumentExpiryCalendarViewModel>();
         }
     }
 }

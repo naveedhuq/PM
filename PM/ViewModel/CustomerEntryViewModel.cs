@@ -6,6 +6,7 @@ namespace PM.ViewModel
 {
     public class CustomerEntryViewModel : ViewModelBase
     {
+        Shared.ILogger _logger;
         public Customer SelectedCustomer
         {
             get { return GetProperty(() => SelectedCustomer); }

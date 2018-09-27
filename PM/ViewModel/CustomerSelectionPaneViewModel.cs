@@ -11,6 +11,8 @@ namespace PM.ViewModel
 {
     public class CustomerSelectionPaneViewModel : ViewModelBase
     {
+        Shared.ILogger _logger;
+
         [ServiceProperty(Key = "InputDialog")]
         protected IDialogService DialogService { get { return GetService<IDialogService>(); } }
         protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
@@ -51,7 +53,7 @@ namespace PM.ViewModel
                 return new DelegateCommand(() =>
                 {
                     try { RefreshData(); }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 });
             }
         }
@@ -84,7 +86,7 @@ namespace PM.ViewModel
                         Customers.Add(customer);
                         SelectedCustomer = customer;
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 });
             }
         }
@@ -102,7 +104,7 @@ namespace PM.ViewModel
                         SelectedCustomer = null;
                         RefreshData();
                     }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedCustomer != null);
             }
         }
@@ -122,6 +124,12 @@ namespace PM.ViewModel
         private void RefreshData()
         {
             Customers = DBHelper.Instance.GetCustomers(ActiveOnly: !ShowInactiveCustomers);
+        }
+
+        private void ShowError(Exception ex)
+        {
+            MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error);
+            _logger.Error(ex.Message, ex);
         }
 
     }

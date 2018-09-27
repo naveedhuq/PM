@@ -13,6 +13,7 @@ namespace PM.ViewModel
 {
     public class CustomerContactsViewModel : ViewModelBase
     {
+        ILogger _logger;
         public Customer SelectedCustomer
         {
             get { return GetProperty(() => SelectedCustomer); }
@@ -36,6 +37,7 @@ namespace PM.ViewModel
                 SelectedCustomer = new Customer();
                 return;
             }
+            _logger = LogManager.GetLogger(GetType());
             ContactItemTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.ContactItemType);
 
             Messenger.Default.Register<Customer>(

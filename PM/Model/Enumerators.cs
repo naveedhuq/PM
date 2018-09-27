@@ -21,7 +21,8 @@ namespace PM.Model
         {
             SelectedCustomerChanged,
             DocumentClipboardChanged,
-            ApplyFilterInvoked
+            ApplyFilterInvoked,
+            CloseUserControl
         }
 
 

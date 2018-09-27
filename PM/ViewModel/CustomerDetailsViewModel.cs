@@ -3,11 +3,13 @@ using System.Collections.ObjectModel;
 using DevExpress.Mvvm;
 using PM.Model;
 using static PM.Model.Enumerators;
+using PM.Shared;
 
 namespace PM.ViewModel
 {
     public class CustomerDetailsViewModel : ViewModelBase
     {
+        ILogger _logger;
         protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
 
         public Customer SelectedCustomer
@@ -41,7 +43,7 @@ namespace PM.ViewModel
                 return new DelegateCommand(() =>
                 {
                     try { SelectedCustomer.SaveChanges(); }
-                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                    catch (Exception ex) { ShowError(ex); }
                 }, () => SelectedCustomer != null && SelectedCustomer.IsDirty );
             }
         }
@@ -53,6 +55,7 @@ namespace PM.ViewModel
                 SelectedCustomer = new Customer();
                 return;
             }
+            _logger = LogManager.GetLogger(GetType());
             RefreshData();
 
             Messenger.Default.Register<Customer>(
@@ -66,6 +69,12 @@ namespace PM.ViewModel
             CustomerTypes =LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.CustomerType);
             TypesOfCompany = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.TypeOfCompany);
             ServiceTypes = LookupItem.GetLookupStrings(LookupItem.LookupTypesEnum.ServiceType);
+        }
+
+        void ShowError(Exception ex)
+        {
+            MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error);
+            _logger.Error(ex.Message, ex);
         }
     }
 }

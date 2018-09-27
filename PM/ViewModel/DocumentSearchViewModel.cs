@@ -9,6 +9,8 @@ namespace PM.ViewModel
 {
     public class DocumentSearchViewModel : ViewModelBase
     {
+        Shared.ILogger _logger;
+
         public ObservableCollection<DocumentFilter> FilteredDocuments
         {
             get { return GetProperty(() => FilteredDocuments); }
