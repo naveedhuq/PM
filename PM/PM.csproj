@@ -315,6 +315,7 @@
     <Resource Include="Images\SplashBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\jr-logo.jpg" />
     <None Include="Resources\info.png" />
     <None Include="Resources\IconWord.png" />
     <None Include="Resources\IconUnknown.png" />
