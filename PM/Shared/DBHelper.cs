@@ -324,5 +324,7 @@ namespace PM.Shared
                        };
             return new ObservableCollection<m.DocumentFilter>(docs);
         }
+
+        public bool CustomerNameExists(string customerName) { return (bool)_cx.fn_CustomerNameExists(customerName); }
     }
 }

@@ -274,6 +274,12 @@ namespace PM.DB
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, isActive, openingDate, customerType, customerName, personal_Gender, personal_BirthDate, personal_SSN, personal_LicenseID, business_TypeOfCompany, business_TaxID, notes);
 			return ((int)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.fn_CustomerNameExists", IsComposable=true)]
+		public System.Nullable<bool> fn_CustomerNameExists([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerName", DbType="NVarChar(1000)")] string customerName)
+		{
+			return ((System.Nullable<bool>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerName).ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Customer")]

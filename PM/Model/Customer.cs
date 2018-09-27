@@ -202,5 +202,9 @@ namespace PM.Model
         {
             return CustomerName;
         }
+        public static bool CustomerNameExists(string customerName)
+        {
+            return DBHelper.Instance.CustomerNameExists(customerName);
+        }
     }
 }

@@ -255,4 +255,8 @@
     <Parameter Name="Notes" Parameter="notes" Type="System.String" DbType="NVarChar(4000)" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.fn_CustomerNameExists" Method="fn_CustomerNameExists" IsComposable="true">
+    <Parameter Name="CustomerName" Parameter="customerName" Type="System.String" DbType="NVarChar(1000)" />
+    <Return Type="System.Boolean" />
+  </Function>
 </Database>

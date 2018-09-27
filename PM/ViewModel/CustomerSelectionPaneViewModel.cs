@@ -62,25 +62,51 @@ namespace PM.ViewModel
             {
                 return new DelegateCommand(() =>
                 {
-                    InputDialogText = null;
-                    var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter Customer Name", viewModel: this);
-                    if (ret != MessageResult.OK)
-                        return;
-
-                    var customer = new Customer()
+                    try
                     {
-                        CustomerName = InputDialogText,
-                        CustomerType = SelectedCustomer?.CustomerType ?? "Business",
-                        IsActive = true,
-                        OpeningDate = DateTime.Today
-                    };
-                    customer.SaveChanges();
-                    Customers.Add(customer);
-                    SelectedCustomer = customer;
+                        InputDialogText = null;
+                        var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter Customer Name", viewModel: this);
+                        if (ret != MessageResult.OK)
+                            return;
+
+                        if (Customer.CustomerNameExists(InputDialogText))
+                            if (MessageBoxService.ShowMessage($"The Customer Name '{InputDialogText}' already exists. Do you still want to create a new customer?", "Confirmation", MessageButton.YesNo, MessageIcon.Exclamation) == MessageResult.No)
+                                return;
+
+                        var customer = new Customer()
+                        {
+                            CustomerName = InputDialogText,
+                            CustomerType = SelectedCustomer?.CustomerType ?? "Business",
+                            IsActive = true,
+                            OpeningDate = DateTime.Today
+                        };
+                        customer.SaveChanges();
+                        Customers.Add(customer);
+                        SelectedCustomer = customer;
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
                 });
             }
         }
-        
+
+        public DelegateCommand ActivateToggleCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        SelectedCustomer.IsActive = !SelectedCustomer.IsActive;
+                        SelectedCustomer.SaveChanges();
+                        SelectedCustomer = null;
+                        RefreshData();
+                    }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedCustomer != null);
+            }
+        }
+
 
 
         public CustomerSelectionPaneViewModel()
