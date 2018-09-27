@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using PM.Model;
 using PM.Shared;
 using System;
@@ -10,6 +11,10 @@ namespace PM.ViewModel
 {
     public class CustomerSelectionPaneViewModel : ViewModelBase
     {
+        [ServiceProperty(Key = "InputDialog")]
+        protected IDialogService DialogService { get { return GetService<IDialogService>(); } }
+        protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+
         public ObservableCollection<Customer> Customers
         {
             get { return GetProperty(() => Customers); }
@@ -26,6 +31,57 @@ namespace PM.ViewModel
                     MessageTokenEnum.SelectedCustomerChanged);
             }
         }
+        public bool ShowInactiveCustomers
+        {
+            get { return GetProperty(() => ShowInactiveCustomers); }
+            set { SetProperty(() => ShowInactiveCustomers, value); }
+        }
+
+        public string InputDialogText
+        {
+            get { return GetProperty(() => InputDialogText); }
+            set { SetProperty(() => InputDialogText, value); }
+        }
+
+
+        public DelegateCommand RefreshCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try { RefreshData(); }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                });
+            }
+        }
+
+        public DelegateCommand NewCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    InputDialogText = null;
+                    var ret = DialogService.ShowDialog(dialogButtons: MessageButton.OKCancel, title: "Enter Customer Name", viewModel: this);
+                    if (ret != MessageResult.OK)
+                        return;
+
+                    var customer = new Customer()
+                    {
+                        CustomerName = InputDialogText,
+                        CustomerType = SelectedCustomer?.CustomerType ?? "Business",
+                        IsActive = true,
+                        OpeningDate = DateTime.Today
+                    };
+                    customer.SaveChanges();
+                    Customers.Add(customer);
+                    SelectedCustomer = customer;
+                });
+            }
+        }
+        
+
 
         public CustomerSelectionPaneViewModel()
         {
@@ -37,9 +93,9 @@ namespace PM.ViewModel
             RefreshData();
         }
 
-        void RefreshData()
+        private void RefreshData()
         {
-            Customers = DBHelper.Instance.GetCustomers(true);
+            Customers = DBHelper.Instance.GetCustomers(ActiveOnly: !ShowInactiveCustomers);
         }
 
     }

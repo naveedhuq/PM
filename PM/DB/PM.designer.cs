@@ -267,6 +267,13 @@ namespace PM.DB
 		{
 			return this.CreateMethodCallQuery<fn_GetDocumentsForFilterResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveCustomer")]
+		public int sp_SaveCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsActive", DbType="Bit")] System.Nullable<bool> isActive, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OpeningDate", DbType="Date")] System.Nullable<System.DateTime> openingDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerType", DbType="NVarChar(100)")] string customerType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerName", DbType="NVarChar(1000)")] string customerName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Personal_Gender", DbType="NVarChar(100)")] string personal_Gender, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Personal_BirthDate", DbType="Date")] System.Nullable<System.DateTime> personal_BirthDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Personal_SSN", DbType="NVarChar(100)")] string personal_SSN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Personal_LicenseID", DbType="NVarChar(100)")] string personal_LicenseID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Business_TypeOfCompany", DbType="NVarChar(100)")] string business_TypeOfCompany, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Business_TaxID", DbType="NVarChar(100)")] string business_TaxID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Notes", DbType="NVarChar(4000)")] string notes)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, isActive, openingDate, customerType, customerName, personal_Gender, personal_BirthDate, personal_SSN, personal_LicenseID, business_TypeOfCompany, business_TaxID, notes);
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Customer")]

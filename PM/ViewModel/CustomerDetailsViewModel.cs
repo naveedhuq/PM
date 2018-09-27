@@ -1,13 +1,15 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using DevExpress.Mvvm;
 using PM.Model;
-using PM.Shared;
 using static PM.Model.Enumerators;
 
 namespace PM.ViewModel
 {
     public class CustomerDetailsViewModel : ViewModelBase
     {
+        protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+
         public Customer SelectedCustomer
         {
             get { return GetProperty(() => SelectedCustomer); }
@@ -30,6 +32,18 @@ namespace PM.ViewModel
         {
             get { return GetProperty(() => ServiceTypes); }
             set { SetProperty(() => ServiceTypes, value); }
+        }
+
+        public DelegateCommand SaveCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try { SelectedCustomer.SaveChanges(); }
+                    catch (Exception ex) { MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error); }
+                }, () => SelectedCustomer != null && SelectedCustomer.IsDirty );
+            }
         }
 
         public CustomerDetailsViewModel()

@@ -171,6 +171,26 @@ namespace PM.Shared
             _cx.sp_AddDocumentActivityLog(eventType.ToString(), customerName, documentFileName, folderName);
         }
 
+        public m.Customer SaveCustomer(m.Customer c)
+        {
+            var id = _cx.sp_SaveCustomer(
+                c.ID,
+                c.IsActive,
+                c.OpeningDate,
+                c.CustomerType,
+                c.CustomerName,
+                c.Personal_Gender,
+                c.Personal_BirthDate,
+                c.Personal_SSN,
+                c.Personal_LicenseID,
+                c.Business_TypeOfCompany,
+                c.Business_TaxID,
+                c.Notes);
+            if (id != 0)
+                c.ID = id;
+            return c;
+        }
+
         #endregion
 
 

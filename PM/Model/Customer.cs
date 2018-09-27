@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using PM.Shared;
 
 namespace PM.Model
 {
@@ -188,7 +189,8 @@ namespace PM.Model
 
         public override void SaveChanges()
         {
-            throw new NotImplementedException();
+            var ret = DBHelper.Instance.SaveCustomer(this);
+            IsDirty = false;
         }
 
         protected override void Populate(Customer item)

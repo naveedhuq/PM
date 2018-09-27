@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -18,6 +19,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+    </dxmvvm:Interaction.Behaviors>
+
     <UserControl.DataContext>
         <Binding Path="CustomerDetailsViewModel" Source="{StaticResource Locator}" />
     </UserControl.DataContext>
@@ -25,7 +30,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid>
             <Grid.RowDefinitions>
@@ -124,8 +129,7 @@
             Grid.Row="2"
             Grid.ColumnSpan="2"
             Orientation="Horizontal">
-            <dx:SimpleButton Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" />
-            <dx:SimpleButton Content="Save" Glyph="{dx:DXImage Image=Save_16x16.png}" />
+            <dx:SimpleButton Content="Save" Glyph="{dx:DXImage Image=Save_16x16.png}" Command="{Binding SaveCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

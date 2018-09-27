@@ -697,3 +697,75 @@ GO
 GRANT SELECT ON dbo.fn_GetDocumentsForFilter TO PUBLIC
 GO
 
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveCustomer','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveCustomer
+GO
+CREATE PROCEDURE dbo.sp_SaveCustomer
+    @ID INT,
+    @IsActive BIT,
+	@OpeningDate DATE,
+	@CustomerType NVARCHAR(100),
+	@CustomerName NVARCHAR(1000),
+	@Personal_Gender NVARCHAR(100),
+	@Personal_BirthDate DATE,
+	@Personal_SSN NVARCHAR(100),
+	@Personal_LicenseID NVARCHAR(100),
+	@Business_TypeOfCompany NVARCHAR(100),
+	@Business_TaxID NVARCHAR(100),
+	@Notes NVARCHAR(4000)
+AS
+BEGIN
+    IF EXISTS(SELECT * FROM dbo.Customer WHERE ID=@ID)
+        UPDATE dbo.Customer
+        SET
+			IsActive=@IsActive,
+			OpeningDate=@OpeningDate,
+			CustomerType=@CustomerType,
+			CustomerName=@CustomerName,
+			Personal_Gender=@Personal_Gender,
+			Personal_BirthDate=@Personal_BirthDate,
+			Personal_SSN=@Personal_SSN,
+			Personal_LicenseID=@Personal_LicenseID,
+			Business_TypeOfCompany=@Business_TypeOfCompany,
+			Business_TaxID=@Business_TaxID,
+			Notes=@Notes
+        WHERE ID=@ID
+    ELSE
+	BEGIN
+        INSERT INTO dbo.Customer 
+		(
+			IsActive,
+			OpeningDate,
+			CustomerType,
+			CustomerName,
+			Personal_Gender,
+			Personal_BirthDate,
+			Personal_SSN,
+			Personal_LicenseID,
+			Business_TypeOfCompany,
+			Business_TaxID,
+			Notes
+		)
+        VALUES
+		(
+			@IsActive,
+			@OpeningDate,
+			@CustomerType,
+			@CustomerName,
+			@Personal_Gender,
+			@Personal_BirthDate,
+			@Personal_SSN,
+			@Personal_LicenseID,
+			@Business_TypeOfCompany,
+			@Business_TaxID,
+			@Notes
+		)
+		SET @ID=SCOPE_IDENTITY()
+	END
+    RETURN @ID
+END
+GO
+GRANT EXECUTE ON dbo.sp_SaveCustomer TO PUBLIC
+GO
+

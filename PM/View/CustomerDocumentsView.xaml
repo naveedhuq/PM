@@ -42,7 +42,6 @@
         <dx:DXMessageBoxService />
         <dxmvvm:OpenFileDialogService Multiselect="True"/>
         <dxmvvm:NotificationService UseWin8NotificationsIfAvailable="False" PredefinedNotificationDuration="Default"/>
-
     </dxmvvm:Interaction.Behaviors>
 
     <UserControl.DataContext>
