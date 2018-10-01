@@ -780,3 +780,34 @@ GO
 GRANT EXECUTE ON dbo.sp_SaveCustomer TO PUBLIC
 GO
 
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveContact','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveContact
+GO
+CREATE PROCEDURE dbo.sp_SaveContact
+    @ID INT,
+	@IsActive BIT,
+	@CustomerID INT,
+	@ContactItemType NVARCHAR(100),
+	@ContactItemValue NVARCHAR(1000)
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM dbo.Contacts WHERE ID=@ID)
+		UPDATE dbo.Contacts
+		SET
+			IsActive=@IsActive,
+			CustomerID=@CustomerID,
+			ContactItemType=@ContactItemType,
+			ContactItemValue=@ContactItemValue
+		WHERE ID=@ID
+	ELSE
+	BEGIN
+		INSERT INTO dbo.Contacts (CustomerID, ContactItemType, ContactItemValue)
+		VALUES (@CustomerID, @ContactItemType, @ContactItemValue)
+		SET @ID=SCOPE_IDENTITY()
+	END
+	RETURN @ID
+END
+GO
+GRANT EXECUTE ON dbo.sp_SaveContact TO PUBLIC
+GO

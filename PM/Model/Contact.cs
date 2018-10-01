@@ -21,7 +21,7 @@ namespace PM.Model
             }
         }
 
-        private bool _IsActive;
+        private bool _IsActive = true;
         public bool IsActive
         {
             get { return _IsActive; }
@@ -91,7 +91,9 @@ namespace PM.Model
 
         public override void SaveChanges()
         {
-            throw new NotImplementedException();
+            var ret = DBHelper.Instance.SaveContact(this);
+            ID = ret.ID;
+            IsDirty = false;
         }
 
         protected override void Populate(Contact item)

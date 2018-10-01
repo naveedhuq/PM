@@ -14,6 +14,8 @@ namespace PM.ViewModel
     public class CustomerContactsViewModel : ViewModelBase
     {
         ILogger _logger;
+        protected IMessageBoxService MessageBoxService { get { return GetService<IMessageBoxService>(); } }
+
         public Customer SelectedCustomer
         {
             get { return GetProperty(() => SelectedCustomer); }
@@ -30,6 +32,35 @@ namespace PM.ViewModel
             set { SetProperty(() => ContactItemTypes, value); }
         }
 
+        
+        public DelegateCommand NewCommand
+        {
+            get
+            {
+                return new DelegateCommand(() => { SelectedContact = new Contact() { CustomerID = SelectedCustomer.ID }; });
+            }
+        }
+        public DelegateCommand SaveCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    try
+                    {
+                        SelectedContact.SaveChanges();
+                        SelectedContact = null;
+                        SelectedCustomer.RefreshContacts();
+                        SelectedCustomer.IsDirty = false;
+                    }
+                    catch (Exception ex) { ShowError(ex); }
+                }, () => SelectedContact != null && 
+                         SelectedContact.IsDirty &&
+                         SelectedContact.ContactItemType != null &&
+                         SelectedContact.ContactItemValue != null);
+            }
+        }
+
         public CustomerContactsViewModel()
         {
             if (IsInDesignMode)
@@ -44,6 +75,12 @@ namespace PM.ViewModel
                 recipient: this,
                 token: MessageTokenEnum.SelectedCustomerChanged,
                 action: customer => SelectedCustomer = customer);
+        }
+
+        void ShowError(Exception ex)
+        {
+            MessageBoxService.ShowMessage(messageBoxText: ex.Message, caption: "Error", button: MessageButton.OK, icon: MessageIcon.Error);
+            _logger.Error(ex.Message, ex);
         }
     }
 }

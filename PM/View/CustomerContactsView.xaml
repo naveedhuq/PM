@@ -7,6 +7,7 @@
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800">
 
@@ -18,9 +19,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+    </dxmvvm:Interaction.Behaviors>
+
     <UserControl.DataContext>
         <Binding Path="CustomerContactsViewModel" Source="{StaticResource Locator}" />
     </UserControl.DataContext>
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -81,8 +87,14 @@
                 Grid.Row="3"
                 Grid.ColumnSpan="2"
                 Orientation="Horizontal">
-                <dx:SimpleButton Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" />
-                <dx:SimpleButton Content="Save" Glyph="{dx:DXImage Image=Save_16x16.png}" />
+                <dx:SimpleButton
+                    Content="New"
+                    Glyph="{dx:DXImage Image=New_16x16.png}"
+                    Command="{Binding NewCommand}"/>
+                <dx:SimpleButton
+                    Content="Save"
+                    Glyph="{dx:DXImage Image=Save_16x16.png}"
+                    Command="{Binding SaveCommand}"/>
             </StackPanel>
         </Grid>
     </Grid>

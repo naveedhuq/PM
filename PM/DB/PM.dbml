@@ -259,4 +259,12 @@
     <Parameter Name="CustomerName" Parameter="customerName" Type="System.String" DbType="NVarChar(1000)" />
     <Return Type="System.Boolean" />
   </Function>
+  <Function Name="dbo.sp_SaveContact" Method="sp_SaveContact">
+    <Parameter Name="ID" Parameter="iD" Type="System.Int32" DbType="Int" />
+    <Parameter Name="IsActive" Parameter="isActive" Type="System.Boolean" DbType="Bit" />
+    <Parameter Name="CustomerID" Parameter="customerID" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ContactItemType" Parameter="contactItemType" Type="System.String" DbType="NVarChar(100)" />
+    <Parameter Name="ContactItemValue" Parameter="contactItemValue" Type="System.String" DbType="NVarChar(1000)" />
+    <Return Type="System.Int32" />
+  </Function>
 </Database>

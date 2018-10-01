@@ -191,6 +191,19 @@ namespace PM.Shared
             return c;
         }
 
+        public m.Contact SaveContact(m.Contact c)
+        {
+            var id = _cx.sp_SaveContact(
+                c.ID,
+                c.IsActive,
+                c.CustomerID,
+                c.ContactItemType,
+                c.ContactItemValue);
+            if (id != 0)
+                c.ID = id;
+            return c;
+        }
+
         #endregion
 
 
@@ -326,5 +339,13 @@ namespace PM.Shared
         }
 
         public bool CustomerNameExists(string customerName) { return (bool)_cx.fn_CustomerNameExists(customerName); }
+
+        public ObservableCollection<m.Contact> GetContactsForCustomer(int customerID)
+        {
+            var ret = from c in ContactRepository
+                      where c.CustomerID == customerID
+                      select c;
+            return new ObservableCollection<m.Contact>(ret);
+        }
     }
 }

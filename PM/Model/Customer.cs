@@ -190,6 +190,7 @@ namespace PM.Model
         public override void SaveChanges()
         {
             var ret = DBHelper.Instance.SaveCustomer(this);
+            ID = ret.ID;
             IsDirty = false;
         }
 
@@ -205,6 +206,11 @@ namespace PM.Model
         public static bool CustomerNameExists(string customerName)
         {
             return DBHelper.Instance.CustomerNameExists(customerName);
+        }
+
+        public void RefreshContacts()
+        {
+            Contacts = DBHelper.Instance.GetContactsForCustomer(ID);
         }
     }
 }
