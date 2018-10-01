@@ -23,8 +23,7 @@ namespace PM.Shared
         }
         #endregion
 
-        private DB.PMDataContext _cx = new DB.PMDataContext(Properties.Settings.Default.PMConnectionString);
-        public DB.PMDataContext DataContext { get { return _cx; } }
+        public DB.PMDataContext DataContext { get; } = new DB.PMDataContext(Properties.Settings.Default.PMConnectionString);
 
 
         #region Repositories
@@ -35,7 +34,7 @@ namespace PM.Shared
             {
                 return
                 (
-                    from x in _cx.Customer
+                    from x in DataContext.Customer
                     select new m.Customer
                     {
                         ID = x.ID,
@@ -61,7 +60,7 @@ namespace PM.Shared
             {
                 return
                 (
-                    from x in _cx.Contacts
+                    from x in DataContext.Contacts
                     select new m.Contact
                     {
                         ID = x.ID,
@@ -74,14 +73,13 @@ namespace PM.Shared
             }
         }
 
-
         public List<m.LookupItem> LookupsRepository
         {
             get
             {
                 return
                 (
-                    from x in _cx.Lookups
+                    from x in DataContext.Lookups
                     orderby x.SortOrder
                     select new m.LookupItem
                     {
@@ -92,15 +90,14 @@ namespace PM.Shared
                 ).ToList();
             }
         }
-
-
+        
         public List<m.DocumentFolder> DocumentFolderRepository
         {
             get
             {
                 return
                 (
-                    from x in _cx.DocumentFolders
+                    from x in DataContext.DocumentFolders
                     where x.IsActive == true
                     select new m.DocumentFolder
                     {
@@ -115,6 +112,31 @@ namespace PM.Shared
             }
         }
 
+        public List<m.RelatedParty> RelatedPartyRepository
+        {
+            get
+            {
+                return
+                (
+                    from x in DataContext.RelatedParties
+                    select new m.RelatedParty
+                    {
+                        ID = x.ID,
+                        IsActive = x.IsActive,
+                        CustomerID = x.CustomerID,
+                        PartyName = x.PartyName,
+                        EntityType = x.EntityType,
+                        Gender = x.Gender,
+                        BirthDate = x.BirthDate,
+                        SSN = x.SSN,
+                        LicenseID = x.LicenseID,
+                        Notes = x.Notes
+                    }
+                ).ToList();
+            }
+        }
+
+        
         #endregion
 
 
@@ -123,7 +145,7 @@ namespace PM.Shared
 
         public m.DocumentFolder SaveDocumentFolder(m.DocumentFolder f)
         {
-            var id = _cx.sp_SaveDocumentFolder(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
+            var id = DataContext.sp_SaveDocumentFolder(f.ID, f.CustomerID, f.ParentID, f.FolderName, f.IsStarred, f.IsHidden);
             if (id != 0)
                 f.ID = id;
             return f;
@@ -131,12 +153,12 @@ namespace PM.Shared
 
         public void DeleteDocumentFolder(m.DocumentFolder f)
         {
-            _cx.sp_DeleteDocumentFolder(f.ID);
+            DataContext.sp_DeleteDocumentFolder(f.ID);
         }
 
         public m.Document SaveDocument(m.Document d)
         {
-            var id = _cx.sp_SaveDocument(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
+            var id = DataContext.sp_SaveDocument(d.ID, d.CustomerID, d.DocumentFolderID, d.DocumentFileName, d.DocumentType, d.FileType, d.FileTimestamp, d.UploadDate, d.ExpirationDate, d.Comments);
             if (id != 0)
                 d.ID = id;
             return d;
@@ -144,36 +166,36 @@ namespace PM.Shared
 
         public void DeleteDocument(m.Document d)
         {
-            _cx.sp_DeleteDocument(d.ID);
+            DataContext.sp_DeleteDocument(d.ID);
         }
 
         public void UploadDocumentData(int documentID, string fileName)
         {
-            _cx.sp_UploadDocumentData(documentID, fileName);
+            DataContext.sp_UploadDocumentData(documentID, fileName);
         }
 
         public void SaveDocumentData(int documentID, Binary rawData)
         {
-            _cx.sp_SaveDocumentData(documentID, rawData);
+            DataContext.sp_SaveDocumentData(documentID, rawData);
         }
 
         public void SyncDocumentType()
         {
-            _cx.sp_SyncDocumentType();
+            DataContext.sp_SyncDocumentType();
         }
         public void AddEventLog(EventLog.LogEventType eventType, string message)
         {
-            _cx.sp_AddEventLog(eventType.ToString(), message);
+            DataContext.sp_AddEventLog(eventType.ToString(), message);
         }
 
         public void AddDocumentActivityLog(EventLog.LogEventType eventType, string customerName, string documentFileName, string folderName)
         {
-            _cx.sp_AddDocumentActivityLog(eventType.ToString(), customerName, documentFileName, folderName);
+            DataContext.sp_AddDocumentActivityLog(eventType.ToString(), customerName, documentFileName, folderName);
         }
 
         public m.Customer SaveCustomer(m.Customer c)
         {
-            var id = _cx.sp_SaveCustomer(
+            var id = DataContext.sp_SaveCustomer(
                 c.ID,
                 c.IsActive,
                 c.OpeningDate,
@@ -193,7 +215,7 @@ namespace PM.Shared
 
         public m.Contact SaveContact(m.Contact c)
         {
-            var id = _cx.sp_SaveContact(
+            var id = DataContext.sp_SaveContact(
                 c.ID,
                 c.IsActive,
                 c.CustomerID,
@@ -204,7 +226,29 @@ namespace PM.Shared
             return c;
         }
 
+        public m.RelatedParty SaveRelatedParty(m.RelatedParty r)
+        {
+            var id = DataContext.sp_SaveRelatedParty(
+                r.ID,
+                r.IsActive,
+                r.CustomerID,
+                r.PartyName,
+                r.EntityType,
+                r.Gender,
+                r.BirthDate,
+                r.SSN,
+                r.LicenseID,
+                r.Notes);
+            if (id != 0)
+                r.ID = id;
+            return r;
+        }
+
         #endregion
+
+
+
+        #region Utility Selection Functions
 
 
         public ObservableCollection<m.Customer> GetCustomers(bool ActiveOnly = true, string CustomerType = null)
@@ -234,13 +278,13 @@ namespace PM.Shared
             return new ObservableCollection<m.Customer>(ret);
         }
 
-        public void CreateDefaultDocumentFolders(int customerID) { _cx.sp_CreateDefaultDocumentFolders(customerID); }
+        public void CreateDefaultDocumentFolders(int customerID) { DataContext.sp_CreateDefaultDocumentFolders(customerID); }
 
-        public int GetDocumentFolderCountForCustomer(int customerID) { return _cx.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0; }
+        public int GetDocumentFolderCountForCustomer(int customerID) { return DataContext.fn_GetDocumentFolderCountForCustomer(customerID) ?? 0; }
 
         public ObservableCollection<m.DocumentFolder> GetDocumentFoldersForCustomer(int customerID)
         {
-            var folders = from x in _cx.fn_GetDocumentFoldersForCustomer(customerID)
+            var folders = from x in DataContext.fn_GetDocumentFoldersForCustomer(customerID)
                           select new m.DocumentFolder
                           {
                               ID = x.ID,
@@ -255,7 +299,7 @@ namespace PM.Shared
 
         public ObservableCollection<m.Document> GetDocumentsForCustomer(int customerID, bool activeOnly = true)
         {
-            var docs = from x in _cx.fn_GetDocumentsForCustomer(customerID, activeOnly)
+            var docs = from x in DataContext.fn_GetDocumentsForCustomer(customerID, activeOnly)
                        select new m.Document
                        {
                            ID = x.ID,
@@ -275,12 +319,12 @@ namespace PM.Shared
 
         public Binary GetRawDocumentData(int documentID)
         {
-            return _cx.fn_GetRawDocumentData(documentID);
+            return DataContext.fn_GetRawDocumentData(documentID);
         }
 
         public ObservableCollection<string> GetAllFolderNames(bool activeOnly = true)
         {
-            var folders = from x in _cx.fn_GetAllFolderNames(activeOnly)
+            var folders = from x in DataContext.fn_GetAllFolderNames(activeOnly)
                           orderby x.FolderName
                           select x.FolderName;
             return new ObservableCollection<string>(folders);
@@ -288,7 +332,7 @@ namespace PM.Shared
 
         public ObservableCollection<m.Document> GetAllDocuments(bool activeOnly = true)
         {
-            var docs = from x in _cx.Documents
+            var docs = from x in DataContext.Documents
                        where (activeOnly ? x.IsActive : true)
                        select new m.Document
                        {
@@ -309,12 +353,12 @@ namespace PM.Shared
 
         public string GetDocumentFolderTree(int documentFolderID)
         {
-            return _cx.fn_GetFolderTreeForDocumentFolderID(documentFolderID);
+            return DataContext.fn_GetFolderTreeForDocumentFolderID(documentFolderID);
         }
 
         public ObservableCollection<m.DocumentFilter> GetDocumentsForFilter()
         {
-            var docs = from x in _cx.fn_GetDocumentsForFilter()
+            var docs = from x in DataContext.fn_GetDocumentsForFilter()
                        select new m.DocumentFilter()
                        {
                            DocumentID = x.DocumentID,
@@ -338,7 +382,9 @@ namespace PM.Shared
             return new ObservableCollection<m.DocumentFilter>(docs);
         }
 
-        public bool CustomerNameExists(string customerName) { return (bool)_cx.fn_CustomerNameExists(customerName); }
+
+        public bool CustomerNameExists(string customerName) { return (bool)DataContext.fn_CustomerNameExists(customerName); }
+
 
         public ObservableCollection<m.Contact> GetContactsForCustomer(int customerID)
         {
@@ -347,5 +393,15 @@ namespace PM.Shared
                       select c;
             return new ObservableCollection<m.Contact>(ret);
         }
+
+        public ObservableCollection<m.RelatedParty> GetRelatedPartiesForCustomer(int customerID)
+        {
+            var ret = from r in RelatedPartyRepository
+                      where r.CustomerID == customerID
+                      select r;
+            return new ObservableCollection<m.RelatedParty>(ret);
+        }
+
+        #endregion
     }
 }

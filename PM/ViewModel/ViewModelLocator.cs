@@ -19,6 +19,7 @@ namespace PM.ViewModel
         public static DocumentExpiryCalendarViewModel DocumentExpiryCalendarViewModel { get { return _container.Resolve<DocumentExpiryCalendarViewModel>(); } }
         public static WordDocumentViewModel WordDocumentViewModel { get { return _container.Resolve<WordDocumentViewModel>(); } }
         public static ExcelDocumentViewModel ExcelDocumentViewModel { get { return _container.Resolve<ExcelDocumentViewModel>(); } }
+        public static RelatedPartyViewModel RelatedPartyViewModel { get { return _container.Resolve<RelatedPartyViewModel>(); } }
 
 
         static ViewModelLocator()
@@ -35,8 +36,7 @@ namespace PM.ViewModel
             _container.RegisterType<DocumentExpiryCalendarViewModel>();
             _container.RegisterType<WordDocumentViewModel>();
             _container.RegisterType<ExcelDocumentViewModel>();
-
-
+            _container.RegisterType<RelatedPartyViewModel>();
         }
     }
 }

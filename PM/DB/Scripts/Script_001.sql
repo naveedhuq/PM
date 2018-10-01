@@ -55,6 +55,30 @@ GO
 
 
 -----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.RelatedParties','U') IS NOT NULL
+    DROP TABLE dbo.RelatedParties
+GO
+CREATE TABLE dbo.RelatedParties
+(
+    ID INT IDENTITY(1,1) PRIMARY KEY CLUSTERED,
+	INSERT_TIMESTAMP DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	INSERT_USER NVARCHAR(100) NOT NULL DEFAULT SUSER_SNAME(),
+	IsActive BIT NOT NULL DEFAULT 1,
+
+	CustomerID INT NOT NULL,
+    PartyName NVARCHAR(1000) NOT NULL,
+    EntityType NVARCHAR(100) NOT NULL,
+    Gender NVARCHAR(100),
+    BirthDate DATE,
+    SSN NVARCHAR(100),
+    LicenseID NVARCHAR(100),
+    Notes NVARCHAR(4000)
+)
+GRANT SELECT, INSERT, UPDATE, DELETE ON dbo.RelatedParties TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID('dbo.DocumentFolders','U') IS NOT NULL
 	DROP TABLE dbo.DocumentFolders
 CREATE TABLE dbo.DocumentFolders
@@ -229,7 +253,12 @@ INSERT INTO dbo.Lookups (LookupType, SortOrder, LookupName) VALUES
 ('ExtensionMapping', 13, '.png|Image'),
 ('ExtensionMapping', 14, '.tiff|Image'),
 ('ExtensionMapping', 15, '.gif|Image'),
-('ExtensionMapping', 16, '.bmp|Image')
+('ExtensionMapping', 16, '.bmp|Image'),
+
+('EntityType', 1, 'Owner'),
+('EntityType', 2, 'Partner'),
+('EntityType', 3, 'Manager'),
+('EntityType', 4, 'Care of')
 
 GO
 
@@ -810,4 +839,47 @@ BEGIN
 END
 GO
 GRANT EXECUTE ON dbo.sp_SaveContact TO PUBLIC
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.sp_SaveRelatedParty','P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_SaveRelatedParty
+GO
+CREATE PROCEDURE dbo.sp_SaveRelatedParty
+    @ID INT,
+	@IsActive BIT,
+	@CustomerID INT,
+    @PartyName NVARCHAR(1000),
+    @EntityType NVARCHAR(100),
+    @Gender NVARCHAR(100),
+    @BirthDate DATE,
+    @SSN NVARCHAR(100),
+    @LicenseID NVARCHAR(100),
+    @Notes NVARCHAR(4000)
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM dbo.RelatedParties WHERE ID=@ID)
+		UPDATE dbo.RelatedParties
+		SET
+			IsActive=@IsActive,
+			CustomerID=@CustomerID,
+			PartyName=@PartyName,
+            EntityType=@EntityType,
+            Gender=@Gender,
+            BirthDate=@BirthDate,
+            SSN=@SSN,
+            LicenseID=@LicenseID,
+            Notes=@Notes
+		WHERE ID=@ID
+	ELSE
+	BEGIN
+		INSERT INTO dbo.RelatedParties (CustomerID, PartyName, EntityType, Gender, BirthDate, SSN, LicenseID, Notes)
+		VALUES (@CustomerID, @PartyName, @EntityType, @Gender, @BirthDate, @SSN, @LicenseID, @Notes)
+		SET @ID=SCOPE_IDENTITY()
+	END
+	RETURN @ID
+END
+GO
+GRANT EXECUTE ON dbo.sp_SaveRelatedParty TO PUBLIC
 GO

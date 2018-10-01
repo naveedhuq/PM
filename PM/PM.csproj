@@ -167,6 +167,7 @@
     <Compile Include="Model\DocumentFilter.cs" />
     <Compile Include="Model\DocumentFolder.cs" />
     <Compile Include="Model\Enumerators.cs" />
+    <Compile Include="Model\RelatedParty.cs" />
     <Compile Include="Shared\EventLog.cs" />
     <Compile Include="Model\LookupItem.cs" />
     <Compile Include="Model\ModelBase.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="ViewModel\DocumentSearchViewModel.cs" />
     <Compile Include="ViewModel\ExcelDocumentViewModel.cs" />
     <Compile Include="ViewModel\MasterViewModel.cs" />
+    <Compile Include="ViewModel\RelatedPartyViewModel.cs" />
     <Compile Include="ViewModel\ReminderCalendarViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WordDocumentViewModel.cs" />
@@ -228,6 +230,9 @@
     </Compile>
     <Compile Include="View\MasterView.xaml.cs">
       <DependentUpon>MasterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RelatedPartyView.xaml.cs">
+      <DependentUpon>RelatedPartyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReminderCalendarView.xaml.cs">
       <DependentUpon>ReminderCalendarView.xaml</DependentUpon>
@@ -330,6 +335,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MasterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RelatedPartyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

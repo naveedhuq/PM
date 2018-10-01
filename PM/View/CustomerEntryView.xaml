@@ -73,15 +73,34 @@
                             <dx:DXTabItem Header="Customer Inforation">
                                 <!-- Layout for Customer / Contact Details -->
                                 <dxdo:LayoutGroup Orientation="Vertical">
-                                    <!-- Customer Details -->
-                                    <dxdo:LayoutPanel AllowHide="False" Caption="Customer Details">
-                                        <dxdo:LayoutPanel.CaptionTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"/>
-                                            </DataTemplate>
-                                        </dxdo:LayoutPanel.CaptionTemplate>
-                                        <view:CustomerDetailsView Margin="40,10" />
-                                    </dxdo:LayoutPanel>
+                                    <dxdo:LayoutGroup Orientation="Horizontal">
+                                        
+                                        <!-- Customer Details -->
+                                        <dxdo:LayoutPanel AllowHide="False" Caption="Customer Details">
+                                            <dxdo:LayoutPanel.CaptionTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"/>
+                                                </DataTemplate>
+                                            </dxdo:LayoutPanel.CaptionTemplate>
+                                            <view:CustomerDetailsView Margin="40,10" />
+                                        </dxdo:LayoutPanel>
+                                        
+                                        <!-- Related Parties -->
+                                        <dxdo:LayoutPanel
+                                            AllowHide="False"
+                                            Caption="Related Party Information" 
+                                            Visibility="{Binding SelectedCustomer.IsBusinessCustomer, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                                            <dxdo:LayoutPanel.CaptionTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"/>
+                                                </DataTemplate>
+                                            </dxdo:LayoutPanel.CaptionTemplate>
+                                            <view:RelatedPartyView Margin="40,10"/>
+                                        </dxdo:LayoutPanel>
+                                        
+                                    </dxdo:LayoutGroup>
+                                    
+                                    
 
                                     <!-- Contact Details -->
                                     <dxdo:LayoutPanel AllowHide="False" Caption="Contacts">

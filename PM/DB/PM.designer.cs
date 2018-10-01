@@ -54,6 +54,9 @@ namespace PM.DB
     partial void InsertDocumentActivityLog(DocumentActivityLog instance);
     partial void UpdateDocumentActivityLog(DocumentActivityLog instance);
     partial void DeleteDocumentActivityLog(DocumentActivityLog instance);
+    partial void InsertRelatedParties(RelatedParties instance);
+    partial void UpdateRelatedParties(RelatedParties instance);
+    partial void DeleteRelatedParties(RelatedParties instance);
     #endregion
 		
 		public PMDataContext() : 
@@ -147,6 +150,14 @@ namespace PM.DB
 			get
 			{
 				return this.GetTable<DocumentActivityLog>();
+			}
+		}
+		
+		public System.Data.Linq.Table<RelatedParties> RelatedParties
+		{
+			get
+			{
+				return this.GetTable<RelatedParties>();
 			}
 		}
 		
@@ -285,6 +296,13 @@ namespace PM.DB
 		public int sp_SaveContact([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsActive", DbType="Bit")] System.Nullable<bool> isActive, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ContactItemType", DbType="NVarChar(100)")] string contactItemType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ContactItemValue", DbType="NVarChar(1000)")] string contactItemValue)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, isActive, customerID, contactItemType, contactItemValue);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_SaveRelatedParty")]
+		public int sp_SaveRelatedParty([global::System.Data.Linq.Mapping.ParameterAttribute(Name="ID", DbType="Int")] System.Nullable<int> iD, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsActive", DbType="Bit")] System.Nullable<bool> isActive, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="CustomerID", DbType="Int")] System.Nullable<int> customerID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PartyName", DbType="NVarChar(1000)")] string partyName, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EntityType", DbType="NVarChar(100)")] string entityType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Gender", DbType="NVarChar(100)")] string gender, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="BirthDate", DbType="Date")] System.Nullable<System.DateTime> birthDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SSN", DbType="NVarChar(100)")] string sSN, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LicenseID", DbType="NVarChar(100)")] string licenseID, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Notes", DbType="NVarChar(4000)")] string notes)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), iD, isActive, customerID, partyName, entityType, gender, birthDate, sSN, licenseID, notes);
 			return ((int)(result.ReturnValue));
 		}
 	}
@@ -2128,6 +2146,332 @@ namespace PM.DB
 					this._FolderName = value;
 					this.SendPropertyChanged("FolderName");
 					this.OnFolderNameChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.RelatedParties")]
+	public partial class RelatedParties : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private System.DateTime _INSERT_TIMESTAMP;
+		
+		private string _INSERT_USER;
+		
+		private bool _IsActive;
+		
+		private int _CustomerID;
+		
+		private string _PartyName;
+		
+		private string _EntityType;
+		
+		private string _Gender;
+		
+		private System.Nullable<System.DateTime> _BirthDate;
+		
+		private string _SSN;
+		
+		private string _LicenseID;
+		
+		private string _Notes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnINSERT_TIMESTAMPChanging(System.DateTime value);
+    partial void OnINSERT_TIMESTAMPChanged();
+    partial void OnINSERT_USERChanging(string value);
+    partial void OnINSERT_USERChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnCustomerIDChanging(int value);
+    partial void OnCustomerIDChanged();
+    partial void OnPartyNameChanging(string value);
+    partial void OnPartyNameChanged();
+    partial void OnEntityTypeChanging(string value);
+    partial void OnEntityTypeChanged();
+    partial void OnGenderChanging(string value);
+    partial void OnGenderChanged();
+    partial void OnBirthDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnBirthDateChanged();
+    partial void OnSSNChanging(string value);
+    partial void OnSSNChanged();
+    partial void OnLicenseIDChanging(string value);
+    partial void OnLicenseIDChanged();
+    partial void OnNotesChanging(string value);
+    partial void OnNotesChanged();
+    #endregion
+		
+		public RelatedParties()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_TIMESTAMP", DbType="DateTime NOT NULL")]
+		public System.DateTime INSERT_TIMESTAMP
+		{
+			get
+			{
+				return this._INSERT_TIMESTAMP;
+			}
+			set
+			{
+				if ((this._INSERT_TIMESTAMP != value))
+				{
+					this.OnINSERT_TIMESTAMPChanging(value);
+					this.SendPropertyChanging();
+					this._INSERT_TIMESTAMP = value;
+					this.SendPropertyChanged("INSERT_TIMESTAMP");
+					this.OnINSERT_TIMESTAMPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_INSERT_USER", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string INSERT_USER
+		{
+			get
+			{
+				return this._INSERT_USER;
+			}
+			set
+			{
+				if ((this._INSERT_USER != value))
+				{
+					this.OnINSERT_USERChanging(value);
+					this.SendPropertyChanging();
+					this._INSERT_USER = value;
+					this.SendPropertyChanged("INSERT_USER");
+					this.OnINSERT_USERChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomerID", DbType="Int NOT NULL")]
+		public int CustomerID
+		{
+			get
+			{
+				return this._CustomerID;
+			}
+			set
+			{
+				if ((this._CustomerID != value))
+				{
+					this.OnCustomerIDChanging(value);
+					this.SendPropertyChanging();
+					this._CustomerID = value;
+					this.SendPropertyChanged("CustomerID");
+					this.OnCustomerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PartyName", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
+		public string PartyName
+		{
+			get
+			{
+				return this._PartyName;
+			}
+			set
+			{
+				if ((this._PartyName != value))
+				{
+					this.OnPartyNameChanging(value);
+					this.SendPropertyChanging();
+					this._PartyName = value;
+					this.SendPropertyChanged("PartyName");
+					this.OnPartyNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EntityType", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string EntityType
+		{
+			get
+			{
+				return this._EntityType;
+			}
+			set
+			{
+				if ((this._EntityType != value))
+				{
+					this.OnEntityTypeChanging(value);
+					this.SendPropertyChanging();
+					this._EntityType = value;
+					this.SendPropertyChanged("EntityType");
+					this.OnEntityTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Gender", DbType="NVarChar(100)")]
+		public string Gender
+		{
+			get
+			{
+				return this._Gender;
+			}
+			set
+			{
+				if ((this._Gender != value))
+				{
+					this.OnGenderChanging(value);
+					this.SendPropertyChanging();
+					this._Gender = value;
+					this.SendPropertyChanged("Gender");
+					this.OnGenderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BirthDate", DbType="Date")]
+		public System.Nullable<System.DateTime> BirthDate
+		{
+			get
+			{
+				return this._BirthDate;
+			}
+			set
+			{
+				if ((this._BirthDate != value))
+				{
+					this.OnBirthDateChanging(value);
+					this.SendPropertyChanging();
+					this._BirthDate = value;
+					this.SendPropertyChanged("BirthDate");
+					this.OnBirthDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SSN", DbType="NVarChar(100)")]
+		public string SSN
+		{
+			get
+			{
+				return this._SSN;
+			}
+			set
+			{
+				if ((this._SSN != value))
+				{
+					this.OnSSNChanging(value);
+					this.SendPropertyChanging();
+					this._SSN = value;
+					this.SendPropertyChanged("SSN");
+					this.OnSSNChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LicenseID", DbType="NVarChar(100)")]
+		public string LicenseID
+		{
+			get
+			{
+				return this._LicenseID;
+			}
+			set
+			{
+				if ((this._LicenseID != value))
+				{
+					this.OnLicenseIDChanging(value);
+					this.SendPropertyChanging();
+					this._LicenseID = value;
+					this.SendPropertyChanged("LicenseID");
+					this.OnLicenseIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Notes", DbType="NVarChar(4000)")]
+		public string Notes
+		{
+			get
+			{
+				return this._Notes;
+			}
+			set
+			{
+				if ((this._Notes != value))
+				{
+					this.OnNotesChanging(value);
+					this.SendPropertyChanging();
+					this._Notes = value;
+					this.SendPropertyChanged("Notes");
+					this.OnNotesChanged();
 				}
 			}
 		}

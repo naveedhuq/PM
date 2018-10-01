@@ -175,6 +175,20 @@ namespace PM.Model
             }
         }
 
+        private ObservableCollection<RelatedParty> _RelatedParties;
+        public ObservableCollection<RelatedParty> RelatedParties
+        {
+            get { return _RelatedParties; }
+            set
+            {
+                if (_RelatedParties == value)
+                    return;
+                _RelatedParties = value;
+                NotifyPropertyChanged(m => m.RelatedParties);
+            }
+        }
+
+
 
         public bool IsPersonalCustomer
         {
@@ -211,6 +225,7 @@ namespace PM.Model
         public void RefreshContacts()
         {
             Contacts = DBHelper.Instance.GetContactsForCustomer(ID);
+            RelatedParties = DBHelper.Instance.GetRelatedPartiesForCustomer(ID);
         }
     }
 }

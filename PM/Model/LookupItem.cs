@@ -19,7 +19,8 @@ namespace PM.Model
             DefaultFolder,
             DocumentType,
             FileType,
-            ExtensionMapping
+            ExtensionMapping,
+            EntityType
         }
 
 
