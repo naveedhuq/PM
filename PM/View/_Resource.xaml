@@ -4,7 +4,13 @@
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors">
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <x:Array x:Key="Genders" Type="sys:String">
+        <sys:String>Male</sys:String>
+        <sys:String>Female</sys:String>
+    </x:Array>
 
     <Style TargetType="Control" x:Key="UIControlBase">
         <Setter Property="Padding" Value="0"/>

@@ -12,10 +12,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="_Resource.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <x:Array x:Key="Genders" Type="sys:String">
-                <sys:String>Male</sys:String>
-                <sys:String>Female</sys:String>
-            </x:Array>
         </ResourceDictionary>
     </UserControl.Resources>
 

@@ -1,4 +1,4 @@
-﻿<UserControl xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+﻿<UserControl xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"  xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
     x:Class="PM.View.RelatedPartyView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -26,7 +26,103 @@
     </UserControl.DataContext>
 
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <dxe:ListBoxEdit
+            ItemsSource="{Binding SelectedCustomer.RelatedParties}"
+            SelectedItem="{Binding SelectedRelatedParty}">
+            <dxe:ListBoxEdit.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{dx:DXImage Image=BOCustomer_32x32.png}"  Margin="0,0,10,0"/>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding PartyName}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding EntityType}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </dxe:ListBoxEdit.ItemTemplate>
+        </dxe:ListBoxEdit>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="75" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="300" />
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Name"/>
+                <dxe:TextEdit Grid.Column="1" Text="{Binding SelectedRelatedParty.PartyName}"/>
+
+                <Label Grid.Row="1" Content="Type/Position"/>
+                <dxe:ComboBoxEdit
+                    Grid.Row="1" Grid.Column="1" Width="150"
+                    Text="{Binding SelectedRelatedParty.EntityType}"
+                    ItemsSource="{Binding EntityTypes}"/>
+
+                <Label Grid.Row="2" Content="Gender"/>
+                <dxe:ComboBoxEdit
+                    Grid.Row="2" Grid.Column="1" Width="150"
+                    Text="{Binding SelectedRelatedParty.Gender}"
+                    ItemsSource="{StaticResource ResourceKey=Genders}" />
+
+                <Label Grid.Row="3" Content="Date of Birth" />
+                <dxe:DateEdit
+                    Grid.Row="3" Grid.Column="1"
+                    EditValue="{Binding SelectedRelatedParty.BirthDate}" />
+                
+                <Label Grid.Row="4" Content="SSN" />
+                <dxe:TextEdit
+                    Grid.Row="4" Grid.Column="1" Width="150"
+                    EditValue="{Binding SelectedRelatedParty.SSN}" />
+                
+                <Label Grid.Row="5" Content="Identifcation No." />
+                <dxe:TextEdit
+                    Grid.Row="5" Grid.Column="1"
+                    EditValue="{Binding SelectedRelatedParty.LicenseID}" />
+
+                <Label Grid.Row="6" Content="Notes" VerticalAlignment="Top"/>
+                <dxe:TextEdit
+                    Grid.Row="6" Grid.Column="1"
+                    EditValue="{Binding SelectedRelatedParty.Notes}"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    VerticalAlignment="Top"
+                    Height="72"
+                    VerticalScrollBarVisibility="Auto"
+                    VerticalContentAlignment="Top"/>
+            </Grid>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <dx:SimpleButton
+                    Content="New"
+                    Glyph="{dx:DXImage Image=New_16x16.png}"
+                    Command="{Binding NewCommand}"/>
+                <dx:SimpleButton
+                    Content="Save"
+                    Glyph="{dx:DXImage Image=Save_16x16.png}"
+                    Command="{Binding SaveCommand}"/>
+            </StackPanel>
+
+
+        </Grid>
 
     </Grid>
 </UserControl>

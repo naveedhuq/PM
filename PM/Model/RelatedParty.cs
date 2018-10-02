@@ -152,5 +152,10 @@ namespace PM.Model
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return PartyName;
+        }
     }
 }

@@ -225,7 +225,6 @@ namespace PM.Model
         public void RefreshContacts()
         {
             Contacts = DBHelper.Instance.GetContactsForCustomer(ID);
-            RelatedParties = DBHelper.Instance.GetRelatedPartiesForCustomer(ID);
         }
     }
 }

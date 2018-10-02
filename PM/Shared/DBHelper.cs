@@ -255,6 +255,7 @@ namespace PM.Shared
         {
             var customers = CustomerRepository;
             var contacts = ContactRepository;
+            var related = RelatedPartyRepository;
 
             var ret = (from x in customers
                        where (ActiveOnly ? x.IsActive : true)
@@ -273,7 +274,8 @@ namespace PM.Shared
                            Business_TypeOfCompany = x.Business_TypeOfCompany,
                            Business_TaxID = x.Business_TaxID,
                            Notes = x.Notes,
-                           Contacts = new ObservableCollection<m.Contact>(from y in contacts where y.CustomerID == x.ID select y)
+                           Contacts = new ObservableCollection<m.Contact>(from y in contacts where y.CustomerID == x.ID select y),
+                           RelatedParties = new ObservableCollection<m.RelatedParty>(from r in related where r.CustomerID == x.ID select r)
                        }).ToList();
             return new ObservableCollection<m.Customer>(ret);
         }
